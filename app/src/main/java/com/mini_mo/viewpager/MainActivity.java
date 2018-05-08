@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MainActivity()
     {
+        // 김기완 주석
         instance = this;
 
         //저는 쓰레기입니다 ㅡ
