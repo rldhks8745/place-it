@@ -27,7 +27,7 @@ public class MainPageFragment extends Fragment{
     // 생성자 필수
     public MainPageFragment()
     {
-
+        // 테스트용
     }
 
     @Override
