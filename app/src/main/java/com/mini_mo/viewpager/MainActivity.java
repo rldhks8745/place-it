@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // 이건 내 테스트용
         instance = this;
 // 나의 테스트
+// 아 머냐고 왜안돼냐고
     }
 
     @Override
