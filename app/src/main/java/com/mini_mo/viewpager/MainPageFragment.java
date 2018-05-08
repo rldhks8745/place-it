@@ -28,6 +28,7 @@ public class MainPageFragment extends Fragment{
     public MainPageFragment()
     {
         // 테스트용
+        // 다른 곳에서 푸쉬했는데 될까 ㅋㅋ?
     }
 
     @Override
