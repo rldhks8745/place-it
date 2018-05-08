@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public MainActivity()
     {
 // 테스트용
+        // 이건 내 테스트용
         instance = this;
     }
 
