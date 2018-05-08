@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //내 테스트
 // 나의 테스트
 // 아 머냐고 왜안돼냐고
+        //황의원 주ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ석
         // 더추가
     }
 
