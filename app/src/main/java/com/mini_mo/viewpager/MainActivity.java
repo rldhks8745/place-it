@@ -1,4 +1,4 @@
-package com.mini_mo.viewpager;
+﻿package com.mini_mo.viewpager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MainActivity()
     {
+// 테스트용
         instance = this;
     }
 
