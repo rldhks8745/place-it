@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mini_mo.viewpager.Cluster.ClusterMap">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        xmlns:tools="http://schemas.android.com/tools"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        tools:context="com.mini_mo.viewpager.Cluster.ClusterMap" >
+
+
+        <fragment
+
+            android:id="@+id/map1"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.MapFragment"
+ />
+
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

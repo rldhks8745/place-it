@@ -1,0 +1,83 @@
+package com.mini_mo.viewpager.ListView;
+
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
+
+import com.mini_mo.viewpager.R;
+
+import java.util.ArrayList;
+
+/*
+ * Created by 노현민 on 2018-04-29.
+ */
+
+public class RecyclerListView {
+
+
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+    private ArrayList<ListViewItemData> listViewItems;
+
+    /**
+     * 생성자
+     * listViewItems 생성 및 어댑터 설정
+     */
+    public RecyclerListView(Context context, View view, Fragment fragment)
+    {
+        listViewItems = new ArrayList<ListViewItemData>();
+        adapter = new RecyclerViewAdapter(listViewItems, R.layout.group_listview, fragment);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context.getApplicationContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    public RecyclerListView(Context context, View view, AppCompatActivity activity )
+    {
+        listViewItems = new ArrayList<ListViewItemData>();
+        adapter = new RecyclerViewAdapter(listViewItems, R.layout.group_listview, activity);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context.getApplicationContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    // Default 값, 테스트 용
+    public void addItem()
+    {
+        ListViewItemData listViewItem = new ListViewItemData();
+        listViewItems.add(listViewItem);
+    }
+
+    /** 동적 로딩을 위한 NestedScrollView의 아래 부분을 인식 **/
+    public void loadItems(NestedScrollView nestedScrollView, final Context context) {
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    //TODO add listItems
+                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
+                    addItem();
+                    // 어댑터에 연결된 ListView를 갱신
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    /** 데이터베이스 연동 부분 **/
+    /** 데이터베이스로 보내주는 부분**/
+    /* 현재 사용자의 위치 */
+    /* count ( 코멘트를 10개씩 가져오기 위함 AND 메인 화면에 게시글 수 ( = ArrayList<DAO_ListViewItem>의 크기 ) )*/
+    /** 데이터베이스에서 받는 부분 **/
+    /* ArrayList<DAO_ListViewItem> readListViweItems() 메소드를 사용하여 코멘트 받아오기 */
+}
