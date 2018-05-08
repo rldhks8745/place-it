@@ -29,14 +29,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MainActivity()
     {
-// 테스트용
-        // 이건 내 테스트용
+        // 김기완 주석
         instance = this;
         //내 테스트
 // 나의 테스트
 // 아 머냐고 왜안돼냐고
         //황의원 주ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ석
         // 더추가
+        //Rldpdpdpdpdpdpd
     }
 
     @Override
