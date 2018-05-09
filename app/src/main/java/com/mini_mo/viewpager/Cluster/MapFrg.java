@@ -291,13 +291,13 @@ public class MapFrg extends Fragment
         getVisibleRegion();
 
     }
-
+    //디바이스에 출력되는 지도 범위
     public LatLngBounds getVisibleRegion() {
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d("TEST", bounds.toString());
         return bounds;
     }
-
+    //MapFrg용 실질적으로 마커를 찍는부분
     public void addItem2(){
         double lat = 35.2706008;
         double lng = 128.01357559999997;

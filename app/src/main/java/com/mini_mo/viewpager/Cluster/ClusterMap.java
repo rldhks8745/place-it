@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.R;
 
@@ -126,7 +127,7 @@ public class ClusterMap extends AppCompatActivity
         }
     }
 
-
+//권한 확인하고 위치 갱신
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
@@ -215,16 +216,14 @@ public class ClusterMap extends AppCompatActivity
 
             }
         });
-
-
-        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-
+        //클러스터 클릭 리스너 ㅡ 추후 데이터 받아서 리스트뷰로 넘겨줄 예정
+        myClusterManager.setOnClusterClickListener( new ClusterManager.OnClusterClickListener<MyItem>() {
             @Override
-            public void onCameraMove() {
+            public boolean onClusterClick(Cluster<MyItem> cluster) {
 
-
+                return false;
             }
-        });
+        } );
 
         myClusterManager = new ClusterManager<>( this ,mGoogleMap);
         mGoogleMap.setOnCameraIdleListener( myClusterManager );
@@ -232,18 +231,13 @@ public class ClusterMap extends AppCompatActivity
 
         addItem();
     }
+
+    //ClusterMap용 addItem실질적으로 마커를 찍는부분
     private void addItem(){
         double lat = 35.2706008;
         double lng = 128.01357559999997;
-
-        for(int i = 0; i < 10 ; i ++){
-            double offset = i/60d;
-            lat = lat + offset;
-            lng = lng + offset;
             MyItem offsetItem = new MyItem( lat,lng );
             myClusterManager.addItem( offsetItem );
-
-        }
     }
 
     @Override
