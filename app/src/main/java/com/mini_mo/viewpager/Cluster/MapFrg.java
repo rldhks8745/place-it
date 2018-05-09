@@ -38,6 +38,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
@@ -274,6 +275,8 @@ public class MapFrg extends Fragment
 
                     Log.d( TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화" );
                     mMoveMapByAPI = false;
+
+                    getVisibleRegion();
                 }
 
                 mMoveMapByUser = true;
@@ -285,21 +288,23 @@ public class MapFrg extends Fragment
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
         addItem2();
+        getVisibleRegion();
 
     }
+    //디바이스에 출력되는 지도 범위
+    public LatLngBounds getVisibleRegion() {
+        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+        Log.d("TEST", bounds.toString());
+        return bounds;
+    }
+    //MapFrg용 실질적으로 마커를 찍는부분
     public void addItem2(){
         double lat = 35.2706008;
         double lng = 128.01357559999997;
-
-        for(int i = 0; i < 10 ; i ++){
-            double offset = i/60d;
-            lat = lat + offset;
-            lng = lng + offset;
             MyItem offsetItem2 = new MyItem( lat,lng );
             mClusterManager.addItem( offsetItem2 );
 
         }
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
