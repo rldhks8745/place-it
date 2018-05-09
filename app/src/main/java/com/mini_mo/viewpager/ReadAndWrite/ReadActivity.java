@@ -197,7 +197,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     10); // 얻어올 값의 개수
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+            Log.e("test", "server err - location read err");
         }
         String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
 

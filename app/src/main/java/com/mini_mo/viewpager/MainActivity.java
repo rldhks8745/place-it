@@ -1,4 +1,4 @@
-﻿package com.mini_mo.viewpager;
+package com.mini_mo.viewpager;
 
 import android.content.Intent;
 import android.os.Bundle;

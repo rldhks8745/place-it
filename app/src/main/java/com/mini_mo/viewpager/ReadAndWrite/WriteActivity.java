@@ -64,7 +64,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean isAccessCoarseLocation = false;
 
-    private boolean isPermission = false;
+    private boolean isPermission = true;
 
     private GpsInfo gps;
 
@@ -120,7 +120,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
 
 
-
         send.setOnClickListener(this);
         back.setOnClickListener(this);
         img.setOnClickListener(this);
@@ -157,17 +156,21 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.research:
+                LoadingDialog resuarchDialog = new LoadingDialog();
+                resuarchDialog.progressON( this, "위치 찾는 중..." );
+
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
 
 
 
                 // 권한 요청을 해야 함
-
-                if (!isPermission) {
+                /*if (!isPermission) {
                     callPermission();
+                    //Toast.makeText(getApplicationContext(),"aaaa",Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
+
 
                 gps = new GpsInfo(WriteActivity.this);
 
@@ -179,11 +182,14 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                     location.setText( getAddress(latitude,longitude));
 
+
                 } else {
                     // GPS 를 사용할수 없으므로
                     gps.showSettingsAlert();
 
                 }
+
+                resuarchDialog.progressOFF();
 
                 break;
 
@@ -381,7 +387,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     10); // 얻어올 값의 개수
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+            Log.e("test", "server err - location read err");
         }
         String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
 
