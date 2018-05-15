@@ -165,7 +165,7 @@ public class Data {
         return fl;
     }
 
-    public ArrayList<read_list_board> read_board_listdouble (double min_lat, double max_lat, double min_lon, double max_lon) throws JSONException
+    public ArrayList<read_list_board> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng) throws JSONException
     {
         ArrayList<read_list_board> fl = new ArrayList<read_list_board>();
         int f_cnt = 0;
@@ -176,8 +176,8 @@ public class Data {
         obj.put("flag", "read_board_list");
         u_n.put("min_lat", min_lat);
         u_n.put("max_lat", max_lat);
-        u_n.put("min_lon", min_lon);
-        u_n.put("max_lon", max_lon);
+        u_n.put("min_lon", min_lng);
+        u_n.put("max_lon", max_lng);
 
         obj.put("read_board_list_data", u_n);
 
