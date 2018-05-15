@@ -1,7 +1,5 @@
 package com.mini_mo.viewpager.DAO;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 
 /**
@@ -24,10 +22,5 @@ public class ReadBoardInfo {
     public int good;
     public int hits;
 
-    //public ReadBoardInfo readBoardInfo(int 게시글번호){
-
-    // return ReadBoardInfo;
-
-    //}
 
 }

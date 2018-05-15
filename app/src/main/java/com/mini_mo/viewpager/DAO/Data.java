@@ -1,9 +1,6 @@
 package com.mini_mo.viewpager.DAO;
 
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,13 +16,391 @@ public class Data {
 
     }
 
-    public String test(String photo_url)
+    public String membership(String user_id, String passwd, String birth) throws JSONException
     {
-        Log.i("test",photo_url);
-        new Imagehttp(photo_url, "14", "board_num").execute();
-        Log.i("test",photo_url+"asdasdafas");
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
 
-        return "-12";
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("user_id",user_id);
+        login_data.put("passwd",passwd);
+        login_data.put("birth",birth);
+
+        jobj.put("flag","membership");
+        jobj.put("membership_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+    }
+
+
+    public String check_Id(String ID) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("ID",ID);
+
+        jobj.put("flag","check_Id");
+        jobj.put("check_Id_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+    public User_Info read_myPage(String user_name)  throws JSONException
+    {
+        User_Info fl = new User_Info();
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_myPage");
+        u_n.put("user_name", user_name);
+
+        obj.put("read_myPage_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+
+        fl.user_id = result.getString("user_id");
+        fl.date_birth = result.getString("date_birth");
+        fl.date_member = result.getString("date_member");
+        fl.user_photo = result.getString("user_photo");
+        fl.massage = result.getString("massage");
+
+
+
+        return fl;
+    }
+
+    public ArrayList<read_list_board> read_myBoard (String user_name, int limit) throws JSONException
+    {
+        ArrayList<read_list_board> fl = new ArrayList<read_list_board>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_myboard");
+        u_n.put("user_name", user_name);
+        u_n.put("limit", limit);
+
+        obj.put("read_myboard_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("read_board_list_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_board_list_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                read_list_board t = new read_list_board();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num");
+                t.content = tjo.getString("content");
+                t.date_board = tjo.getString("date_board");
+                t.good = tjo.getInt("good");
+                t.latitude = tjo.getDouble("board_latitude");
+                t.longitude = tjo.getDouble("board_longitude");
+                t.user_id = tjo.getString("user_id");
+                t.user_photo = tjo.getString("user_photo");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+    }
+
+    public ArrayList<read_list_board> read_board_listdouble (double min_lat, double max_lat, double min_lon, double max_lon) throws JSONException
+    {
+        ArrayList<read_list_board> fl = new ArrayList<read_list_board>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_board_list");
+        u_n.put("min_lat", min_lat);
+        u_n.put("max_lat", max_lat);
+        u_n.put("min_lon", min_lon);
+        u_n.put("max_lon", max_lon);
+
+        obj.put("read_board_list_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("read_board_list_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_board_list_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                read_list_board t = new read_list_board();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num");
+                t.content = tjo.getString("content");
+                t.date_board = tjo.getString("date_board");
+                t.good = tjo.getInt("good");
+                t.latitude = tjo.getDouble("board_latitude");
+                t.longitude = tjo.getDouble("board_longitude");
+                t.user_id = tjo.getString("user_id");
+                t.user_photo = tjo.getString("user_photo");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+
+    }
+
+
+    public ArrayList<Board_Location> read_board_location(double min_lat, double max_lat, double min_lon, double max_lon) throws JSONException
+    {
+        ArrayList<Board_Location> fl = new ArrayList<Board_Location>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_board_location");
+        u_n.put("min_lat", min_lat);
+        u_n.put("max_lat", max_lat);
+        u_n.put("min_lon", min_lon);
+        u_n.put("max_lon", max_lon);
+
+        obj.put("read_board_location_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("read_board_location_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_board_location_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                Board_Location t = new Board_Location();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.latitude = tjo.getDouble("board_latitude");
+                t.longitude = tjo.getDouble("board_longitude");
+                t.board_count = tjo.getInt("board_count");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+    }
+
+
+
+    public String add_friends(String id_applicant, String id_respondent) throws JSONException
+    {
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject f_d = new JSONObject();
+
+        obj.put("flag", "add_friends");
+        f_d.put("id_applicant",id_applicant);
+        f_d.put("id_respondent", id_respondent);
+        obj.put("add_friends_data",f_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
+
+    public ArrayList<FriendsList> readFriends(String user_name) throws JSONException
+    {
+        ArrayList<FriendsList> fl = new ArrayList<FriendsList>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_friends");
+        u_n.put("user_name", user_name);
+        obj.put("read_friends_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("friends_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_friends_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                FriendsList t = new FriendsList();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.user_id = tjo.getString("user_id");
+                t.user_photo = tjo.getString("user_photo");
+                t.message = tjo.getString("message");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+    }
+
+
+
+    public ArrayList<ReadCommentInfo> readComment(String board_num) throws JSONException {
+        ArrayList<ReadCommentInfo> rci = new ArrayList<ReadCommentInfo>();
+        int com_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject b_n = new JSONObject();
+
+        obj.put("flag", "read_comment");
+        b_n.put("Board_num", board_num);
+        obj.put("read_comment_data", b_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        com_cnt = result.getInt("com_count");
+
+        if (com_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_comment_data");
+            for (int i = 0; i < com_cnt; i++)
+            {
+                ReadCommentInfo t = new ReadCommentInfo();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num")+"";
+                t.comment_num = tjo.getInt("comment_num")+"";
+                t.comment_date = tjo.getString("comment_date");
+                t.comment_content = tjo.getString("comment_content");
+                t.comment_id = tjo.getString("comment_id");
+                t.user_photo = tjo.getString("user_photo");
+
+                rci.add(t);
+            }
+        }
+
+        return rci;
+
+    }
+
+
+    public String writeComment(String board_num, String user_id, String content) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "write_comment");
+        c_d.put("Board_num",board_num);
+        c_d.put("user_name", user_id);
+        c_d.put("content", content);
+        obj.put("write_comment_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
     }
 
 
@@ -42,15 +417,14 @@ public class Data {
 
         try
         {
-            result = new JSONObject(new ConHttpJson().execute(obj).get().toString());
+            result = new ConHttpJson().execute(obj).get();
 
-            result.getString("result");
+            //result.getString("result");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         /*
         j.put("board_num",rs.getInt(1));
         j.put("content",rs.getString(2));
@@ -64,15 +438,7 @@ public class Data {
 
 */
 
-         String userid;
-         String profile;
-         int boardnumber;
-         String title;
-         int imgcount;
-         ArrayList<Bitmap> imglist;
-         String location; // EX: 대구광역시 북구 복현동
-         String date; //YYYY-MM-DD HH:MM
-         int like_count;
+        result = new JSONObject(result.getString("result"));
 
         if(result != null)
         {
@@ -86,22 +452,26 @@ public class Data {
             rbi.user_id = result.getString("user_id");
             rbi.user_photo = result.getString("user_photo");
 
-            if(result.getString("b_photos")!=null)
+            int count = result.getInt("img_count");
+
+            if(count > 0)
             {
                 JSONArray ja = new JSONArray(result.getString("b_photos"));
-                for(int i = 0;ja.getJSONObject(i) != null;i++)
+                rbi.b_photos = new ArrayList<String>();
+                for(int i = 0; i < count;i++) //ja.getJSONObject(i)
                 {
                     rbi.b_photos.add(ja.getJSONObject(i).getString("board_photo"));  //ja.getJSONObject(i)
                 }
             }
         }
 
+
         return rbi;
     }
 
 
 
-    public String writeBorard(String Content, String user_name, String tag, double latitude ,double longitute, ArrayList<String> urls) throws JSONException {
+    public String writeBorard(String Content, String user_name, String tag, double latitude , double longitute, ArrayList<String> urls) throws JSONException {
         String r = "-3";
         String board_number = "-30";
 
@@ -123,6 +493,8 @@ public class Data {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+
 
         if(result != null)
         {
@@ -174,15 +546,6 @@ public class Data {
 
         return r;
     }
-
-    public Bitmap test_bitmap(Bitmap bit)
-    {
-
-
-
-        return bit;
-    }
-
 
 
 }
