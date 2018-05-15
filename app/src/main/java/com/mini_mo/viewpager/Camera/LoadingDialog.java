@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-//import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mini_mo.viewpager.R;
 
 /**
@@ -40,11 +41,10 @@ public class LoadingDialog {
             progressDialog.show();
         }
 
-        final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
-
-        /*GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget( img_loading_frame );
-
-        Glide.with( activity ).load(R.drawable.loading1 ).into(imageViewTarget);*/
+        Glide.with( progressDialog.getContext() )
+                .load( R.drawable.loading1 )
+                .apply( RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE) )
+                .into(( ImageView)progressDialog.findViewById(R.id.iv_frame_loading) );
 
         TextView tv_progress_message = (TextView) progressDialog.findViewById(R.id.tv_progress_message);
         if (!TextUtils.isEmpty(message)) {
