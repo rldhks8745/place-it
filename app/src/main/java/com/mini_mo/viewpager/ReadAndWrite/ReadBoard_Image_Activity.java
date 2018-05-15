@@ -1,6 +1,7 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -9,6 +10,9 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
+
+import java.util.ArrayList;
 
 
 /**
@@ -18,7 +22,7 @@ import com.mini_mo.viewpager.R;
 public class ReadBoard_Image_Activity extends AppCompatActivity {
 
     ViewPager viewPager;
-    int[] image;
+    ArrayList<Bitmap> image;
     Intent intent;
 
 
@@ -30,18 +34,7 @@ public class ReadBoard_Image_Activity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        image = new int[10];
-
-        intent = getIntent();
-        int num = intent.getExtras().getInt("number");
-
-        for(int i=0; i < 10; i++){
-            Log.e("for mCon Tack","index");
-            intent = getIntent();
-            String key = "image"+String.valueOf(i);
-            image[i] = intent.getExtras().getInt(key);
-
-        }
+        image = Store.readboard_image;
 
         viewPager.setAdapter(new MyViewPagerAdaper(getSupportFragmentManager(),image));
     }

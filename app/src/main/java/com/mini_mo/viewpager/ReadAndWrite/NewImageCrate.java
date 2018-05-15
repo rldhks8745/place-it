@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.mini_mo.viewpager.R;
 
 /**

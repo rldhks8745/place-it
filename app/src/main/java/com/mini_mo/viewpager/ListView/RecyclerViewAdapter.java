@@ -14,11 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.mini_mo.viewpager.MainActivity;
-import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
-import com.mini_mo.viewpager.ReadAndWrite.Store;
+import com.mini_mo.viewpager.Store;
 
 import java.util.ArrayList;
 
