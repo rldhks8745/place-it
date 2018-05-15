@@ -12,6 +12,8 @@
       <module fileurl="file://E:\AndroidStudioProjects\place it\place-it.iml" filepath="E:\AndroidStudioProjects\place it\place-it.iml" />
       <module fileurl="file://D:\Capstone Design\place-it-master\place-it\place-it.iml" filepath="D:\Capstone Design\place-it-master\place-it\place-it.iml" />
       <module fileurl="file://K:\AndroidStudioProjects\place it\place-it.iml" filepath="K:\AndroidStudioProjects\place it\place-it.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/place-it.iml" filepath="$PROJECT_DIR$/place-it.iml" />
     </modules>
   </component>
 </project>
