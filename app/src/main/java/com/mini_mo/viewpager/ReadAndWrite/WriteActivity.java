@@ -305,9 +305,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
-                                    realPath.add( getRealPathFromURI(clipData.getItemAt(0).getUri()));
+                                    realPath.add( getRealPathFromURI(clipData.getItemAt(i).getUri()));
 
-                                    imgurl.add(realPath.get(0).toString());
+                                    imgurl.add(realPath.get(i).toString());
 
                                     Uri uri = clipData.getItemAt(i).getUri();
 
