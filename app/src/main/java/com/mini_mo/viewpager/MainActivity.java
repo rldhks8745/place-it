@@ -1,6 +1,8 @@
 package com.mini_mo.viewpager;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import com.mini_mo.viewpager.Camera.CameraActivity;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
+import com.mini_mo.viewpager.Login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -110,6 +113,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_logout) {
+            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE); //로그아웃 버튼 클릭시
+            SharedPreferences.Editor editor = auto.edit();
+            editor.clear(); //안에 내용 다 지움
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class); // 로그인 액티비티로 이동
+            startActivity(intent);
+            finish();
 
         }
 

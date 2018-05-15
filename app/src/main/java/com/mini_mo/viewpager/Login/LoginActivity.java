@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
 import org.json.JSONException;
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             {
                 Toast.makeText(getApplicationContext(),"기존 계정으로 로그인합니다.", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(getApplicationContext(), Testactivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
 
                 finish();
@@ -93,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(),"로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(getApplicationContext(), Testactivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
 
                     finish();
