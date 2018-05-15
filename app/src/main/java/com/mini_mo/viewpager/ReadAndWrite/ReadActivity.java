@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -35,6 +36,9 @@ import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +47,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
+
+    InputStream inputStream;
     //실험용
 
 
@@ -85,31 +91,39 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         //실험
 
+        Store.readboard_image.clear();
+
         try {
-            rbi = new Data().readBoardInfo("16");
+            rbi = new Data().readBoardInfo("19");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         content.setText(rbi.content);
 
-        Log.i("URL",rbi.b_photos.get(0));
-
-        //Glide.with(getApplicationContext()).load("http://39.127.8.20:8080/PlitImage/20180417_171156.jpg").into(aaa);
-
+        //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
         for(int i=0;i<rbi.b_photos.size();i++) {
-            Drawable d = new BitmapDrawable(rbi.b_photos.get(i));
              //실험용
+
 
             Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             imgarrlist.addListresult(newImageCreate(resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+
                             Store.readboard_image.add(resource);
                             imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
                         }
                     });
+
+
+        }
+
+
+        for(int i=0;i<imgarrlist.getSize();i++) {
+            imgarrlist.getListresult(i).setId(i);
+            imgarrlist.getListresult(i).setOnClickListener(this);
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
@@ -135,15 +149,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         comment.setOnClickListener(this);
         like_button.setOnClickListener(this);
 
-        //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        gps.setText( AddressTransformation.getAddress(this,37.57,126.97));
     }
 
     @SuppressLint("ResourceType")
     @Override
     public void onClick(View v) {
 
-        if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
+        if(0<=v.getId() && v.getId() <= imgarrlist.getSize()){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
+            Log.i("Click","클릭 하셨습니다.");
+
             Intent intent = new Intent(this,ReadBoard_Image_Activity.class);
             intent.putExtra("number",0);
 
@@ -217,6 +231,21 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         img.setLayoutParams(new LinearLayout.LayoutParams(margin));
 
         return img;
+    }
+
+    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+    public Bitmap ReSizing(Bitmap bitmap, URL url){
+
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opt.inSampleSize = 12;
+        opt.inDither = true;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inTempStorage = new byte[32 * 1024];
+        bitmap = BitmapFactory.decodeFile(String.valueOf(url), opt);
+
+        return bitmap;
     }
 
 }
