@@ -134,6 +134,22 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
+        if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
+
+            Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
+
+            imgarrlist.removeListresult(v.getId());
+            imglist.removeViewAt(v.getId()+1);
+
+            for(int i=0;i<imgarrlist.getSize();i++){
+                if(imgarrlist.getListresult(i).getId() > v.getId()){
+                    imgarrlist.getListresult(i).setId(imgarrlist.getListresult(i).getId()-1);
+                }
+            }
+
+            imgcount.setText(String.valueOf(imgarrlist.getSize()));
+        }
+
         switch (v.getId()) {
             case R.id.back:
                 finish();
