@@ -168,32 +168,34 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
 
 
-                // 권한 요청을 해야 함
-                /*if (!isPermission) {
+
+                if (!isPermission) {
                     callPermission();
-                    //Toast.makeText(getApplicationContext(),"aaaa",Toast.LENGTH_SHORT).show();
                     return;
-                }*/
+                }
 
 
                 gps = new GpsInfo(WriteActivity.this);
 
                 // GPS 사용유무 가져오기
                 if (gps.isGetLocation()) {
+                    resuarchDialog.progressOFF();
 
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
 
-                    location.setText( getAddress(latitude,longitude));
+                    location.setText( AddressTransformation.getAddress(this,latitude,longitude));
+
 
 
                 } else {
                     // GPS 를 사용할수 없으므로
+                    resuarchDialog.progressOFF();
                     gps.showSettingsAlert();
 
                 }
 
-                resuarchDialog.progressOFF();
+
 
                 break;
 
@@ -258,7 +260,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                imgarrlist.addListresult(newImageCreate(ReSizing(uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -278,7 +280,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = clipData.getItemAt(0).getUri();
 
-                                imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -295,9 +297,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                     imgurl.add(realPath.get(0).toString());
 
-                                    Uri uri = clipData.getItemAt(0).getUri();
+                                    Uri uri = clipData.getItemAt(i).getUri();
 
-                                    imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
+                                    imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
                                     imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
                                     imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -340,75 +342,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return cursor.getString(column_index);
-    }
-
-    public ImageButton newImageCreate(){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setBackgroundResource(R.drawable.plus);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageButton newImageCreate(Bitmap bitmap){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setImageBitmap(bitmap);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        imgv.getLayoutParams().width = 200;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageCreate(ImageView imgv){
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        //imgv.getLayoutParams().height = GridLayout.LayoutParams.MATCH_PARENT;
-        //imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
-
-        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
-        margin.setMargins(left, top, right, bottom);
-        img.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-        return img;
-    }
-
-    public String getAddress(double latitude, double longitude){
-
-        List<Address> list = null;
-        try {
-            //위도 받기
-            //경도 받기
-
-            list = geocoder.getFromLocation(
-                    latitude, // 위도
-                    longitude, // 경도
-                    10); // 얻어올 값의 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", "server err - location read err");
-        }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
-
-        return str;
     }
 
     public Bitmap ReSizing(Uri uri){

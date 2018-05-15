@@ -96,7 +96,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             Drawable drawable = getResources().getDrawable(R.drawable.test);
 
-            imgarrlist.addListresult(newImageCreate(drawable)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다.
+            imgarrlist.addListresult(NewImageCrate.newImageCreate(this, drawable)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다.
 
             //url을 받아오면 그걸 비트맵으로 바꿔주고 그걸 drawable로 변환
             /*Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -120,7 +120,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         like_button.setOnClickListener(this);
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        gps.setText( getAddress(37.57,126.97));
+        gps.setText( AddressTransformation.getAddress(this,37.57,126.97));
     }
 
     @SuppressLint("ResourceType")
@@ -183,82 +183,5 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         finish();
         super.onBackPressed();
     }
-
-    public String getAddress(double latitude, double longitude){
-
-        List<Address> list = null;
-        try {
-            //위도 받기
-            //경도 받기
-
-            list = geocoder.getFromLocation(
-                    latitude, // 위도
-                    longitude, // 경도
-                    10); // 얻어올 값의 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", "server err - location read err");
-        }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
-
-        return str;
-    }
-
-
-
-
-    public ImageButton newImageCreate(){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setBackgroundResource(R.drawable.plus);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageButton newImageCreate(Drawable drawable){
-        ImageButton imgv = new ImageButton(this);
-
-
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 300;
-        imgv.getLayoutParams().width = 300;
-        imgv.setBackgroundColor(Color.parseColor("#ffffff"));
-        imgv.setImageDrawable(drawable);
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageCreate(ImageView imgv){
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
-
-        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
-        margin.setMargins(left, top, right, bottom);
-        img.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-        return img;
-    }
-
 
 }
