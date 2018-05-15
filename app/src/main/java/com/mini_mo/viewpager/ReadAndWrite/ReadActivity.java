@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
@@ -198,10 +199,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         ImageButton imgv = new ImageButton(this);
 
         imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setImageBitmap(bitmap);
         imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        imgv.getLayoutParams().width = 200;
+        imgv.getLayoutParams().height = 400;
+        imgv.getLayoutParams().width = 400;
+        imgv.setBackgroundColor(Color.parseColor("#ffffff"));
+        imgv.setImageBitmap(bitmap);
 
         newImageMargin(imgv,40,40,0,50);
 
