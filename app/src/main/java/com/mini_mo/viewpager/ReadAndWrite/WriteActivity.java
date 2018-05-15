@@ -2,7 +2,6 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,9 +9,7 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +19,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,16 +31,13 @@ import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
-import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
 import org.json.JSONException;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sasor on 2018-04-25.
@@ -76,6 +67,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     //실험
     TextView imgcount;
+
+    double latitude;
+    double longitude;
     //실험
 
     Data data;
@@ -112,6 +106,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         //실험
         imgcount = (TextView)findViewById(R.id.imgcount);
+
+        latitude = 0.0;
+        longitude = 0.0;
         //실험
 
         send = (ImageButton)findViewById(R.id.send);
@@ -156,22 +153,21 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.send:
-                LoadingDialog loadingDialog = new LoadingDialog();
-                loadingDialog.progressON( this, "보내는 중..." );
+                /*LoadingDialog loadingDialog = new LoadingDialog();
+                loadingDialog.progressON( this, "보내는 중..." );*/
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
 
                 try {
-                    data.writeBorard(content.getText().toString(), "aaa", "", 37.000 ,128.000, imgurl);
+                    data.writeBorard(content.getText().toString(), "aaa", "", latitude ,longitude, imgurl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-
-                    loadingDialog.progressOFF();
+                    //loadingDialog.progressOFF();
                     finish();
                 }
 
-                loadingDialog.progressOFF();
+                //loadingDialog.progressOFF();
                 finish();
                 break;
 
@@ -197,8 +193,8 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 if (gps.isGetLocation()) {
                     resuarchDialog.progressOFF();
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
+                    latitude = gps.getLatitude();
+                    longitude = gps.getLongitude();
 
                     location.setText( AddressTransformation.getAddress(this,latitude,longitude));
 

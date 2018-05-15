@@ -42,10 +42,15 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.read_list_board;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,8 +62,7 @@ public class MapFrg extends Fragment
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener
-{
+        LocationListener {
 
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
@@ -78,6 +82,8 @@ public class MapFrg extends Fragment
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
+    ArrayList<read_list_board> read;
+
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -86,8 +92,7 @@ public class MapFrg extends Fragment
 
     private MapView mapView = null;
 
-    public MapFrg()
-    {
+    public MapFrg() {
         // required
     }
 
@@ -103,7 +108,7 @@ public class MapFrg extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.activity_map, container, false);
 
-        mapView = (MapView)layout.findViewById(R.id.map);
+        mapView = (MapView) layout.findViewById(R.id.map);
         mapView.getMapAsync(this);
 
         return layout;
@@ -114,7 +119,7 @@ public class MapFrg extends Fragment
         super.onStart();
         mapView.onStart();
 
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected() == false){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() == false) {
 
             Log.d(TAG, "onStart: mGoogleApiClient connect");
             mGoogleApiClient.connect();
@@ -132,7 +137,7 @@ public class MapFrg extends Fragment
             stopLocationUpdates();
         }
 
-        if ( mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
 
             Log.d(TAG, "onStop : mGoogleApiClient disconnect");
             mGoogleApiClient.disconnect();
@@ -191,14 +196,13 @@ public class MapFrg extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         //액티비티가 처음 생성될 때 실행되는 함수
-        mGoogleApiClient = new GoogleApiClient.Builder( MainActivity.getInstance() )
+        mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.getInstance())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
-        if(mapView != null)
-        {
+        if (mapView != null) {
             mapView.onCreate(savedInstanceState);
         }
     }
@@ -209,10 +213,10 @@ public class MapFrg extends Fragment
 
             Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
-        }else {
+        } else {
 
-            if (ActivityCompat.checkSelfPermission( MainActivity.getInstance() , Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission( MainActivity.getInstance() , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
@@ -230,10 +234,9 @@ public class MapFrg extends Fragment
     }
 
 
-
     private void stopLocationUpdates() {
 
-        Log.d(TAG,"stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
+        Log.d(TAG, "stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mRequestingLocationUpdates = false;
     }
@@ -243,37 +246,37 @@ public class MapFrg extends Fragment
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ) );
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
 
-        mGoogleMap.setOnMyLocationButtonClickListener( new GoogleMap.OnMyLocationButtonClickListener() {
+        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
 
             @Override
             public boolean onMyLocationButtonClick() {
 
-                Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화" );
+                Log.d(TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화");
                 mMoveMapByAPI = true;
                 return true;
             }
-        } );
-        mGoogleMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
+        });
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng latLng) {
 
-                Log.d( TAG, "onMapClick :" );
+                Log.d(TAG, "onMapClick :");
             }
-        } );
+        });
 
-        mGoogleMap.setOnCameraMoveStartedListener( new GoogleMap.OnCameraMoveStartedListener() {
+        mGoogleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
 
             @Override
             public void onCameraMoveStarted(int i) {
 
                 if (mMoveMapByUser == true && mRequestingLocationUpdates) {
 
-                    Log.d( TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화" );
+                    Log.d(TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화");
                     mMoveMapByAPI = false;
 
                     getVisibleRegion();
@@ -282,20 +285,36 @@ public class MapFrg extends Fragment
                 mMoveMapByUser = true;
 
             }
-        } );
+        });
 
-        mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
-        mGoogleMap.setOnCameraIdleListener( mClusterManager );
-        mGoogleMap.setOnMarkerClickListener( mClusterManager );
-        addItem2();
-        getVisibleRegion();
+        mClusterManager = new ClusterManager<>(this.getActivity(), mGoogleMap);
+        mGoogleMap.setOnCameraIdleListener(mClusterManager);
+        mGoogleMap.setOnMarkerClickListener(mClusterManager);
+        addItem2();//마커 찍기
+        getVisibleRegion();//DB에 남서단 동북단 좌표를 보내고 글 read리스트에 저장하기
+
+
 
     }
+
     //디바이스에 출력되는 지도 범위
-    public LatLngBounds getVisibleRegion() {
+    public void getVisibleRegion() {
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d("TEST", bounds.toString());
-        return bounds;
+        double max_lat, max_lng, min_lat, min_lng;
+        max_lat = bounds.northeast.latitude;
+        max_lng = bounds.northeast.longitude;
+        min_lat = bounds.southwest.latitude;
+        min_lng = bounds.southwest.longitude;
+
+        Data data = new Data();
+        try {
+            read = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     //MapFrg용 실질적으로 마커를 찍는부분
     public void addItem2(){
