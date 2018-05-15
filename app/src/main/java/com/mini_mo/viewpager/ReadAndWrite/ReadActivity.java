@@ -55,7 +55,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     TextView gps,like_count;
     Animation ani=null;
     Bitmap bitmap = null;
-    int boardnumber;
+    String boardnumber;
 
     int count_state,total_count;
 
@@ -89,8 +89,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         profile.setImageDrawable(roundedBitmapDrawable);
 
-        // Intent intent = getIntent();
-        //boardnumber = intent.getExtras().getInt("boardnumber");
+        /*Intent intent = getIntent();
+        boardnumber = intent.getExtras().getString("Board_num");*/
 
         for(int i=0;i<10;i++) {
 

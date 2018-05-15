@@ -74,6 +74,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
 
+    //실험
+    TextView imgcount;
+    //실험
+
     Data data;
 
     Geocoder geocoder = null;
@@ -90,7 +94,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     ImageList imgarrlist;
     ImageView tempimg;
     EditText content;
-    int imgcount;
     InputStream inputStream;
 
     ArrayList<String> imgurl;
@@ -107,6 +110,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         data = new Data();
         imgurl = new ArrayList<>();
 
+        //실험
+        imgcount = (TextView)findViewById(R.id.imgcount);
+        //실험
+
         send = (ImageButton)findViewById(R.id.send);
         back = (ImageButton)findViewById(R.id.back);
         research = (ImageButton)findViewById(R.id.research);
@@ -116,9 +123,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         content = (EditText)findViewById(R.id.content);
 
         imgarrlist = new ImageList();
-        imgcount = 0;
-
-
 
         send.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -248,15 +252,20 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             ClipData clipData = data.getClipData();
                             if(data.getClipData() == null){
-                                realPath.add( getRealPathFromURI(data.getData()));
+                                realPath.add( getRealPathFromURI(data.getData())); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
 
-                                imgurl.add(realPath.get(0).toString());
+                                imgurl.add(realPath.get(0).toString()); //imgurl 이라는 arraylist에 절대경로를 넣어준다.
 
-                                Uri uri = data.getData();
+                                Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
+                                imgarrlist.addListresult(newImageCreate(ReSizing(uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
-                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+
+                                imgcount.setText(String.valueOf(imgarrlist.getSize())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
 
                             }else if(clipData.getItemCount() > 10){
                                 Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
@@ -270,24 +279,32 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                                 Uri uri = clipData.getItemAt(0).getUri();
 
                                 imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
-                                imgarrlist.getListresult(imgarrlist.getSize()-1).setOnClickListener(this);
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
 
                                 imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                imgcount.setText(String.valueOf(imgarrlist.getSize()));
 
 
 
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
-                                    realPath.add( getRealPathFromURI(clipData.getItemAt(i).getUri()));
+                                    realPath.add( getRealPathFromURI(clipData.getItemAt(0).getUri()));
 
-                                    imgurl.add(realPath.get(i).toString());
+                                    imgurl.add(realPath.get(0).toString());
 
-                                    Uri uri = clipData.getItemAt(i).getUri();
+                                    Uri uri = clipData.getItemAt(0).getUri();
 
                                     imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
-                                    imgarrlist.getListresult(imgarrlist.getSize()-1).setOnClickListener(this);
+                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
 
                                     imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                    imgcount.setText(String.valueOf(imgarrlist.getSize()));
 
                                 }
 
