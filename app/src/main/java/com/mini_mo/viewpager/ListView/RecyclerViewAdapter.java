@@ -14,10 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.mini_mo.viewpager.MainActivity;
-import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
+import com.mini_mo.viewpager.Store;
 
 import java.util.ArrayList;
 
@@ -94,6 +93,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
                 instance.startActivity(intent);
+                Store.board_num = 1; // 게시글번호를 서버에서 받으면 이쪽에 넣어주기
                 instance.getActivity().overridePendingTransition(R.anim.goup, R.anim.godown);
             }
         });

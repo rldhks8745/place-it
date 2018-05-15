@@ -41,8 +41,6 @@ public class LoadingDialog {
             progressDialog.show();
         }
 
-       // final ImageView img_loading_frame = (ImageView) progressDialog.findViewById(R.id.iv_frame_loading);
-
         Glide.with( progressDialog.getContext() )
                 .load( R.drawable.loading1 )
                 .apply( RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE) )

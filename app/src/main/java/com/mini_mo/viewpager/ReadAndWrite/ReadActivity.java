@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -27,20 +25,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mini_mo.viewpager.MainActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
-import java.io.IOException;
+import org.json.JSONException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener{
 
     //실험용
-    int[] image = new int[10];
-
+    com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
     //실험용
 
 
@@ -55,7 +56,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     TextView gps,like_count;
     Animation ani=null;
     Bitmap bitmap = null;
-    int boardnumber;
+    String boardnumber;
+
+    TextView content;
 
     int count_state,total_count;
 
@@ -77,7 +80,43 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         imgarrlist = new ImageList();
         imglist = (LinearLayout)findViewById(R.id.ll);
 
+        content = (TextView)findViewById(R.id.title);
 
+        //실험
+
+        try {
+            rbi = new Data().readBoardInfo("16");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        content.setText(rbi.content);
+
+        Log.i("URL",rbi.b_photos.get(0));
+
+        //Glide.with(getApplicationContext()).load("http://39.127.8.20:8080/PlitImage/20180417_171156.jpg").into(aaa);
+
+        for(int i=0;i<rbi.b_photos.size();i++) {
+            Drawable d = new BitmapDrawable(rbi.b_photos.get(i));
+             //실험용
+
+            Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            imgarrlist.addListresult(newImageCreate(resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                            Store.readboard_image.add(resource);
+                            imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
+                        }
+                    });
+        }
+
+        //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
+        gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
+        time.setText(rbi.date);
+        like_count.setText(String.valueOf(rbi.good));
+
+        //실험
 
 
         count_state = 0; //DB에서 자기가 이 글에 대해 좋아요 눌렀는 지, 안눌렀는지 알아와야됩니다. (0대신 가져온 값/ 0: FLASE , 1: TRUE)
@@ -89,30 +128,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         profile.setImageDrawable(roundedBitmapDrawable);
 
-        // Intent intent = getIntent();
-        //boardnumber = intent.getExtras().getInt("boardnumber");
-
-        for(int i=0;i<10;i++) {
-
-            Drawable drawable = getResources().getDrawable(R.drawable.test);
-
-            imgarrlist.addListresult(newImageCreate(drawable)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다.
-
-            //url을 받아오면 그걸 비트맵으로 바꿔주고 그걸 drawable로 변환
-            /*Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            Drawable drawable = new BitmapDrawable(bitmap);*/
-
-            //받은 사진들을 Arraylist에 담아 크기를 구해주고
-
-            image[i] = R.drawable.test; //실험용  drawable 은 int 형이기 떄문에 나중에 DB연동할떈 STRING으로 바꿔야된다
-
-            imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-
-            imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
-
-            imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1)); // 마지막으로 ll이라는 리스트뷰에 넣어준다.
-        }
-
 
         time.setText(getDate());
         back.setOnClickListener(this);
@@ -120,7 +135,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         like_button.setOnClickListener(this);
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        gps.setText( getAddress(37.57,126.97));
+        gps.setText( AddressTransformation.getAddress(this,37.57,126.97));
     }
 
     @SuppressLint("ResourceType")
@@ -131,11 +146,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this,ReadBoard_Image_Activity.class);
             intent.putExtra("number",0);
 
-            for(int i=0; i < 10; i++){ //나중에 i< 10 부분을 i < arraylist.size 로 바꿔줘야됨
-                Log.e("for mCon Tack","index");
-                String key = "image"+String.valueOf(i);
-                intent.putExtra(key, image[i]);
-            }
             startActivity(intent);
         }
 
@@ -184,74 +194,21 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-    public String getAddress(double latitude, double longitude){
-
-        List<Address> list = null;
-        try {
-            //위도 받기
-            //경도 받기
-
-            list = geocoder.getFromLocation(
-                    latitude, // 위도
-                    longitude, // 경도
-                    10); // 얻어올 값의 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
-        }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
-
-        return str;
-    }
-
-
-
-
-    public ImageButton newImageCreate(){
+    public ImageButton newImageCreate(Bitmap bitmap){
         ImageButton imgv = new ImageButton(this);
 
         imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setBackgroundResource(R.drawable.plus);
+        imgv.setImageBitmap(bitmap);
         imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
 
+        imgv.getLayoutParams().width = 200;
 
         newImageMargin(imgv,40,40,0,50);
 
         return imgv;
     }
 
-    public ImageButton newImageCreate(Drawable drawable){
-        ImageButton imgv = new ImageButton(this);
-
-
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 300;
-        imgv.getLayoutParams().width = 300;
-        imgv.setBackgroundColor(Color.parseColor("#ffffff"));
-        imgv.setImageDrawable(drawable);
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageCreate(ImageView imgv){
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
+    public static ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
 
         ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
         margin.setMargins(left, top, right, bottom);
@@ -259,6 +216,5 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         return img;
     }
-
 
 }

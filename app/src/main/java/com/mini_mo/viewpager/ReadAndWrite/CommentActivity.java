@@ -15,8 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+
+import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +29,8 @@ import java.util.Date;
  */
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
+
+    Data data;
 
     ImageButton back =null, send = null;
     Animation ani=null;
@@ -49,10 +54,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
         roundedBitmapDrawable.setCircular(true);
 
-        for(int i=0;i<1;i++)
+        data = new Data();
 
-            myadapter.addItem(roundedBitmapDrawable,"안녕하세요!","2018");
-
+        /*try {
+            data.readComment(String.valueOf(Store.board_num));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
 
 
         comment_list.setAdapter(myadapter);

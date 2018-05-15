@@ -63,6 +63,11 @@
 
         <!-- Map Activity ( 주재현 ) -->
         <activity android:name=".Cluster.ClusterMap"/>
+
+        <!-- Map Activity ( 주재현 ) -->
+        <activity android:name=".Login.LoginActivity"/>
+        <activity android:name=".Login.Membershipactivity"/>
+        <activity android:name=".Login.Testactivity"/>
     </application>
 
 </manifest>

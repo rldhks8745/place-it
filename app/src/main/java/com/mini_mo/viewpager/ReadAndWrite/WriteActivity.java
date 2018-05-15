@@ -2,7 +2,6 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,9 +9,7 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +19,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,16 +31,13 @@ import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
-import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
 import org.json.JSONException;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sasor on 2018-04-25.
@@ -64,7 +55,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean isAccessCoarseLocation = false;
 
-    private boolean isPermission = false;
+    private boolean isPermission = true;
 
     private GpsInfo gps;
 
@@ -73,6 +64,13 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
+
+    //실험
+    TextView imgcount;
+
+    double latitude;
+    double longitude;
+    //실험
 
     Data data;
 
@@ -90,7 +88,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     ImageList imgarrlist;
     ImageView tempimg;
     EditText content;
-    int imgcount;
     InputStream inputStream;
 
     ArrayList<String> imgurl;
@@ -107,6 +104,13 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         data = new Data();
         imgurl = new ArrayList<>();
 
+        //실험
+        imgcount = (TextView)findViewById(R.id.imgcount);
+
+        latitude = 0.0;
+        longitude = 0.0;
+        //실험
+
         send = (ImageButton)findViewById(R.id.send);
         back = (ImageButton)findViewById(R.id.back);
         research = (ImageButton)findViewById(R.id.research);
@@ -116,10 +120,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         content = (EditText)findViewById(R.id.content);
 
         imgarrlist = new ImageList();
-        imgcount = 0;
-
-
-
 
         send.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -131,59 +131,83 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
+        if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
+
+            Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
+
+            imgarrlist.removeListresult(v.getId());
+            imglist.removeViewAt(v.getId()+1);
+
+            for(int i=0;i<imgarrlist.getSize();i++){
+                if(imgarrlist.getListresult(i).getId() > v.getId()){
+                    imgarrlist.getListresult(i).setId(imgarrlist.getListresult(i).getId()-1);
+                }
+            }
+
+            imgcount.setText(String.valueOf(imgarrlist.getSize()));
+        }
+
         switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
 
             case R.id.send:
-                LoadingDialog loadingDialog = new LoadingDialog();
-                loadingDialog.progressON( this, "보내는 중..." );
+                /*LoadingDialog loadingDialog = new LoadingDialog();
+                loadingDialog.progressON( this, "보내는 중..." );*/
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
 
                 try {
-                    data.writeBorard(content.getText().toString(), "aaa", "", 37.000 ,128.000, imgurl);
+                    data.writeBorard(content.getText().toString(), "aaa", "", latitude ,longitude, imgurl);
                 } catch (JSONException e) {
                     e.printStackTrace();
-
-                    loadingDialog.progressOFF();
+                    //loadingDialog.progressOFF();
                     finish();
                 }
 
-                loadingDialog.progressOFF();
+                //loadingDialog.progressOFF();
                 finish();
                 break;
 
             case R.id.research:
+                LoadingDialog resuarchDialog = new LoadingDialog();
+                resuarchDialog.progressON( this, "위치 찾는 중..." );
+
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
 
 
 
-                // 권한 요청을 해야 함
 
                 if (!isPermission) {
                     callPermission();
                     return;
                 }
 
+
                 gps = new GpsInfo(WriteActivity.this);
 
                 // GPS 사용유무 가져오기
                 if (gps.isGetLocation()) {
+                    resuarchDialog.progressOFF();
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
+                    latitude = gps.getLatitude();
+                    longitude = gps.getLongitude();
 
-                    location.setText( getAddress(latitude,longitude));
+                    location.setText( AddressTransformation.getAddress(this,latitude,longitude));
+
+
 
                 } else {
                     // GPS 를 사용할수 없으므로
+                    resuarchDialog.progressOFF();
                     gps.showSettingsAlert();
 
                 }
+
+
 
                 break;
 
@@ -242,15 +266,20 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             ClipData clipData = data.getClipData();
                             if(data.getClipData() == null){
-                                realPath.add( getRealPathFromURI(data.getData()));
+                                realPath.add( getRealPathFromURI(data.getData())); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
 
-                                imgurl.add(realPath.get(0).toString());
+                                imgurl.add(realPath.get(0).toString()); //imgurl 이라는 arraylist에 절대경로를 넣어준다.
 
-                                Uri uri = data.getData();
+                                Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
-                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+
+                                imgcount.setText(String.valueOf(imgarrlist.getSize())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
 
                             }else if(clipData.getItemCount() > 10){
                                 Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
@@ -263,25 +292,33 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = clipData.getItemAt(0).getUri();
 
-                                imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
-                                imgarrlist.getListresult(imgarrlist.getSize()-1).setOnClickListener(this);
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
 
                                 imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                imgcount.setText(String.valueOf(imgarrlist.getSize()));
 
 
 
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
-                                    realPath.add( getRealPathFromURI(clipData.getItemAt(i).getUri()));
+                                    realPath.add( getRealPathFromURI(clipData.getItemAt(0).getUri()));
 
-                                    imgurl.add(realPath.get(i).toString());
+                                    imgurl.add(realPath.get(0).toString());
 
                                     Uri uri = clipData.getItemAt(i).getUri();
 
-                                    imgarrlist.addListresult(newImageCreate(ReSizing(uri)));
-                                    imgarrlist.getListresult(imgarrlist.getSize()-1).setOnClickListener(this);
+                                    imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
+                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
 
                                     imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+
+                                    imgcount.setText(String.valueOf(imgarrlist.getSize()));
 
                                 }
 
@@ -317,75 +354,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return cursor.getString(column_index);
-    }
-
-    public ImageButton newImageCreate(){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setBackgroundResource(R.drawable.plus);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageButton newImageCreate(Bitmap bitmap){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setImageBitmap(bitmap);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        imgv.getLayoutParams().width = 200;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageCreate(ImageView imgv){
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        //imgv.getLayoutParams().height = GridLayout.LayoutParams.MATCH_PARENT;
-        //imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
-
-        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
-        margin.setMargins(left, top, right, bottom);
-        img.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-        return img;
-    }
-
-    public String getAddress(double latitude, double longitude){
-
-        List<Address> list = null;
-        try {
-            //위도 받기
-            //경도 받기
-
-            list = geocoder.getFromLocation(
-                    latitude, // 위도
-                    longitude, // 경도
-                    10); // 얻어올 값의 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
-        }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
-
-        return str;
     }
 
     public Bitmap ReSizing(Uri uri){
