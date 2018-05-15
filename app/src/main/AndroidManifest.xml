@@ -61,7 +61,7 @@
         <activity android:name=".Cluster.ClusterMap"/>
 
 
-        <!-- Map Activity ( 주재현 ) -->
+        <!-- Map Activity ( 이용훈 ) -->
         <activity android:name=".Login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
