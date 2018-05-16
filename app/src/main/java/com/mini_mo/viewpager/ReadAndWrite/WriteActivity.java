@@ -80,9 +80,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     ImageButton send, back,img,research;
     TextView location;
     LinearLayout imglist;
-    ArrayList<Uri> arr_uri;
     String str= null;
-    AssetFileDescriptor afd = null;
     Bitmap bmp = null;
 
     ImageList imgarrlist;
@@ -272,7 +270,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -292,7 +290,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = clipData.getItemAt(0).getUri();
 
-                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
                                 imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -311,7 +309,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                     Uri uri = clipData.getItemAt(i).getUri();
 
-                                    imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ReSizing(uri)));
+                                    imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
                                     imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
                                     imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
@@ -354,25 +352,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return cursor.getString(column_index);
-    }
-
-    public Bitmap ReSizing(Uri uri){
-        try {
-            inputStream = getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 12;
-        opt.inDither = true;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inTempStorage = new byte[32 * 1024];
-        bmp = BitmapFactory.decodeStream(inputStream, null, opt);
-
-        return bmp;
     }
 
     @SuppressLint("LongLogTag")

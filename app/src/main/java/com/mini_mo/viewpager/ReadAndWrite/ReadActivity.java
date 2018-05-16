@@ -1,6 +1,7 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,6 +49,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
 
+    Activity activity;
+
     InputStream inputStream;
     //실험용
 
@@ -56,16 +59,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
 
     ImageList imgarrlist;
-    ImageView tempimg;
-    LinearLayout imglist;
-    ImageButton like_button,back;
-    Button comment = null;
-    TextView gps,like_count;
-    Animation ani=null;
-    Bitmap bitmap = null;
-    String boardnumber;
+    ImageButton like_button,back,change,delete;
 
-    TextView content;
+    LinearLayout imglist;
+
+    Button comment = null;
+
+    Animation ani=null;
+
+    TextView gps,like_count,content;
 
     int count_state,total_count;
 
@@ -91,6 +93,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         //실험
 
+        change = (ImageButton)findViewById(R.id.change);
+        delete = (ImageButton)findViewById(R.id.delete);
+
+        activity = this;
+
         Store.readboard_image.clear();
 
         try {
@@ -110,7 +117,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            imgarrlist.addListresult(newImageCreate(resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                            imgarrlist.addListresult(NewImageCrate.newImageCreate(activity,resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
 
                             Store.readboard_image.add(resource);
                             imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
@@ -165,6 +172,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         switch (v.getId()){
+
+            case R.id.change:
+                Intent intent = new Intent(this,ChangeBoard.class);
+                startActivity(intent);
+                break;
+
+            case R.id.delete:
+                //서버에 delete 보내준다
+                break;
+
             case R.id.back:
                 finish();
                 break;
@@ -207,30 +224,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         finish();
         super.onBackPressed();
-    }
-
-    public ImageButton newImageCreate(Bitmap bitmap){
-        ImageButton imgv = new ImageButton(this);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-        imgv.setBackgroundColor(Color.parseColor("#ffffff"));
-        imgv.setImageBitmap(bitmap);
-
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public static ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
-
-        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
-        margin.setMargins(left, top, right, bottom);
-        img.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-        return img;
     }
 
     //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
