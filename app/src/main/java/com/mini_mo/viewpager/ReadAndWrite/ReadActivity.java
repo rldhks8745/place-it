@@ -2,6 +2,7 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -150,8 +152,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         profile.setImageDrawable(roundedBitmapDrawable);
 
-
-        time.setText(getDate());
         back.setOnClickListener(this);
         comment.setOnClickListener(this);
         like_button.setOnClickListener(this);
@@ -162,24 +162,38 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        if(0<=v.getId() && v.getId() <= imgarrlist.getSize()){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
-            Log.i("Click","클릭 하셨습니다.");
+        if (0 <= v.getId() && v.getId() <= 9) { //0 ~ 9 번 째 클릭시
+            Log.i("Click", "클릭 하셨습니다.");
 
-            Intent intent = new Intent(this,ReadBoard_Image_Activity.class);
-            intent.putExtra("number",0);
+            Intent intent = new Intent(this, ReadBoard_Image_Activity.class);
+            intent.putExtra("number", 0);
 
             startActivity(intent);
         }
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             case R.id.change:
-                Intent intent = new Intent(this,ChangeBoard.class);
+                Intent intent = new Intent(this, ChangeBoard.class);
                 startActivity(intent);
                 break;
 
             case R.id.delete:
-                //서버에 delete 보내준다
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("삭제")
+                        .setMessage("정말 글을 삭제하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
                 break;
 
             case R.id.back:
@@ -187,37 +201,27 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.comment:
-                Intent intent_comment = new Intent(this,CommentActivity.class);
+                Intent intent_comment = new Intent(this, CommentActivity.class);
                 startActivity(intent_comment);
                 break;
 
             case R.id.like_button:
-                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                 like_button.startAnimation(ani);
 
-                if(count_state == 0){
-                    count_state=1;
+                if (count_state == 0) {
+                    count_state = 1;
                     Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
-                    total_count+=1;
+                    total_count += 1;
                     like_count.setText(String.valueOf(total_count));
-                }else if(count_state==1){
-                    count_state=0;
+                } else if (count_state == 1) {
+                    count_state = 0;
                     Toast.makeText(getApplicationContext(), "좋아요 취소!", Toast.LENGTH_SHORT).show();
-                    total_count-=1;
+                    total_count -= 1;
                     like_count.setText(String.valueOf(total_count));
                 }
                 break;
         }
-    }
-
-    public String getDate(){
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        String formatDate = sdfNow.format(date);
-
-
-        return formatDate;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.mini_mo.viewpager.ReadAndWrite;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
 import org.json.JSONException;
@@ -66,6 +69,8 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     final int IMAGE_CODE = 100;
 
     //실험
+    HashtagSpans hashtagSpans;
+
     TextView imgcount;
 
     double latitude;
@@ -147,7 +152,21 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.back:
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog  .setTitle("종료 알림")
+                        .setMessage("작업했던 내용들이 사라집니다.\n정말 종료하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
                 break;
 
             case R.id.send:
@@ -156,6 +175,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
+
+                hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
+
+               //hashtagSpans.getHashtags()  추출한 태그 String형
 
                 try {
                     data.writeBorard(content.getText().toString(), "aaa", "", latitude ,longitude, imgurl);
@@ -339,7 +362,23 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        finish();
+        // Alert을 이용해 종료시키기
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog  .setTitle("종료 알림")
+                .setMessage("작업했던 내용들이 사라집니다.\n정말 종료하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+
         super.onBackPressed();
     }
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -86,7 +88,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         }
 
         for(int i=0;i<rbi.b_photos.size();i++) {
-            //실험용
+
             bitmaplist.add(ImageResizing.ReSizing(rbi.b_photos.get(i)));
 
             imgbuttonlist.add(NewImageCrate.newImageCreate(activity,bitmaplist.get(i)));
@@ -143,10 +145,25 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
             case R.id.send:
 
+                finish();
                 break;
 
             case R.id.back:
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog  .setTitle("종료 알림")
+                        .setMessage("작업했던 내용들이 사라집니다.\n정말 종료하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
                 break;
 
             case R.id.img:
@@ -164,10 +181,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                         //} else {
-
-
                         // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
-
                         //}
                     }
                 }else{
@@ -299,7 +313,21 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-        finish();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog  .setTitle("종료 알림")
+                .setMessage("작업했던 내용들이 사라집니다.\n정말 종료하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
         super.onBackPressed();
     }
 }

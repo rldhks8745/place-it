@@ -56,6 +56,7 @@
         <activity android:name=".ReadAndWrite.CommentActivity"/>
         <activity android:name=".ReadAndWrite.ReadActivity"/>
         <activity android:name=".ReadAndWrite.ReadBoard_Image_Activity"/>
+        <activity android:name=".ReadAndWrite.ChangeBoard"/>
 
         <!-- Map Activity ( 주재현 ) -->
         <activity android:name=".Cluster.ClusterMap"/>
