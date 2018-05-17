@@ -47,6 +47,24 @@
                     android:clickable="true"
                     android:scaleType="centerInside" />
 
+                <ImageButton
+                    android:id="@+id/change"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="260dp"
+                    android:background="@drawable/contract"
+                    android:clickable="true"
+                    android:scaleType="centerInside" />
+
+                <ImageButton
+                    android:id="@+id/delete"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/delete"
+                    android:clickable="true"
+                    android:scaleType="centerInside" />
+
 
             </android.support.v7.widget.Toolbar>
 
