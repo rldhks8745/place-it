@@ -47,6 +47,7 @@ import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
@@ -83,7 +84,7 @@ public class MapFrg extends Fragment
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    ArrayList<read_list_board> read_board;
+    ArrayList<ListViewItemData> read_board;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()

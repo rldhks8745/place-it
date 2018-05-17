@@ -2,7 +2,7 @@ package com.mini_mo.viewpager;
 
 import android.graphics.Bitmap;
 
-import com.mini_mo.viewpager.DAO.read_list_board;
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,6 @@ public class Store {
     public static int board_num = 0;
     public static ArrayList<Bitmap> readboard_image = new ArrayList<>();
     public static ArrayList<ListViewItemData> sendboard = new ArrayList<>();
-    public static ArrayList<read_list_board> sendboard = new ArrayList<>();
-    public static ArrayList<read_list_board> sendcluster = new ArrayList<>();
+    public static ArrayList<ListViewItemData> sendcluster = new ArrayList<>();
 
 }

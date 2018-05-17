@@ -39,8 +39,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.mini_mo.viewpager.DAO.Data;
-import com.mini_mo.viewpager.DAO.read_list_board;
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
@@ -75,7 +74,7 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    ArrayList<read_list_board> clustericon;
+    ArrayList<ListViewItemData> clustericon;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
