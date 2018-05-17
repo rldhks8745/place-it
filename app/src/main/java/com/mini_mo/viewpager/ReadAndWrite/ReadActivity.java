@@ -1,6 +1,8 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +10,11 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,6 +39,9 @@ import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +50,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
+
+    Activity activity;
+
+    InputStream inputStream;
     //실험용
 
 
@@ -50,16 +61,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
 
     ImageList imgarrlist;
-    ImageView tempimg;
-    LinearLayout imglist;
-    ImageButton like_button,back;
-    Button comment = null;
-    TextView gps,like_count;
-    Animation ani=null;
-    Bitmap bitmap = null;
-    String boardnumber;
+    ImageButton like_button,back,change,delete;
 
-    TextView content;
+    LinearLayout imglist;
+
+    Button comment = null;
+
+    Animation ani=null;
+
+    TextView gps,like_count,content;
 
     int count_state,total_count;
 
@@ -85,31 +95,44 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         //실험
 
+        change = (ImageButton)findViewById(R.id.change);
+        delete = (ImageButton)findViewById(R.id.delete);
+
+        activity = this;
+
+        Store.readboard_image.clear();
+
         try {
-            rbi = new Data().readBoardInfo("16");
+            rbi = new Data().readBoardInfo("19");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         content.setText(rbi.content);
 
-        Log.i("URL",rbi.b_photos.get(0));
-
-        //Glide.with(getApplicationContext()).load("http://39.127.8.20:8080/PlitImage/20180417_171156.jpg").into(aaa);
-
+        //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
         for(int i=0;i<rbi.b_photos.size();i++) {
-            Drawable d = new BitmapDrawable(rbi.b_photos.get(i));
              //실험용
+
 
             Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            imgarrlist.addListresult(newImageCreate(resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                            imgarrlist.addListresult(NewImageCrate.newImageCreate(activity,resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+
                             Store.readboard_image.add(resource);
                             imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
                         }
                     });
+
+
+        }
+
+
+        for(int i=0;i<imgarrlist.getSize();i++) {
+            imgarrlist.getListresult(i).setId(i);
+            imgarrlist.getListresult(i).setOnClickListener(this);
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
@@ -129,64 +152,76 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         profile.setImageDrawable(roundedBitmapDrawable);
 
-
-        time.setText(getDate());
         back.setOnClickListener(this);
         comment.setOnClickListener(this);
         like_button.setOnClickListener(this);
 
-        //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        gps.setText( AddressTransformation.getAddress(this,37.57,126.97));
     }
 
     @SuppressLint("ResourceType")
     @Override
     public void onClick(View v) {
 
-        if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
-            Intent intent = new Intent(this,ReadBoard_Image_Activity.class);
-            intent.putExtra("number",0);
+        if (0 <= v.getId() && v.getId() <= 9) { //0 ~ 9 번 째 클릭시
+            Log.i("Click", "클릭 하셨습니다.");
+
+            Intent intent = new Intent(this, ReadBoard_Image_Activity.class);
+            intent.putExtra("number", 0);
 
             startActivity(intent);
         }
 
-        switch (v.getId()){
+        switch (v.getId()) {
+
+            case R.id.change:
+                Intent intent = new Intent(this, ChangeBoard.class);
+                startActivity(intent);
+                break;
+
+            case R.id.delete:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("삭제")
+                        .setMessage("정말 글을 삭제하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
+                break;
+
             case R.id.back:
                 finish();
                 break;
 
             case R.id.comment:
-                Intent intent_comment = new Intent(this,CommentActivity.class);
+                Intent intent_comment = new Intent(this, CommentActivity.class);
                 startActivity(intent_comment);
                 break;
 
             case R.id.like_button:
-                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                 like_button.startAnimation(ani);
 
-                if(count_state == 0){
-                    count_state=1;
+                if (count_state == 0) {
+                    count_state = 1;
                     Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
-                    total_count+=1;
+                    total_count += 1;
                     like_count.setText(String.valueOf(total_count));
-                }else if(count_state==1){
-                    count_state=0;
+                } else if (count_state == 1) {
+                    count_state = 0;
                     Toast.makeText(getApplicationContext(), "좋아요 취소!", Toast.LENGTH_SHORT).show();
-                    total_count-=1;
+                    total_count -= 1;
                     like_count.setText(String.valueOf(total_count));
                 }
                 break;
         }
-    }
-
-    public String getDate(){
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        String formatDate = sdfNow.format(date);
-
-
-        return formatDate;
     }
 
     @Override
@@ -195,28 +230,19 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-    public ImageButton newImageCreate(Bitmap bitmap){
-        ImageButton imgv = new ImageButton(this);
+    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+    public Bitmap ReSizing(Bitmap bitmap, URL url){
 
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imgv.getLayoutParams().height = 400;
-        imgv.getLayoutParams().width = 400;
-        imgv.setBackgroundColor(Color.parseColor("#ffffff"));
-        imgv.setImageBitmap(bitmap);
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opt.inSampleSize = 12;
+        opt.inDither = true;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inTempStorage = new byte[32 * 1024];
+        bitmap = BitmapFactory.decodeFile(String.valueOf(url), opt);
 
-        newImageMargin(imgv,40,40,0,50);
-
-        return imgv;
-    }
-
-    public static ImageView newImageMargin(ImageView img,int left , int top, int right, int bottom){
-
-        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(img.getLayoutParams());
-        margin.setMargins(left, top, right, bottom);
-        img.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-        return img;
+        return bitmap;
     }
 
 }

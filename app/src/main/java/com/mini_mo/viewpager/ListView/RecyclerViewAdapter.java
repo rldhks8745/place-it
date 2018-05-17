@@ -90,7 +90,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
                 Intent intent;
 
                 if( instance != null )
