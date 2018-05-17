@@ -15,5 +15,6 @@ public class Store {
     public static int board_num = 0;
     public static ArrayList<Bitmap> readboard_image = new ArrayList<>();
     public static ArrayList<read_list_board> sendboard = new ArrayList<>();
+    public static ArrayList<read_list_board> sendcluster = new ArrayList<>();
 
 }
