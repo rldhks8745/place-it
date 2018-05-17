@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,11 +46,14 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.read_list_board;
 import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +86,7 @@ public class MapFrg extends Fragment
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    ArrayList<read_list_board> read;
+    ArrayList<read_list_board> read_board;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -279,6 +283,8 @@ public class MapFrg extends Fragment
                     Log.d(TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화");
                     mMoveMapByAPI = false;
 
+                    Store.sendboard.clear();
+
                     getVisibleRegion();
                 }
 
@@ -309,7 +315,7 @@ public class MapFrg extends Fragment
 
         Data data = new Data();
         try {
-            read = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
+            read_board = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
 
 
         } catch (JSONException e) {
@@ -324,6 +330,8 @@ public class MapFrg extends Fragment
             mClusterManager.addItem( offsetItem2 );
 
         }
+
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
