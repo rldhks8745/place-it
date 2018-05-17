@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+    SharedPreferences auto;
+    String loginId;
+
     public static MainActivity getInstance(){ return instance; }
 
     public MainActivity()
@@ -39,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
+
+        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        loginId = auto.getString("inputId",null);
+
+
+
 
         /*** Tool bar ***/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case 0:
                     return new MainPageFragment();
                 case 1:
-                    return  new MyPageFragment();
+                    MyPageFragment myPageFragment = new MyPageFragment();
+                    myPageFragment.setLoginId(loginId);
+                    return  myPageFragment;
                 case 2:
                     return new FriendListFragment();
                 default:

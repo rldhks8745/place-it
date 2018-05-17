@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.R;
 
 import java.util.ArrayList;
@@ -58,13 +59,21 @@ public class RecyclerListView {
         listViewItems.add(listViewItem);
     }
 
+    public void add(ArrayList<ListViewItemData> items)
+    {
+        for( int i = 0; i < items.size(); i++ )
+        {
+            listViewItems.add(items.get(i));
+        }
+    }
+
     /** 동적 로딩을 위한 NestedScrollView의 아래 부분을 인식 **/
     public void loadItems(NestedScrollView nestedScrollView, final Context context) {
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    //TODO add listItems
+                    // TODO add listItems
                     Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
                     addItem();
                     // 어댑터에 연결된 ListView를 갱신

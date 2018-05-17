@@ -1,6 +1,8 @@
 package com.mini_mo.viewpager;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,8 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 /*
  * Created by 노현민 on 2018-04-19.
@@ -19,8 +27,12 @@ import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 public class MyPageFragment extends Fragment {
 
+
     private View rootView;
     private RecyclerListView recyclerListView;
+
+    String loginId;
+
     // 생성자 필수
     public MyPageFragment()
     {
@@ -43,12 +55,14 @@ public class MyPageFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         recyclerListView = new RecyclerListView(getContext(), view,this);
+        ArrayList<ListViewItemData> mylistItem = new ArrayList<>();
 
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
+        try {
+           mylistItem = new Data().read_myBoard(loginId, 0);
+            recyclerListView.add(mylistItem);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
         FloatingActionButton writeButton = (FloatingActionButton) rootView.findViewById(R.id.write_fab);
@@ -61,5 +75,10 @@ public class MyPageFragment extends Fragment {
             }
         });
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void setLoginId(String id)
+    {
+        loginId = id;
     }
 }

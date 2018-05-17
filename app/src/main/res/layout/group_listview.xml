@@ -84,11 +84,11 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView3"
-            android:gravity="right"
+            android:id="@+id/good"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="right"
             android:text="99"
             android:textSize="16sp" />
 

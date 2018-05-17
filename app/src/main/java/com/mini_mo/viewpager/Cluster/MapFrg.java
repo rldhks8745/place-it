@@ -43,7 +43,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
-import com.mini_mo.viewpager.DAO.read_list_board;
+
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 
@@ -82,7 +83,7 @@ public class MapFrg extends Fragment
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    ArrayList<read_list_board> read;
+    ArrayList<ListViewItemData> read;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()

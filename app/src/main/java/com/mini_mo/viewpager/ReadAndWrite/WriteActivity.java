@@ -160,7 +160,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 research.startAnimation(ani);
 
                 try {
-                    data.writeBorard(content.getText().toString(), "aaa", "", latitude ,longitude, imgurl);
+                    data.writeBorard(content.getText().toString(), "minimo", "", latitude ,longitude, imgurl);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //loadingDialog.progressOFF();
@@ -177,8 +177,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 research.startAnimation(ani);
-
-
 
 
                 if (!isPermission) {

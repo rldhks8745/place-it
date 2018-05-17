@@ -12,15 +12,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
 
+
 import java.util.ArrayList;
 
-import static android.app.PendingIntent.getActivity;
 
 // RecyclerView 어댑터
 // ViewHolder : 뷰들을 홀더에 꼽아놓듯 보관하는 객체
@@ -61,6 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(itemLayout,viewGroup,false);
+
         return new ViewHolder(view);
     }
 
@@ -77,6 +80,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ListViewItemData item = listViewItems.get(position);
 
         // 값 설정 ( set )
+        viewHolder.id.setText(item.user_id);
+        viewHolder.context.setText(item.content);
+        //viewHolder.good.setText(item.good);
+
         /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
         //Here it is simply write onItemClick listener here
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 instance.getActivity().overridePendingTransition(R.anim.goup, R.anim.godown);
             }
         });
-
     }
-
-    //테스트
-
-    //테스트
 
     @Override
     public int getItemCount() {
@@ -114,12 +116,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
+        public TextView id;
+        public TextView context;
+        public TextView good;
+
         public final View mView;
         public ViewHolder(View itemView){
             super(itemView);
             mView = itemView;
 
             // 레이아웃 객체화 findViewById
+            id = (TextView) itemView.findViewById(R.id.userid);
+            context = (TextView) itemView.findViewById(R.id.context);
+            good = (TextView) itemView.findViewById(R.id.good);
         }
     }
 }

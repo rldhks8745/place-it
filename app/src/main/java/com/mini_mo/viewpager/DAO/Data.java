@@ -1,6 +1,9 @@
 package com.mini_mo.viewpager.DAO;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,7 +85,7 @@ public class Data {
 
     }
 
-    public User_Info read_myPage(String user_name)  throws JSONException
+    public User_Info read_myPage(String userId)  throws JSONException
     {
         User_Info fl = new User_Info();
         JSONObject result = null;
@@ -90,7 +93,7 @@ public class Data {
         JSONObject u_n = new JSONObject();
 
         obj.put("flag", "read_myPage");
-        u_n.put("user_name", user_name);
+        u_n.put("user_name", userId);
 
         obj.put("read_myPage_data", u_n);
 
@@ -116,16 +119,16 @@ public class Data {
         return fl;
     }
 
-    public ArrayList<read_list_board> read_myBoard (String user_name, int limit) throws JSONException
+    public ArrayList<ListViewItemData> read_myBoard (String userId, int limit) throws JSONException
     {
-        ArrayList<read_list_board> fl = new ArrayList<read_list_board>();
+        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
         JSONObject u_n = new JSONObject();
 
         obj.put("flag", "read_myboard");
-        u_n.put("user_name", user_name);
+        u_n.put("user_name", userId);
         u_n.put("limit", limit);
 
         obj.put("read_myboard_data", u_n);
@@ -147,7 +150,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_data");
             for (int i = 0; i < f_cnt; i++)
             {
-                read_list_board t = new read_list_board();
+                ListViewItemData t = new ListViewItemData();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");
@@ -165,9 +168,9 @@ public class Data {
         return fl;
     }
 
-    public ArrayList<read_list_board> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng) throws JSONException
+    public ArrayList<ListViewItemData> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng) throws JSONException
     {
-        ArrayList<read_list_board> fl = new ArrayList<read_list_board>();
+        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -198,7 +201,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_data");
             for (int i = 0; i < f_cnt; i++)
             {
-                read_list_board t = new read_list_board();
+                ListViewItemData t = new ListViewItemData();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");

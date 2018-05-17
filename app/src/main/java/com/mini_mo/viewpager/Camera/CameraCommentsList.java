@@ -21,18 +21,5 @@ public class CameraCommentsList extends AppCompatActivity {
 
         View view = this.getWindow().getDecorView() ;
         recyclerListView = new RecyclerListView(this, view, this );
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
-        recyclerListView.addItem();
     }
 }
