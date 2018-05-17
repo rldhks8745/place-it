@@ -83,7 +83,7 @@ public class MapFrg extends Fragment
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    ArrayList<ListViewItemData> read;
+    ArrayList<read_list_board> read_board;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -280,6 +280,8 @@ public class MapFrg extends Fragment
                     Log.d(TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화");
                     mMoveMapByAPI = false;
 
+                    Store.sendboard.clear();
+
                     getVisibleRegion();
                 }
 
@@ -310,7 +312,7 @@ public class MapFrg extends Fragment
 
         Data data = new Data();
         try {
-            read = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
+            read_board = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
 
 
         } catch (JSONException e) {

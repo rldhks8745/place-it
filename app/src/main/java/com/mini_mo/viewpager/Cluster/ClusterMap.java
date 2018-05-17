@@ -39,9 +39,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.read_list_board;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,6 +74,8 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
+
+    ArrayList<read_list_board> clustericon;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -220,6 +226,10 @@ public class ClusterMap extends AppCompatActivity
         myClusterManager.setOnClusterClickListener( new ClusterManager.OnClusterClickListener<MyItem>() {
             @Override
             public boolean onClusterClick(Cluster<MyItem> cluster) {
+
+                clustericon = Store.sendboard;
+                Store.sendcluster.clear();
+                Store.sendcluster = clustericon;
 
                 return false;
             }
