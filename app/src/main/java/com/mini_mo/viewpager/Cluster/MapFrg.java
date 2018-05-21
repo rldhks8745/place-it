@@ -314,9 +314,7 @@ public class MapFrg extends Fragment
         Data data = new Data();
         try {
             read_board = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
-
             Store.sendboard = read_board;
-
 
         } catch (JSONException e) {
             e.printStackTrace();

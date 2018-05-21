@@ -35,7 +35,7 @@ public class AddressTransformation {
             e.printStackTrace();
             Log.e("test", "server err - location read err");
         }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality().toString() + " " +list.get(0).getThoroughfare().toString();
+        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
 
         return str;
     }
