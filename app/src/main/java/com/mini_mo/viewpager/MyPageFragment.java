@@ -1,8 +1,7 @@
 package com.mini_mo.viewpager;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +9,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
@@ -30,8 +31,12 @@ public class MyPageFragment extends Fragment {
 
     private View rootView;
     private RecyclerListView recyclerListView;
-
+    private User_Info user_info;
     String loginId;
+
+    ImageView icon;
+    TextView id;
+    TextView message;
 
     // 생성자 필수
     public MyPageFragment()
@@ -48,6 +53,7 @@ public class MyPageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_mypage, container, false);
+        icon = (ImageView) rootView.findViewById(R.id.usericon);
 
         return rootView;
     }
@@ -58,7 +64,8 @@ public class MyPageFragment extends Fragment {
         ArrayList<ListViewItemData> mylistItem = new ArrayList<>();
 
         try {
-           mylistItem = new Data().read_myBoard(loginId, 0);
+            user_info = new Data().read_myPage(loginId);
+            mylistItem = new Data().read_myBoard(loginId, 0);
             recyclerListView.add(mylistItem);
         } catch (JSONException e) {
             e.printStackTrace();
