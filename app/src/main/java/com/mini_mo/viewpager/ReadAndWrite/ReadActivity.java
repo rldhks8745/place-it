@@ -39,6 +39,7 @@ import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
@@ -101,32 +102,36 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         activity = this;
 
         Store.readboard_image.clear();
-
+        //String.valueOf(Store.board_num)
         try {
-            rbi = new Data().readBoardInfo("19");
+            rbi = new Data().readBoardInfo("29");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         content.setText(rbi.content);
 
-        //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
-        for(int i=0;i<rbi.b_photos.size();i++) {
-             //실험용
+        if(rbi.b_photos != null) {
+            //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+            for (int i = 0; i < rbi.b_photos.size(); i++) {
+                //실험용
 
 
-            Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            imgarrlist.addListresult(NewImageCrate.newImageCreate(activity,resource)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                            Store.readboard_image.add(resource);
-                            imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
-                        }
-                    });
+                                imgarrlist.addListresult(NewImageCrate.newImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+
+                                Store.readboard_image.add(bitmap);
+                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
+                            }
+                        });
 
 
+            }
         }
 
 
@@ -185,6 +190,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                //DELETE문
                                 finish();
                             }
                         })
@@ -231,7 +237,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
-    public Bitmap ReSizing(Bitmap bitmap, URL url){
+    public Bitmap ReSizing(byte[] bytes){
+        Bitmap bitmap;
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -240,9 +247,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         opt.inPurgeable = true;
         opt.inInputShareable = true;
         opt.inTempStorage = new byte[32 * 1024];
-        bitmap = BitmapFactory.decodeFile(String.valueOf(url), opt);
+        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
 
         return bitmap;
     }
 
+    public byte[] bitmapToByteArray( Bitmap bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray ;
+    }
 }

@@ -281,10 +281,6 @@ public class MapFrg extends Fragment
 
                     Log.d(TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화");
                     mMoveMapByAPI = false;
-
-                    Store.sendboard.clear();
-
-                    getVisibleRegion();
                 }
 
                 mMoveMapByUser = true;
@@ -323,6 +319,7 @@ public class MapFrg extends Fragment
         }
     }
     //MapFrg용 실질적으로 마커를 찍는부분
+
     public void addItem2(){
         double lat = 35.2706008;
         double lng = 128.01357559999997;
@@ -398,8 +395,13 @@ public class MapFrg extends Fragment
 
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);
-
         mCurrentLocatiion = location;
+
+        Store.sendboard.clear();
+
+        getVisibleRegion();
+        MainPageFragment.getInstance().recyclerListView.add(Store.sendboard);
+        MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
     }
 
     public String getCurrentAddress(LatLng latlng) {

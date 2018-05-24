@@ -287,6 +287,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                             if(data.getClipData() == null){
                                 realPath.add( getRealPathFromURI(data.getData())); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
 
+
                                 imgurl.add(realPath.get(0).toString()); //imgurl 이라는 arraylist에 절대경로를 넣어준다.
 
                                 Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
