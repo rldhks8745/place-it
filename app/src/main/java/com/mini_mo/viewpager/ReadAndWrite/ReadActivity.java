@@ -104,7 +104,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         Store.readboard_image.clear();
         //String.valueOf(Store.board_num)
         try {
-            rbi = new Data().readBoardInfo("29");
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
         }

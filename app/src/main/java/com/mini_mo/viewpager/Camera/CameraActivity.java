@@ -25,7 +25,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
+import com.mini_mo.viewpager.DAO.Board_Location;
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,8 +59,9 @@ public class CameraActivity extends AppCompatActivity {
     public int sensorX, sensorY, sensorZ;
 
     /***********************
-     *      구글지도로부터 받은 마커값
+     *      DB로부터 받은 마커값
      ***********************/
+
     public ArrayList<Double> marrLatMarker = null;
     public  ArrayList<Double> marrLonMarker = null;
 
@@ -66,6 +71,7 @@ public class CameraActivity extends AppCompatActivity {
     public  CustomMapView mCustomMapView; // 오른쪽 위 작은 맵뷰
     public  CommentView mCommentView; // 화면 전체 코멘트 표시할 뷰
 
+    public ArrayList<Board_Location> mReadComments;
 
     public static CameraActivity getInstance(){ return instance; }
 
@@ -196,8 +202,6 @@ public class CameraActivity extends AppCompatActivity {
 
             }
         };
-
-
     }
 
     @Override
@@ -270,22 +274,6 @@ public class CameraActivity extends AppCompatActivity {
                 // 위도, 경도 값받기
                 if( resultCode == RESULT_OK ) {
 
-                    ArrayList<String> strLon = data.getStringArrayListExtra("arrLon");
-                    ArrayList<String> strLat = data.getStringArrayListExtra("arrLat");
-
-                    marrLatMarker = new ArrayList< Double >();
-                    marrLonMarker = new ArrayList< Double >();
-
-                    for( int i=0; i<strLon.size(); i++)
-                    {
-                        marrLonMarker.add( Double.parseDouble( strLon.get(i) ) );
-                        marrLatMarker.add( Double.parseDouble( strLat.get(i) ) ) ;
-                    }
-
-                    if (marrLatMarker != null && marrLatMarker.size() != 0 && m_customGPS.mCurrentPosition != null)
-                        calculateComentsPosition(); // 현재위치를 기반으로 코멘트들의 거리를 계속 계산해줘야한다.
-
-                    Log.d("CameraActivity : ", "MainActivity : 얻어온 값 개수 : " + marrLatMarker.size());
                 }
                 break;
             case CustomGPS.GPS_ENABLE_REQUEST_CODE:
@@ -314,14 +302,13 @@ public class CameraActivity extends AppCompatActivity {
     public void calculateComentsPosition()
     {
         // 코멘트 벡터 생성
-        // 디비 연동 시
-        //ArrayList<CommentVector2> comments = readCommentVectors( m_customGPS.mCurrentPosition.latitude, m_customGPS.mCurrentPosition.longitude );
         ArrayList<CommentVector2> comments = new ArrayList<>();
 
-        for( int i=0; i < marrLonMarker.size(); i++)
+        for( int i=0; i < mReadComments.size(); i++)
         {
-            double lon = marrLonMarker.get(i); // x좌표, 경도
-            double lat = marrLatMarker.get(i); // y좌표, 위도
+            double lon = mReadComments.get(i).longitude; // x좌표, 경도
+            double lat = mReadComments.get(i).latitude; // y좌표, 위도
+            int count = mReadComments.get(i).board_count;
 
 
             // 코멘트와 현재위치 거리
@@ -335,7 +322,7 @@ public class CameraActivity extends AppCompatActivity {
             double relY = commentVector2.y - m_customGPS.mCurrentPosition.latitude;
 
             // 코멘트 벡터 추가
-            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance ) );
+            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance, count ) );
             comments.get(i).mvecRelativePosition.normalize(); // 노멀화
         }
 

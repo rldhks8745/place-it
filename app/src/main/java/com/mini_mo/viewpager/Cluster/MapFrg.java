@@ -466,7 +466,7 @@ public class MapFrg extends Fragment
 
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 

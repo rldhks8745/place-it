@@ -2,7 +2,7 @@ package com.mini_mo.viewpager.DAO;
 
 public class Board_Location
 {
-    double latitude;
-    double longitude;
-    int board_count;
+    public double latitude;
+    public double longitude;
+    public int board_count;
 }

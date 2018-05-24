@@ -34,13 +34,14 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         mDistance = 0.0;
     }
 
-    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance )
+    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count )
     {
         mvecScreenPos = new Vector2();
         // 코멘트 벡터 생성
         mvecAbsolutePosition = absPos;
         mvecRelativePosition = relPos;
         mDistance = distance;
+        mCount = count;
     }
 
     public void setmNumber( int num ) { mCount = num; }

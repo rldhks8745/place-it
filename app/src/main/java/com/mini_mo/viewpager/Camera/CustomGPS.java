@@ -23,7 +23,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainActivity;
+
+import org.json.JSONException;
 
 /**
  * Created by userForGame on 2018-04-03.
@@ -125,13 +128,26 @@ public class CustomGPS extends Service implements LocationListener,
         mCurrentPosition = new LatLng( location.getLatitude(), location.getLongitude());
         Log.d( TAG, "CustomGPS onLocationChanged : " + "현재위도:" + String.valueOf( location.getLatitude() ) + " 현재경도:" + String.valueOf( location.getLongitude() ) );
 
-        CameraActivity cameraActivity = CameraActivity.getInstance();
+        // 디비에서 가져온다.
+        try
+        {
+            CameraActivity.getInstance().mReadComments = new Data().read_board_location( mCurrentPosition.latitude - 0.0005,
+                    mCurrentPosition.latitude + 0.0005,
+                    mCurrentPosition.longitude - 0.0005,
+                    mCurrentPosition.longitude + 0.0005 );
 
-        // 현재위치 갱신했으니 코멘트들의 위치도 갱신하자.
-        if ( cameraActivity.marrLatMarker != null && cameraActivity.marrLatMarker.size() != 0 && mCurrentPosition != null)
-            cameraActivity.calculateComentsPosition(); // 현재위치를 기반으로 코멘트들의 거리를 계속 계산해줘야한다.
-        // 좌표값 받아왔으니 로딩화면 중지
-        stopLocationUpdates();
+            CameraActivity cameraActivity = CameraActivity.getInstance();
+
+            // 현재위치 갱신했으니 코멘트들의 위치도 갱신하자.
+            if (  mCurrentPosition != null )
+                cameraActivity.calculateComentsPosition(); // 현재위치를 기반으로 코멘트들의 거리를 계속 계산해줘야한다.
+            // 좌표값 받아왔으니 로딩화면 중지
+            stopLocationUpdates();
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void isInCamera()
