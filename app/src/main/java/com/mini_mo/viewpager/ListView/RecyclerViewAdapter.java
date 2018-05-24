@@ -12,8 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.TextView;;
 
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.R;
@@ -93,11 +92,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
                 Intent intent;
 
-                if( instance != null )
-                    intent = new Intent( instance.getActivity(), ReadActivity.class );
+                if( instance != null ) {
+                    Store.board_num = Store.sendboard.get(position).board_num;
+                    intent = new Intent(instance.getActivity(), ReadActivity.class);
+                }
                 else
                     intent = new Intent( activity, ReadActivity.class );
-
                 //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
                 instance.startActivity(intent);
                 Store.board_num = 1; // 게시글번호를 서버에서 받으면 이쪽에 넣어주기
