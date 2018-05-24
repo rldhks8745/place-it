@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -297,7 +296,7 @@ public class MapFrg extends Fragment
         addItem2();//마커 찍기
         getVisibleRegion();//DB에 남서단 동북단 좌표를 보내고 글 read리스트에 저장하기
 
-
+        
 
     }
 

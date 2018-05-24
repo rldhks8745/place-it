@@ -81,10 +81,4 @@ public class MainPageFragment extends Fragment{
 
         super.onViewCreated(view, savedInstanceState);
     }
-
-    public void addItem()
-    {
-        recyclerListView.add(Store.sendboard);
-        recyclerListView.adapter.notifyDataSetChanged();
-    }
 }
