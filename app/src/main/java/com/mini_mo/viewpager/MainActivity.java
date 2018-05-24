@@ -47,9 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginId = auto.getString("inputId",null);
 
-
-
-
         /*** Tool bar ***/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

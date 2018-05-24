@@ -23,7 +23,7 @@ public class RecyclerListView {
 
 
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
+    public RecyclerViewAdapter adapter;
     private ArrayList<ListViewItemData> listViewItems;
 
     /**
