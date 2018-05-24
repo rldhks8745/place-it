@@ -93,14 +93,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Intent intent;
 
                 if( instance != null ) {
-                    Store.board_num = Store.sendboard.get(position).board_num;
                     intent = new Intent(instance.getActivity(), ReadActivity.class);
                 }
                 else
                     intent = new Intent( activity, ReadActivity.class );
                 //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
                 instance.startActivity(intent);
-                Store.board_num = 1; // 게시글번호를 서버에서 받으면 이쪽에 넣어주기
+                Store.board_num = Store.sendboard.get(position).board_num;
                 instance.getActivity().overridePendingTransition(R.anim.goup, R.anim.godown);
             }
         });

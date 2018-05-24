@@ -16,12 +16,15 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.ReadCommentInfo;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -37,6 +40,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     EditText title = null;
     private ListView comment_list ;
     private CustomAdapter myadapter;
+
+    ArrayList<ReadCommentInfo> arr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +61,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         data = new Data();
 
-        /*try {
-            data.readComment(String.valueOf(Store.board_num));
+        try {
+            arr = data.readComment(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
+        }
 
+        ReadCommentInfo readCommentInfo = arr.get(0);
+        //myadapter.addItem(readCommentInfo.user_photo,readCommentInfo.comment_content,readCommentInfo.comment_date);
 
         comment_list.setAdapter(myadapter);
         back.setOnClickListener(this);
