@@ -54,6 +54,8 @@ public class MyPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_mypage, container, false);
         icon = (ImageView) rootView.findViewById(R.id.usericon);
+        id = (TextView) rootView.findViewById(R.id.userid);
+        message = (TextView) rootView.findViewById(R.id.status);
 
         return rootView;
     }
@@ -67,9 +69,13 @@ public class MyPageFragment extends Fragment {
             user_info = new Data().read_myPage(loginId);
             mylistItem = new Data().read_myBoard(loginId, 0);
             recyclerListView.add(mylistItem);
+
+            id.setText(user_info.user_id);
+            message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
         /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
         FloatingActionButton writeButton = (FloatingActionButton) rootView.findViewById(R.id.write_fab);
