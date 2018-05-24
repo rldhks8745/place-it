@@ -44,7 +44,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
@@ -296,7 +298,8 @@ public class MapFrg extends Fragment
         addItem2();//마커 찍기
         getVisibleRegion();//DB에 남서단 동북단 좌표를 보내고 글 read리스트에 저장하기
 
-        
+        MainPageFragment.getInstance().recyclerListView.add(Store.sendboard);
+        MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
 
     }
 
