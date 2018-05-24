@@ -22,12 +22,18 @@ import com.mini_mo.viewpager.ListView.RecyclerListView;
 public class MainPageFragment extends Fragment{
 
     private View rootView;
-    private RecyclerListView recyclerListView;
+    public RecyclerListView recyclerListView;
     private NestedScrollView nestedScrollView;
+    private static MainPageFragment instance = null;
+
+    public static MainPageFragment getInstance()
+    {
+        return instance;
+    }
     // 생성자 필수
     public MainPageFragment()
     {
-
+        instance = this;
     }
 
     @Override
