@@ -21,17 +21,22 @@ import java.util.ArrayList;
 
 public class RecyclerListView {
 
-
+    public static RecyclerListView instance = null;
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
+    public RecyclerViewAdapter adapter;
     private ArrayList<ListViewItemData> listViewItems;
 
+    public static RecyclerListView getInstance()
+    {
+        return instance;
+    }
     /**
      * 생성자
      * listViewItems 생성 및 어댑터 설정
      */
     public RecyclerListView(Context context, View view, Fragment fragment)
     {
+        instance = this;
         listViewItems = new ArrayList<ListViewItemData>();
         adapter = new RecyclerViewAdapter(listViewItems, R.layout.group_listview, fragment);
 

@@ -50,8 +50,6 @@ public class MainPageFragment extends Fragment{
 
         recyclerListView = new RecyclerListView(getContext(), view,this);
 
-        recyclerListView.add(Store.sendboard);
-
         /* Google Map의 세로 드래그 문제를 해결 하기 위한 부분*/
         AppBarLayout appBar = (AppBarLayout) rootView.findViewById(R.id.app_bar);
         if (appBar.getLayoutParams() != null) {
@@ -83,5 +81,4 @@ public class MainPageFragment extends Fragment{
 
         super.onViewCreated(view, savedInstanceState);
     }
-
 }
