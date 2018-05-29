@@ -10,8 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.R;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -24,6 +28,9 @@ public class RecyclerListView {
     private RecyclerView recyclerView;
     public RecyclerViewAdapter adapter;
     private ArrayList<ListViewItemData> listViewItems;
+
+    public String loginId;
+    int count;
 
     /**
      * 생성자
@@ -73,8 +80,18 @@ public class RecyclerListView {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
                     // TODO add listItems
+
+                    count += 10;
                     Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
-                    addItem();
+                    ArrayList<ListViewItemData> mylistItem = null;
+                    try {
+                        mylistItem = new Data().read_myBoard(loginId, count);
+                        if( mylistItem != null ) {
+                            add(mylistItem);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     // 어댑터에 연결된 ListView를 갱신
                     adapter.notifyDataSetChanged();
                 }

@@ -82,9 +82,6 @@ public class MainPageFragment extends Fragment{
             }
         });
 
-        /** 동적 로딩 설정 **/
-        recyclerListView.loadItems(nestedScrollView, getContext());
-
         super.onViewCreated(view, savedInstanceState);
     }
 }

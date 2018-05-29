@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class MyPageFragment extends Fragment {
 
 
     private View rootView;
+    private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
     private User_Info user_info;
     String loginId;
@@ -62,12 +64,14 @@ public class MyPageFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recyclerListView = new RecyclerListView(getContext(), view,this);
-        ArrayList<ListViewItemData> mylistItem = new ArrayList<>();
+        nestedScrollView = (NestedScrollView) rootView.findViewById(R.id.include);
+        recyclerListView = new RecyclerListView(getContext(), view, this);
+        ArrayList<ListViewItemData> mylistItem;
 
         try {
             user_info = new Data().read_myPage(loginId);
             mylistItem = new Data().read_myBoard(loginId, 0);
+            recyclerListView.loginId = loginId;
             recyclerListView.add(mylistItem);
 
             id.setText(user_info.user_id);
@@ -76,6 +80,8 @@ public class MyPageFragment extends Fragment {
             e.printStackTrace();
         }
 
+        /** 동적 로딩 설정 **/
+        recyclerListView.loadItems(nestedScrollView, getContext());
 
         /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
         FloatingActionButton writeButton = (FloatingActionButton) rootView.findViewById(R.id.write_fab);
@@ -89,7 +95,6 @@ public class MyPageFragment extends Fragment {
         });
         super.onViewCreated(view, savedInstanceState);
     }
-
     public void setLoginId(String id)
     {
         loginId = id;

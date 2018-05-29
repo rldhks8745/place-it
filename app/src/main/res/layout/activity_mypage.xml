@@ -136,7 +136,9 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_mypage" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_mypage" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/write_fab"
