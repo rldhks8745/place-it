@@ -35,7 +35,7 @@ public class NewImageCrate {
         return imgv;
     }
 
-    public static ImageButton newImageCreate(Activity activity, Bitmap bitmap){
+    public static ImageButton ReadnewImageCreate(Activity activity, Bitmap bitmap){
         ImageButton imgv = new ImageButton(activity);
 
         imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
@@ -44,6 +44,21 @@ public class NewImageCrate {
 
         imgv.getLayoutParams().height=400;
         imgv.getLayoutParams().width = 400;
+
+        newImageMargin(imgv,40,40,0,50);
+
+        return imgv;
+    }
+
+    public static ImageButton WritenewImageCreate(Activity activity, Bitmap bitmap){
+        ImageButton imgv = new ImageButton(activity);
+
+        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
+        imgv.setImageBitmap(bitmap);
+        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+
+        imgv.getLayoutParams().width = 200;
 
         newImageMargin(imgv,40,40,0,50);
 

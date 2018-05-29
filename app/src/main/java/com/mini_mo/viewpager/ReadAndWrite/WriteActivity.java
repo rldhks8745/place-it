@@ -138,12 +138,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
             Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
 
-            imgarrlist.removeListresult(v.getId());
+            imgarrlist.removeImage(v.getId());
             imglist.removeViewAt(v.getId()+1);
 
             for(int i=0;i<imgarrlist.getSize();i++){
-                if(imgarrlist.getListresult(i).getId() > v.getId()){
-                    imgarrlist.getListresult(i).setId(imgarrlist.getListresult(i).getId()-1);
+                if(imgarrlist.getImage(i).getId() > v.getId()){
+                    imgarrlist.getImage(i).setId(imgarrlist.getImage(i).getId()-1);
                 }
             }
 
@@ -292,12 +292,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+                                imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                                 imgcount.setText(String.valueOf(imgarrlist.getSize())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
 
@@ -312,12 +312,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Uri uri = clipData.getItemAt(0).getUri();
 
-                                imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+                                imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
 
                                 imgcount.setText(String.valueOf(imgarrlist.getSize()));
 
@@ -331,12 +331,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                     Uri uri = clipData.getItemAt(i).getUri();
 
-                                    imgarrlist.addListresult(NewImageCrate.newImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                    imgarrlist.getListresult(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
+                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
+                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                    imglist.addView(imgarrlist.getListresult(imgarrlist.getSize()-1));
+                                    imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
 
                                     imgcount.setText(String.valueOf(imgarrlist.getSize()));
 

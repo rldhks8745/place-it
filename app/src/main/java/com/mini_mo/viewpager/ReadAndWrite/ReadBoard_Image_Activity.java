@@ -22,10 +22,6 @@ import java.util.ArrayList;
 public class ReadBoard_Image_Activity extends AppCompatActivity {
 
     ViewPager viewPager;
-    ArrayList<Bitmap> image;
-    Intent intent;
-
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,9 +30,8 @@ public class ReadBoard_Image_Activity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        image = Store.readboard_image;
 
-        viewPager.setAdapter(new MyViewPagerAdaper(getSupportFragmentManager(),image));
+        viewPager.setAdapter(new MyViewPagerAdaper(getSupportFragmentManager()));
     }
 
     @Override

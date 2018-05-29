@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.mini_mo.viewpager.Store;
+
 import java.util.ArrayList;
 
 /**
@@ -15,9 +17,9 @@ public class MyViewPagerAdaper extends FragmentPagerAdapter {
 
     ArrayList<Bitmap> image;
 
-    public MyViewPagerAdaper(FragmentManager fm, ArrayList<Bitmap> image){
+    public MyViewPagerAdaper(FragmentManager fm){
         super(fm);
-        this.image = image;
+        this.image = Store.readboard_image;
     }
 
     @Override

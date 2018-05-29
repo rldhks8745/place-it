@@ -44,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -55,6 +56,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     Activity activity;
 
     InputStream inputStream;
+
+    ArrayList<ImageButton> buttons;
+    View.OnClickListener listener;
     //실험용
 
 
@@ -95,6 +99,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         content = (TextView)findViewById(R.id.title);
 
         //실험
+        listener = this;
+        buttons = new ArrayList<>();
 
         change = (ImageButton)findViewById(R.id.change);
         delete = (ImageButton)findViewById(R.id.delete);
@@ -104,7 +110,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         Store.readboard_image.clear();
         //String.valueOf(Store.board_num)
         try {
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            //String.valueOf(Store.board_num)
+            rbi = new Data().readBoardInfo("19");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,28 +123,27 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
 
-
+                //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
+                //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
                 Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                                imgarrlist.addListresult(NewImageCrate.newImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                                buttons.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+
+                                Log.i("buttons 크기 : ", buttons.size()+"");
+                                buttons.get(buttons.size()-1).setId(buttons.size()-1);
+                                buttons.get(buttons.size()-1).setOnClickListener(listener);
 
                                 Store.readboard_image.add(bitmap);
-                                imglist.addView(imgarrlist.getListresult(imgarrlist.getSize() - 1));
+                                imglist.addView(buttons.get(buttons.size() - 1));
                             }
                         });
 
 
             }
-        }
-
-
-        for(int i=0;i<imgarrlist.getSize();i++) {
-            imgarrlist.getListresult(i).setId(i);
-            imgarrlist.getListresult(i).setOnClickListener(this);
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
@@ -160,7 +166,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         back.setOnClickListener(this);
         comment.setOnClickListener(this);
         like_button.setOnClickListener(this);
-
+        change.setOnClickListener(this);
+        delete.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -171,8 +178,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             Log.i("Click", "클릭 하셨습니다.");
 
             Intent intent = new Intent(this, ReadBoard_Image_Activity.class);
-            intent.putExtra("number", 0);
-
             startActivity(intent);
         }
 
@@ -181,6 +186,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.change:
                 Intent intent = new Intent(this, ChangeBoard.class);
                 startActivity(intent);
+                finish();
                 break;
 
             case R.id.delete:

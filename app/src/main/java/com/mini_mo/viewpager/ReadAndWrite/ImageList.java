@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class ImageList{
 
-    private ArrayList<ImageView> imglist ;
+    private ArrayList<ImageButton> imglist ;
     private int max;
 
     public ImageList(){
@@ -18,7 +19,7 @@ public class ImageList{
         max = 0;
     }
 
-    public ImageList(ArrayList<ImageView> arr , int count){
+    public ImageList(ArrayList<ImageButton> arr , int count){
         imglist = arr;
         this.max = count;
     }
@@ -27,18 +28,18 @@ public class ImageList{
         return imglist.size();
     }
 
-    public ArrayList<ImageView> getList(){
+    public ArrayList<ImageButton> getList(){
         return imglist;
     }
 
-    public ImageView getListresult(int i){
+    public ImageView getImage(int i){
         return imglist.get(i);
     }
 
-    public void addListresult(ImageView o){
+    public void addImage(ImageButton o){
         imglist.add(o);
     }
-    public void removeListresult(int i){
+    public void removeImage(int i){
         imglist.remove(i);
     }
 
