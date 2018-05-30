@@ -41,11 +41,14 @@ public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
             //conn.setRequestProperty("Accept","application/json");
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type","application/json");// charset=EUC-KR"
+            conn.setRequestProperty("Accept-Charset","EUC-KR");
+            conn.setRequestProperty("Content-Type","application/json; charset=EUC-KR");// charset=EUC-KR"
             conn.setRequestMethod("POST");
-            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
+            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream(),"EUC-KR");
+
 
             //OutputStream osw = conn.getOutputStream();
+
 
             //sendMsg = j;
             osw.write(jsonObjects[0].toString());
