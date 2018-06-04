@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
 {
@@ -41,10 +42,10 @@ public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
             //conn.setRequestProperty("Accept","application/json");
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            conn.setRequestProperty("Accept-Charset","EUC-KR");
-            conn.setRequestProperty("Content-Type","application/json; charset=EUC-KR");// charset=EUC-KR"
+            conn.setRequestProperty("Accept-Charset","UTF-8");
+            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");// charset=EUC-KR"
             conn.setRequestMethod("POST");
-            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream(),"EUC-KR");
+            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream(),"utf-8");
 
 
             //OutputStream osw = conn.getOutputStream();
@@ -52,12 +53,13 @@ public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
 
             //sendMsg = j;
             osw.write(jsonObjects[0].toString());
+            //osw.write(URLEncoder.encode(jsonObjects[0].toString(),"utf-8"));
             //osw.write(j.toString().getBytes("EUC-KR"));
             osw.flush();
 
             if(conn.getResponseCode() == conn.HTTP_OK)
             {
-                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(),"EUC-KR");
+                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(),"utf-8");
                 BufferedReader reader = new BufferedReader(tmp);
                 StringBuffer buffer = new StringBuffer();
 
