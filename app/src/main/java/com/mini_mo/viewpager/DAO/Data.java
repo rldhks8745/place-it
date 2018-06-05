@@ -86,7 +86,6 @@ public class Data {
 
     public String save_locate(String id, double latitude,double longitude,String massage) throws JSONException
     {
-
         JSONObject result = null;
         JSONObject obj = new JSONObject();
         JSONObject c_d = new JSONObject();
@@ -95,6 +94,7 @@ public class Data {
         c_d.put("id",id);
         c_d.put("lat", latitude);
         c_d.put("lon", longitude);
+        c_d.put("massage", massage);
         obj.put("save_locate_data",c_d);
 
         try {
