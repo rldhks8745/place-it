@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.Camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -48,16 +49,18 @@ public class CommentView extends View
 
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         CustomMapView customMapView = CustomMapView.getInstance();
 
-        /*********** 코멘트 위치 표시 ************/
+        // 코멘트 위치 표시
         if( customMapView != null && customMapView.mComments != null )
         {
-            Paint myPaint = new Paint();
+            Paint myPaint;
+            myPaint = new Paint();
 
             myPaint.setStrokeWidth( 1.0f );
             myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -78,6 +81,7 @@ public class CommentView extends View
                             -100;
 
                     canvas.drawCircle( x, y, ( mCommentImage.getWidth() * 5 * radius ) / 2, myPaint ); // 색상 표시
+                    canvas.drawText("" + comment.mCount, x, y, myPaint );
 
                     Bitmap bitComment = mCommentImage.createScaledBitmap( mCommentImage, (int)( mCommentImage.getWidth() * 5 * radius ),(int)( mCommentImage.getWidth() * 5 * radius ), true);
                     canvas.drawBitmap( bitComment, x - (bitComment.getWidth()/2), y - (bitComment.getHeight()/2), myPaint ); // 실제 코멘트 이미지 표시
