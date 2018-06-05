@@ -107,10 +107,15 @@ public class CameraActivity extends AppCompatActivity {
                                             (comment.mvecScreenPos.y - comment.radius <= event.getY()) && (comment.mvecScreenPos.y + comment.radius >= event.getY())) {
 
                                         Log.d("클릭 시", " x좌표 : " + comment.mvecScreenPos.x + " y좌표 : " + comment.mvecScreenPos.y );
-                                        Intent intent = new Intent(CameraActivity.getInstance(), CameraCommentsList.class);
+                                        Intent intent = new Intent( CameraActivity.getInstance(), CameraCommentsList.class );
                                         startActivity(intent);
+                                        /*
 
-                                        //Toast.makeText(CameraActivity.getInstance(), "" + comment.mDistance, Toast.LENGTH_SHORT).show();
+                                        여기다가
+                                        comment.mvecAbsolutePosition.y (위도), comment.mvecAbsolutePosition.x (경도)인 모든 코멘트 찾아서
+
+                                         */
+                                        Toast.makeText(CameraActivity.getInstance(), "클릭한 코멘트 개수 : " + comment.mCount, Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -172,7 +177,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         /**************************************
-         카메라 센서 초기화
+                    카메라 센서 초기화
          **************************************/
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
@@ -272,16 +277,17 @@ public class CameraActivity extends AppCompatActivity {
         {
             case GOOGLE_MAP_RESULT:
                 // 위도, 경도 값받기
-                if( resultCode == RESULT_OK ) {
+                //if( resultCode == RESULT_OK )
+                //{
 
-                }
+                //}
                 break;
             case CustomGPS.GPS_ENABLE_REQUEST_CODE:
                 //사용자가 GPS 활성 시켰는지 검사
                 if ( m_customGPS.checkLocationServicesStatus() ) {
                     Log.d( CustomGPS.TAG, "onActivityResult : 퍼미션 가지고 있음");
 
-                    if ( m_customGPS.mGoogleApiClient.isConnected() == false ) {
+                    if ( !m_customGPS.mGoogleApiClient.isConnected() ) {
 
                         Log.d( CustomGPS.TAG, "onActivityResult : mGoogleApiClient connect ");
                         m_customGPS.mGoogleApiClient.connect();
@@ -361,7 +367,7 @@ public class CameraActivity extends AppCompatActivity {
                 if ( grantResults.length > 0) {
                     if ( grantResults[0] == PackageManager.PERMISSION_GRANTED )
                     {
-                        if ( m_customGPS.mGoogleApiClient.isConnected() == false)
+                        if ( !m_customGPS.mGoogleApiClient.isConnected())
                         {
                             m_customGPS.onConnectGoogleApiClient();
                             Log.d( CustomGPS.TAG, "onRequestPermissionsResult : mGoogleApiClient connect");

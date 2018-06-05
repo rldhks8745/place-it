@@ -2,9 +2,11 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -69,6 +71,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     final int IMAGE_CODE = 100;
 
     //실험
+    SharedPreferences auto;
+    String loginId;
+
     HashtagSpans hashtagSpans;
 
     TextView imgcount;
@@ -108,6 +113,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         imgurl = new ArrayList<>();
 
         //실험
+        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        loginId = auto.getString("inputId",null);
+
         imgcount = (TextView)findViewById(R.id.imgcount);
 
         latitude = 0.0;
@@ -181,7 +189,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
                 try {
-                    data.writeBorard(content.getText().toString(), "minimo", "", latitude ,longitude, imgurl);
+                    data.writeBorard(content.getText().toString(), loginId, hashtagSpans.getHashtags().toString(), latitude ,longitude, imgurl);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //loadingDialog.progressOFF();
