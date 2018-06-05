@@ -108,6 +108,8 @@ public class CameraActivity extends AppCompatActivity {
 
                                         Log.d("클릭 시", " x좌표 : " + comment.mvecScreenPos.x + " y좌표 : " + comment.mvecScreenPos.y );
                                         Intent intent = new Intent( CameraActivity.getInstance(), CameraCommentsList.class );
+                                        intent.putExtra("lat", comment.mvecAbsolutePosition.y);
+                                        intent.putExtra("lon", comment.mvecAbsolutePosition.x);
                                         startActivity(intent);
                                         /*
 
