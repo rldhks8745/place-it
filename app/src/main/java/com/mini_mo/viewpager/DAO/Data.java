@@ -17,6 +17,97 @@ public class Data {
 
     }
 
+    public ArrayList<Save_List> load_locate (String id) throws JSONException
+    {
+        ArrayList<Save_List> fl = new ArrayList<Save_List>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "load_locate");
+        u_n.put("id", id);
+
+        obj.put("load_locate_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("save_locate_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("save_locate_list");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                Save_List t = new Save_List();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.save_number = tjo.getInt("save_number");
+                t.latitude = tjo.getDouble("latitude");
+                t.longitude = tjo.getDouble("longitude");
+                t.massage = tjo.getString("massage");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+
+    }
+
+    public String delete_locate(int save_num) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "delete_locate");
+        c_d.put("save_num",save_num);
+        obj.put("delete_locate_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
+    public String save_locate(String id, double latitude,double longitude,String massage) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "save_locate");
+        c_d.put("id",id);
+        c_d.put("lat", latitude);
+        c_d.put("lon", longitude);
+        obj.put("save_locate_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
     public ArrayList<ListViewItemData> read_board_camera (double latitude, double longitude) throws JSONException
     {
         ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
