@@ -17,11 +17,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.CameraActivity;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
 import com.mini_mo.viewpager.Login.LoginActivity;
+import com.mini_mo.viewpager.ReadAndWrite.SaveLoacateActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -121,12 +123,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_user_account) {
 
         } else if (id == R.id.nav_setting) {
+            //원래 setting이 들어가야되지만 버튼을 만드는 방법을 모르므로 일단 위치저장버튼으로 쓰겠소.
+
+            Intent intent = new Intent(this, SaveLoacateActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE); //로그아웃 버튼 클릭시
             SharedPreferences.Editor editor = auto.edit();
             editor.clear(); //안에 내용 다 지움
             editor.commit();
+
+            Toast.makeText(getApplicationContext(),"로그아웃 되었습니다!",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class); // 로그인 액티비티로 이동
             startActivity(intent);
