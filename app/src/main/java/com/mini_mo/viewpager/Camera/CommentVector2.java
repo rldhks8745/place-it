@@ -3,13 +3,10 @@ package com.mini_mo.viewpager.Camera;
 
 import android.support.annotation.NonNull;
 
-/**
- * Created by userForGame on 2018-04-20.
- */
 
 public class CommentVector2 implements Comparable<CommentVector2>{
-    public int mCount = 0; // 디비 게시글 수
-    public Vector2 mvecAbsolutePosition = null; // 현재 코멘트 위치 절대좌표
+    public int mCount; // 디비 게시글 수
+    public Vector2 mvecAbsolutePosition = null; // 현재 코멘트 위치 절대좌표 ( 경도(x), 위도(y) )
 
     public Vector2 mvecScreenPos = null; // 핸드폰 화면 좌표
     public float radius; // 코멘트 반지름 길이
@@ -22,6 +19,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public CommentVector2( int count, Vector2 pos )
     {
         mvecScreenPos = new Vector2();
+        mCount = 0;
         mCount = count;
         mvecAbsolutePosition = pos;
     }
@@ -32,6 +30,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         mvecAbsolutePosition = absPos;
         mvecRelativePosition = relPos;
         mDistance = 0.0;
+        mCount = 0;
     }
 
     public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count )
@@ -41,6 +40,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         mvecAbsolutePosition = absPos;
         mvecRelativePosition = relPos;
         mDistance = distance;
+        mCount = 0;
         mCount = count;
     }
 
