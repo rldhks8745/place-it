@@ -85,7 +85,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     Geocoder geocoder = null;
     Animation ani=null;
 
-    ImageButton send, back,img,research;
+    ImageButton send, back,img,research,load;
     TextView location;
     LinearLayout imglist;
     String str= null;
@@ -120,6 +120,8 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         send = (ImageButton)findViewById(R.id.send);
         back = (ImageButton)findViewById(R.id.back);
         research = (ImageButton)findViewById(R.id.research);
+        load = (ImageButton)findViewById(R.id.load);
+
         imglist = (LinearLayout)findViewById(R.id.linear);
         img = (ImageButton)findViewById(R.id.img);
         location = (TextView)findViewById(R.id.location);
@@ -131,6 +133,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         back.setOnClickListener(this);
         img.setOnClickListener(this);
         research.setOnClickListener(this);
+        load.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -248,6 +251,13 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 }
 
 
+
+                break;
+
+            case R.id.load:
+
+                //Intent intent = new Intent(this,);
+                startActivity(intent);
 
                 break;
 
