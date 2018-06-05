@@ -40,6 +40,13 @@ public class MyPageFragment extends Fragment {
     TextView id;
     TextView message;
 
+    private static MyPageFragment instance = null;
+
+    public static MyPageFragment getInstance()
+    {
+        return instance;
+    }
+
     // 생성자 필수
     public MyPageFragment()
     {
