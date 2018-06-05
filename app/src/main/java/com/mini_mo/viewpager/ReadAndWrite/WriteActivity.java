@@ -37,6 +37,7 @@ import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
@@ -71,9 +72,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     final int IMAGE_CODE = 100;
 
     //실험
-    SharedPreferences auto;
-    String loginId;
-
     HashtagSpans hashtagSpans;
 
     TextView imgcount;
@@ -113,9 +111,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         imgurl = new ArrayList<>();
 
         //실험
-        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-        loginId = auto.getString("inputId",null);
-
         imgcount = (TextView)findViewById(R.id.imgcount);
 
         latitude = 0.0;
@@ -188,10 +183,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
-                Log.i("현재 아이디 : ", loginId);
+                Log.i("현재 아이디 : ", Store.userid);
 
                 try {
-                    String str = data.writeBorard(content.getText().toString(), loginId, hashtagSpans.getHashtags().toString(), latitude ,longitude, imgurl);
+                    String str = data.writeBorard(content.getText().toString(), Store.userid, hashtagSpans.getHashtags().toString(), latitude ,longitude, imgurl);
                     if(str.equals("-3")){
                         Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
                     }else{
