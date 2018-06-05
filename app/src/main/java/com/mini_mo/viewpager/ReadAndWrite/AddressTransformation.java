@@ -37,6 +37,8 @@ public class AddressTransformation {
         }
         String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
 
+        Log.i("주소 전체 : " , list.get(0).toString());
+
         return str;
     }
 }

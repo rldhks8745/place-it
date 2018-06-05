@@ -188,8 +188,16 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
+                Log.i("현재 아이디 : ", loginId);
+
                 try {
-                    data.writeBorard(content.getText().toString(), loginId, hashtagSpans.getHashtags().toString(), latitude ,longitude, imgurl);
+                    String str = data.writeBorard(content.getText().toString(), loginId, hashtagSpans.getHashtags().toString(), latitude ,longitude, imgurl);
+                    if(str.equals("-3")){
+                        Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //loadingDialog.progressOFF();
