@@ -49,7 +49,7 @@ import java.util.ArrayList;
  * Created by sasor on 2018-04-25.
  */
 
-public class WriteActivity extends AppCompatActivity implements View.OnClickListener{
+public class WriteActivity extends AppCompatActivity implements View.OnClickListener , View.OnLongClickListener{
 
     //GPS파트
 
@@ -135,7 +135,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     @SuppressLint("ResourceType")
     @Override
-    public void onClick(View v) {
+    public boolean onLongClick(View v) {
 
         if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
 
@@ -151,7 +151,17 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             }
 
             imgcount.setText(String.valueOf(imgarrlist.getSize()));
+            Toast.makeText(getApplicationContext(),"사진 삭제 완료",Toast.LENGTH_SHORT).show();
+
+            return true;
         }
+
+        return false;
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public void onClick(View v) {
 
         switch (v.getId()) {
             case R.id.back:
@@ -305,7 +315,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                 imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                 imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
@@ -325,7 +335,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
                                 imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                 imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
@@ -344,7 +354,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                     imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
                                     imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                     imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
@@ -388,8 +398,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                     }
                 }).create().show();
-
-        super.onBackPressed();
     }
 
     private String getRealPathFromURI(Uri contentUri) {
@@ -501,6 +509,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
+
 
 }
 

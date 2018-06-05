@@ -78,6 +78,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     int count_state,total_count;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,12 +99,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         content = (TextView)findViewById(R.id.title);
 
+        change = (ImageButton)findViewById(R.id.change);
+        delete = (ImageButton)findViewById(R.id.delete);
+
         //실험
         listener = this;
         buttons = new ArrayList<>();
 
-        change = (ImageButton)findViewById(R.id.change);
-        delete = (ImageButton)findViewById(R.id.delete);
 
         activity = this;
 
@@ -114,6 +116,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        if(!Store.userid.equals(rbi.user_id)) {
+            toolbar.removeView(delete);
+            toolbar.removeView(change);
         }
 
         content.setText(rbi.content);
@@ -190,7 +197,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.change:
                 Intent intent = new Intent(this, ChangeBoard.class);
                 startActivity(intent);
-                finish();
                 break;
 
             case R.id.delete:
