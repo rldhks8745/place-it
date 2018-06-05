@@ -106,4 +106,10 @@ public class MyPageFragment extends Fragment {
     {
         loginId = id;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerListView.adapter.notifyDataSetChanged();
+    }
 }
