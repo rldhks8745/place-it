@@ -257,7 +257,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             case R.id.load:
 
                 //Intent intent = new Intent(this,);
-                startActivity(intent);
 
                 break;
 
