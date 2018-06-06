@@ -19,7 +19,7 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SaveLoacateActivity extends AppCompatActivity implements View.OnClickListener {
+public class SaveLocateActivity extends AppCompatActivity implements View.OnClickListener {
 
     //GPS파트
 
@@ -78,7 +78,7 @@ public class SaveLoacateActivity extends AppCompatActivity implements View.OnCli
                 }
 
 
-                gps = new GpsInfo(SaveLoacateActivity.this);
+                gps = new GpsInfo(SaveLocateActivity.this);
 
                 // GPS 사용유무 가져오기
                 if (gps.isGetLocation()) {

@@ -9,7 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,7 +22,7 @@ import com.mini_mo.viewpager.Camera.CameraActivity;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
 import com.mini_mo.viewpager.Login.LoginActivity;
-import com.mini_mo.viewpager.ReadAndWrite.SaveLoacateActivity;
+import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_setting) {
             //원래 setting이 들어가야되지만 버튼을 만드는 방법을 모르므로 일단 위치저장버튼으로 쓰겠소.
 
-            Intent intent = new Intent(this, SaveLoacateActivity.class);
+            Intent intent = new Intent(this, SaveLocateActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
