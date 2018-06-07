@@ -253,6 +253,7 @@ public class MapFrg extends Fragment
             public boolean onMyLocationButtonClick() {
 
                 Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화" );
+                read_board.clear();
                 startLocationUpdates();
                 mMoveMapByAPI = true;
                 return true;
@@ -261,11 +262,6 @@ public class MapFrg extends Fragment
         mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
-        getVisibleRegion();//DB에 남서단 동북단 좌표를 보내고 글 read리스트에 저장하기
-
-        MainPageFragment.getInstance().recyclerListView.add( Store.sendboard );
-        MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
-
     }
 
     //디바이스에 출력되는 지도 범위
@@ -286,10 +282,12 @@ public class MapFrg extends Fragment
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        double lat = 32.6485458;
-        double lng = 128.01357559999997;
-        MyItem offsetItem2 = new MyItem( lat, lng );
-        mClusterManager.addItem( offsetItem2 );
+        for(int i = 0 ; i < read_board.size(); i++) {
+            double lat = read_board.get(i).latitude;
+            double lng = read_board.get(i).longitude;
+            MyItem offsetItem2 = new MyItem(lat, lng);
+            mClusterManager.addItem(offsetItem2);
+        }
 
     }
 
@@ -367,11 +365,13 @@ public class MapFrg extends Fragment
         setCurrentLocation(location, markerTitle, markerSnippet);
         mCurrentLocatiion = location;
 
-        Store.sendboard.clear();
+
 
         getVisibleRegion();
-        MainPageFragment.getInstance().recyclerListView.add(Store.sendboard);
+        MainPageFragment.getInstance().recyclerListView.add(read_board);
         MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
+
+        stopLocationUpdates();
     }
 
     public String getCurrentAddress(LatLng latlng) {

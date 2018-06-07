@@ -67,6 +67,7 @@ public class RecyclerListView {
 
     public void add(ArrayList<ListViewItemData> items)
     {
+        listViewItems.clear();
         for( int i = 0; i < items.size(); i++ )
         {
             listViewItems.add(items.get(i));
