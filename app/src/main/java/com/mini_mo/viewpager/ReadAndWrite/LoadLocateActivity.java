@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,6 +33,8 @@ public class LoadLocateActivity extends AppCompatActivity{
 
         locateadapter = new LocateListviewAdapter(this);
         locatelist = (ListView)findViewById(R.id.locatelist);
+
+        data = new Data();
 
         try {
             save_lists =  data.load_locate(Store.userid);

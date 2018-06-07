@@ -68,13 +68,21 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="위치 저장" />
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="저장 목록" />
 
         <ListView
             android:id="@+id/locatelist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="90"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="70"/>
     </LinearLayout>
 
 </LinearLayout>
