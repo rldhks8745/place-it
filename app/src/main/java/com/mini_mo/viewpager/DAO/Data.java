@@ -17,6 +17,58 @@ public class Data {
 
     }
 
+    public String change_board(int board_num, String content, String tag,ArrayList<String> addPhoto,ArrayList<String> delPhoto) throws JSONException {
+        String r = "-3";
+        String board_number = "-30";
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject b_d = new JSONObject();
+        obj.put("flag", "change_board");
+        b_d.put("content", content);
+        b_d.put("board_num", board_num);
+        b_d.put("tag", tag);
+        obj.put("change_board_data", b_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        r = "1";
+
+        for (int i = 0; i < delPhoto.size() ; i++)
+        {
+            obj = new JSONObject();
+            b_d = new JSONObject();
+            obj.put("flag", "delete_board_photo");
+            b_d.put("photo_name", delPhoto.get(i));
+            obj.put("delete_board_photo_data", b_d);
+
+            try {
+                result = new ConHttpJson().execute(obj).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        for(int i = 0 ;i < addPhoto.size(); i++)
+        {
+            //board_number = result.getString("result");
+
+            new Imagehttp(addPhoto.get(i), board_num+"", "board_num").execute();
+        }
+
+        return r;
+    }
+
+
     public ArrayList<Save_List> load_locate (String id) throws JSONException
     {
         ArrayList<Save_List> fl = new ArrayList<Save_List>();
