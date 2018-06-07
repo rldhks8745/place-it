@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="8"
+            android:layout_weight="7"
             android:gravity="center"
             android:hint="현재 위치"
             android:textSize="20sp" />
@@ -67,11 +67,21 @@
             android:id="@+id/research"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:padding="5dp"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/map" />
+
+        <ImageButton
+            android:id="@+id/load"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:padding="5dp"
+            android:background="@android:drawable/ic_menu_recent_history"
+            android:scaleType="centerInside"
+             />
 
     </LinearLayout>
 

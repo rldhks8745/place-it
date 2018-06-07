@@ -17,4 +17,7 @@ public class Store {
     public static ArrayList<ListViewItemData> sendboard = new ArrayList<>();
     public static ArrayList<ListViewItemData> sendcluster = new ArrayList<>();
     public static boolean setlist = false;
+    public static String userid = "";
+
+    public static double latitude=0.1 , longitude=0.1;
 }

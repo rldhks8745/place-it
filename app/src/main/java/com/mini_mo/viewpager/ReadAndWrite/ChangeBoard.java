@@ -46,17 +46,20 @@ import java.util.ArrayList;
  * Created by Administrator on 2018-05-16.
  */
 
-public class ChangeBoard extends AppCompatActivity implements View.OnClickListener{
+public class ChangeBoard extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener{
 
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
 
     Activity activity;
     View.OnClickListener listener;
+    View.OnLongClickListener longlistener;
 
     ArrayList<String> imgurl;
     ArrayList<Bitmap> bitmaplist;
     ArrayList<ImageButton> imgbuttonlist;
+    ArrayList<String> origin_url;
+    ArrayList<String> delete_url;
 
     ImageList imgarrlist;
     Animation ani=null;
@@ -84,6 +87,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         bitmaplist = new ArrayList<>();
         imgbuttonlist = new ArrayList<>();
+        delete_url = new ArrayList<>();
 
 
         send = (ImageButton)findViewById(R.id.send);
@@ -95,9 +99,10 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         imgarrlist = new ImageList();
 
         listener = this;
+        longlistener = this;
 
         try {
-            rbi = new Data().readBoardInfo("19");
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -106,6 +111,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
+                origin_url.add(rbi.b_photos.get(i));
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
@@ -122,8 +128,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                 Log.i("buttons 크기 : ", imgbuttonlist.size()+"");
                                 imgbuttonlist.get(imgbuttonlist.size()-1).setId(imgbuttonlist.size()-1);
-                                imgbuttonlist.get(imgbuttonlist.size()-1).setOnClickListener(listener);
-
+                                imgbuttonlist.get(imgbuttonlist.size()-1).setOnLongClickListener(longlistener);
                                 Store.readboard_image.add(bitmap);
                                 imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1));
                             }
@@ -131,11 +136,16 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
 
             }
+
+            imgcount = (TextView)findViewById(R.id.imgcount);
+            imgcount.setText(String.valueOf(rbi.b_photos.size()));
+        }else{
+            imgcount = (TextView)findViewById(R.id.imgcount);
+            imgcount.setText("0");
         }
         //서버연결 부분
 
-        imgcount = (TextView)findViewById(R.id.imgcount);
-        imgcount.setText(String.valueOf(rbi.b_photos.size()));
+
 
         content = (EditText)findViewById(R.id.content);
         content.setText(rbi.content);
@@ -148,11 +158,13 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     @SuppressLint("ResourceType")
     @Override
-    public void onClick(View v) {
+    public boolean onLongClick(View v) {
 
         if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
 
             Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
+
+            delete_url.add(origin_url.get(v.getId()));
 
             imgbuttonlist.remove(v.getId());
             imglayout.removeViewAt(v.getId()+1);
@@ -164,11 +176,29 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             }
 
             imgcount.setText(String.valueOf(imgbuttonlist.size()));
+            Toast.makeText(getApplicationContext(),"사진 삭제 완료",Toast.LENGTH_SHORT).show();
+
+            return true;
         }
+
+        return false;
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public void onClick(View v) {
+
+
 
         switch (v.getId()){
 
             case R.id.send:
+                //리턴값에 따라서 글 수정이 성공인지 실패인지 알려준다.
+                /*if(str.equals("-3")){
+                    Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+                }*/
 
                 finish();
                 break;
@@ -254,7 +284,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                     imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                     imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
@@ -279,7 +309,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                     imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                     imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
@@ -301,7 +331,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                         imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
                                         imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                        imgbuttonlist.get(imgbuttonlist.size() - 1).setOnClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                        imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
                                         imglayout.addView(imgbuttonlist.get(imgbuttonlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
@@ -347,7 +377,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
-
                     }
                 })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -356,8 +385,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                     }
                 }).create().show();
-        super.onBackPressed();
-
     }
 
     public Bitmap ReSizing(byte[] bytes){

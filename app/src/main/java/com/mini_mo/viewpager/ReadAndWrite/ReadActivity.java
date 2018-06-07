@@ -78,6 +78,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     int count_state,total_count;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +112,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //String.valueOf(Store.board_num)
         try {
             //String.valueOf(Store.board_num)
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            rbi = new Data().readBoardInfo("19");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -147,12 +148,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        if(rbi.latitude != 0.0 && rbi.longitude != 0.0){
-            gps.setText("위치 불안정");
-        }else {
-
-            gps.setText(AddressTransformation.getAddress(this, rbi.latitude, rbi.longitude));
-        }
+        gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
         time.setText(rbi.date);
         like_count.setText(String.valueOf(rbi.good));
 

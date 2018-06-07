@@ -35,7 +35,15 @@ public class AddressTransformation {
             e.printStackTrace();
             Log.e("test", "server err - location read err");
         }
-        String str = list.get(0).getLocality().toString()+" " + list.get(0).getSubLocality() + " " +list.get(0).getThoroughfare().toString();
+
+        String mainlocal = list.get(0).getLocality().toString();
+        String sublocal = list.get(0).getSubLocality();
+        String thoroughfare = list.get(0).getThoroughfare().toString();
+
+
+        String str = ((mainlocal==null)? "" : mainlocal)+" " + ((sublocal==null)? "" : sublocal) + " " +((thoroughfare==null)? "" : thoroughfare);
+
+        Log.i("주소 전체 : " , list.get(0).toString());
 
         return str;
     }

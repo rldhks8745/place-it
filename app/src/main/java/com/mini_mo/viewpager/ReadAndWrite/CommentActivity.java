@@ -33,7 +33,11 @@ import java.util.Date;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
 
+    RoundedBitmapDrawable roundedBitmapDrawable;
+
     Data data;
+
+    int count,temp;
 
     ImageButton back =null, send = null;
     Animation ani=null;
@@ -41,7 +45,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private ListView comment_list ;
     private CustomAdapter myadapter;
 
-    ArrayList<ReadCommentInfo> arr;
+    ArrayList<ReadCommentInfo> rci;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +60,28 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         myadapter = new CustomAdapter();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+        roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
         roundedBitmapDrawable.setCircular(true);
 
         data = new Data();
 
+        count = 0;
+        temp = 0;
+
         try {
-            arr = data.readComment(String.valueOf(Store.board_num));
+            rci = data.readComment(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        ReadCommentInfo readCommentInfo = arr.get(0);
-        //myadapter.addItem(readCommentInfo.user_photo,readCommentInfo.comment_content,readCommentInfo.comment_date);
+        for(int i=0;i<rci.size();i++){
+            ReadCommentInfo readCommentInfo = rci.get(i);
+            myadapter.addItem(roundedBitmapDrawable,readCommentInfo.comment_content,readCommentInfo.comment_date);
 
+            count++;
+        }
+
+        comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         comment_list.setAdapter(myadapter);
         back.setOnClickListener(this);
         send.setOnClickListener(this);
@@ -88,12 +100,27 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 send.startAnimation(ani);
 
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-                roundedBitmapDrawable.setCircular(true);
+                try {
+                    data.writeComment(String.valueOf(Store.board_num),Store.userid,title.getText().toString());
 
-                myadapter.addItem(roundedBitmapDrawable,title.getText().toString(),getDate());
-                myadapter.notifyDataSetChanged();
+                    myadapter = new CustomAdapter();
+
+                    try {
+                        rci = data.readComment(String.valueOf(Store.board_num));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    for(int i=0;i<rci.size();i++){
+                        ReadCommentInfo readCommentInfo = rci.get(i);
+                        myadapter.addItem(roundedBitmapDrawable,readCommentInfo.comment_content,readCommentInfo.comment_date);
+                    }
+
+                    comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                    comment_list.setAdapter(myadapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 title.setText("");
 
