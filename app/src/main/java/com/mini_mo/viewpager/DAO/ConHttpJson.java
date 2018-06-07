@@ -48,6 +48,7 @@ public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
             OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream(),"utf-8");
 
 
+
             //OutputStream osw = conn.getOutputStream();
 
 

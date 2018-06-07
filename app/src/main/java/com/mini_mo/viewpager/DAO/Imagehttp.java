@@ -99,7 +99,7 @@ public class Imagehttp extends AsyncTask<String ,String ,String> {
                 //int recode = conn.getResponseCode();
 
                 // write data
-                OutputStream os = conn.getOutputStream();
+               // OutputStream os = conn.getOutputStream();
                 dos = new DataOutputStream(conn.getOutputStream());
                 dos.writeBytes(lineEnd+twoHyphens + boundary + lineEnd);
                 dos.writeBytes("Content-Disposition: form-data; name=\"json\""+lineEnd);
