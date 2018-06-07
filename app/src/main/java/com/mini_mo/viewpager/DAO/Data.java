@@ -40,7 +40,7 @@ public class Data {
 
         r = "1";
 
-        for (int i = 0; delPhoto.size() > 0; i++)
+        for (int i = 0; i < delPhoto.size() ; i++)
         {
             obj = new JSONObject();
             b_d = new JSONObject();
@@ -58,7 +58,7 @@ public class Data {
 
         }
 
-        for(int i = 0 ;addPhoto.size() > 0; i++)
+        for(int i = 0 ;i < addPhoto.size(); i++)
         {
             //board_number = result.getString("result");
 
