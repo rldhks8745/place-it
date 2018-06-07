@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager mViewPager;
 
     SharedPreferences auto;
-    String loginId;
+    public String loginId;
 
     public static MainActivity getInstance(){ return instance; }
 

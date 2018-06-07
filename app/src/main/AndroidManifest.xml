@@ -8,17 +8,15 @@
          location permissions for the 'MyLocation' functionality.
     -->
 
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 와이파이, 데이터를 이용한 위치 수신용 Permission ( 도시블럭 1개 오차 ?? 뭔소리여 여튼 오차있음 ) -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- GPS 이용 위치 수신용 Permission -->
-    <uses-permission android:name="android.permission.CAMERA"/> <!-- 카메라 Permission -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 와이파이, 데이터를 이용한 위치 수신용 Permission ( 도시블럭 1개 오차 ?? 뭔소리여 여튼 오차있음 ) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- GPS 이용 위치 수신용 Permission -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
-
+    <!-- 카메라 Permission -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -42,27 +40,24 @@
         <activity
             android:name=".MainActivity"
             android:label="plit"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Camera Activity ( 김기완 ) -->
-        <activity android:name=".Camera.CameraActivity"></activity>
-        <activity android:name=".Camera.CustomGoogleMap"></activity>
-        <activity android:name=".Camera.CameraCommentsList"></activity>
+        <activity android:name=".Camera.CameraActivity" />
+        <activity android:name=".Camera.CustomGoogleMap" />
+        <activity android:name=".Camera.CameraCommentsList" />
 
         <!-- Write & Read Comment Activity ( 황의원 ) -->
-        <activity android:name=".ReadAndWrite.WriteActivity"/>
-        <activity android:name=".ReadAndWrite.CommentActivity"/>
-        <activity android:name=".ReadAndWrite.ReadActivity"/>
-        <activity android:name=".ReadAndWrite.ReadBoard_Image_Activity"/>
-        <activity android:name=".ReadAndWrite.ChangeBoard"/>
-        <activity android:name=".ReadAndWrite.SaveLocateActivity"/>
-        <activity android:name=".ReadAndWrite.LoadLocateActivity"/>
+        <activity android:name=".ReadAndWrite.WriteActivity" />
+        <activity android:name=".ReadAndWrite.CommentActivity" />
+        <activity android:name=".ReadAndWrite.ReadActivity" />
+        <activity android:name=".ReadAndWrite.ReadBoard_Image_Activity" />
+        <activity android:name=".ReadAndWrite.ChangeBoard" />
+        <activity android:name=".ReadAndWrite.SaveLocateActivity" />
+        <activity android:name=".ReadAndWrite.LoadLocateActivity" />
 
         <!-- Map Activity ( 주재현 ) -->
-        <activity android:name=".Cluster.ClusterMap"/>
-
+        <activity android:name=".Cluster.ClusterMap" />
 
         <!-- Map Activity ( 이용훈 ) -->
         <activity android:name=".Login.LoginActivity">
@@ -71,10 +66,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".Login.Membershipactivity"/>
-        <activity android:name=".Login.Testactivity"/>
+        <activity android:name=".Login.Membershipactivity" />
+        <activity android:name=".Login.Testactivity" />
+        <activity
+            android:name=".YourPageActivity"
+            android:label="@string/title_activity_your_page"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

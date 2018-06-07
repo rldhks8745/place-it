@@ -27,7 +27,7 @@ public class RecyclerListView {
 
     private RecyclerView recyclerView;
     public RecyclerViewAdapter adapter;
-    private ArrayList<ListViewItemData> listViewItems;
+    public ArrayList<ListViewItemData> listViewItems;
 
     public String loginId;
     int count;

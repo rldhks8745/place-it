@@ -40,6 +40,7 @@ public class MyPageFragment extends Fragment {
     TextView message;
 
     private static MyPageFragment instance = null;
+    ArrayList<ListViewItemData> mylistItem;
 
     public static MyPageFragment getInstance()
     {
@@ -72,19 +73,7 @@ public class MyPageFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         nestedScrollView = (NestedScrollView) rootView.findViewById(R.id.include);
         recyclerListView = new RecyclerListView(getContext(), view, this);
-        ArrayList<ListViewItemData> mylistItem;
 
-        try {
-            user_info = new Data().read_myPage(loginId);
-            mylistItem = new Data().read_myBoard(loginId, 0);
-            recyclerListView.loginId = loginId;
-            recyclerListView.add(mylistItem);
-
-            id.setText(user_info.user_id);
-            message.setText(user_info.massage);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         /** 동적 로딩 설정 **/
         recyclerListView.loadItems(nestedScrollView, getContext());
@@ -109,6 +98,19 @@ public class MyPageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        try {
+            user_info = new Data().read_myPage(loginId);
+            mylistItem = new Data().read_myBoard(loginId, 0);
+            recyclerListView.loginId = loginId;
+            recyclerListView.listViewItems.clear();
+            recyclerListView.add(mylistItem);
+
+            id.setText(user_info.user_id);
+            message.setText(user_info.massage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         recyclerListView.adapter.notifyDataSetChanged();
     }
 }
