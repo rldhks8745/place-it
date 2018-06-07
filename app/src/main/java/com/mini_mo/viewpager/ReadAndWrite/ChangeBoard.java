@@ -58,6 +58,8 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     ArrayList<String> imgurl;
     ArrayList<Bitmap> bitmaplist;
     ArrayList<ImageButton> imgbuttonlist;
+    ArrayList<String> origin_url;
+    ArrayList<String> delete_url;
 
     ImageList imgarrlist;
     Animation ani=null;
@@ -85,6 +87,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         bitmaplist = new ArrayList<>();
         imgbuttonlist = new ArrayList<>();
+        delete_url = new ArrayList<>();
 
 
         send = (ImageButton)findViewById(R.id.send);
@@ -108,6 +111,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
+                origin_url.add(rbi.b_photos.get(i));
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
@@ -159,6 +163,8 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
 
             Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
+
+            delete_url.add(origin_url.get(v.getId()));
 
             imgbuttonlist.remove(v.getId());
             imglayout.removeViewAt(v.getId()+1);

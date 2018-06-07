@@ -81,6 +81,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             count++;
         }
 
+        comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         comment_list.setAdapter(myadapter);
         back.setOnClickListener(this);
         send.setOnClickListener(this);
@@ -102,17 +103,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     data.writeComment(String.valueOf(Store.board_num),Store.userid,title.getText().toString());
 
+                    myadapter = new CustomAdapter();
+
                     try {
                         rci = data.readComment(String.valueOf(Store.board_num));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    for(int i=count;i<rci.size();i++){
+                    for(int i=0;i<rci.size();i++){
                         ReadCommentInfo readCommentInfo = rci.get(i);
                         myadapter.addItem(roundedBitmapDrawable,readCommentInfo.comment_content,readCommentInfo.comment_date);
-                        myadapter.notifyDataSetChanged();
                     }
+
+                    comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                    comment_list.setAdapter(myadapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

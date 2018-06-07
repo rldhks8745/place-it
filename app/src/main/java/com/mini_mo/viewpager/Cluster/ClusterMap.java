@@ -193,12 +193,15 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
+        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                getVisibleRegion();
+            }
+        });
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
-
-        MainPageFragment.getInstance().recyclerListView.add( Store.sendboard );
-        MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
 
     }
 
@@ -245,7 +248,7 @@ public class ClusterMap extends AppCompatActivity
                 + " 경도:" + String.valueOf(location.getLongitude());
 
         //현재 위치에 마커 생성하고 이동
-        setDefaultLocation();
+        setCurrentLocation(location,markerTitle,markerSnippet);
         getVisibleRegion();
         clustericon.clear();
 

@@ -103,4 +103,14 @@ public class LocateListviewAdapter extends BaseAdapter {
 
         return arr;
     }
+
+    public int getSaveNumber(int position){
+        return LocateItems.get(position).getSaveNumber();
+    }
+
+    public void removeItem(int positoin) {
+
+        LocateItems.remove(positoin);
+
+    }
 }
