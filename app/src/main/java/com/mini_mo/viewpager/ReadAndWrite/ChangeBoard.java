@@ -51,6 +51,10 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
 
+    HashtagSpans hashtagSpans;
+
+    Data data;
+
     Activity activity;
     View.OnClickListener listener;
     View.OnLongClickListener longlistener;
@@ -59,7 +63,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     ArrayList<Bitmap> bitmaplist;
     ArrayList<ImageButton> imgbuttonlist;
     ArrayList<String> origin_url;
-    ArrayList<String> delete_url;
+    String[] split_url;
+
+    ArrayList<String> arr_delete_url;
 
     ImageList imgarrlist;
     Animation ani=null;
@@ -85,10 +91,11 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         activity = this;
         Store.readboard_image.clear();
 
+        data = new Data();
+
         bitmaplist = new ArrayList<>();
         imgbuttonlist = new ArrayList<>();
-        delete_url = new ArrayList<>();
-
+        arr_delete_url = new ArrayList<>();
 
         send = (ImageButton)findViewById(R.id.send);
         back = (ImageButton)findViewById(R.id.back);
@@ -164,7 +171,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
             Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
 
-            delete_url.add(origin_url.get(v.getId()));
+            split_url = (origin_url.get(v.getId()).split("/"));
+
+            arr_delete_url.add(split_url[split_url.length-1]);
 
             imgbuttonlist.remove(v.getId());
             imglayout.removeViewAt(v.getId()+1);
@@ -193,12 +202,24 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()){
 
             case R.id.send:
-                //리턴값에 따라서 글 수정이 성공인지 실패인지 알려준다.
-                /*if(str.equals("-3")){
-                    Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
-                }*/
+
+                hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
+
+                try {
+                   String str = data.change_board(Store.board_num,content.getText().toString(),hashtagSpans.getHashtags().toString(),imgurl,arr_delete_url);
+
+                   //리턴값에 따라서 글 수정이 성공인지 실패인지 알려준다.
+                    if(str.equals("1")){
+                        Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
 
                 finish();
                 break;

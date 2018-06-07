@@ -69,4 +69,11 @@ public class LoadLocateActivity extends AppCompatActivity{
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(activity,WriteActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

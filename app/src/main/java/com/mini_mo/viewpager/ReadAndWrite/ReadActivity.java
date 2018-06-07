@@ -118,6 +118,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
+        Log.i("게시글 번호", String.valueOf(Store.board_num));
+
         content.setText(rbi.content);
 
         if(rbi.b_photos != null) {
@@ -149,7 +151,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
-        gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
+
+        if(rbi.latitude != 0.0 && rbi.longitude != 0.0){
+            gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
+        }else{
+            gps.setText("위치 불안정");
+        }
+
         time.setText(rbi.date);
         like_count.setText(String.valueOf(rbi.good));
 

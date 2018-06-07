@@ -532,29 +532,15 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void Setting(){
-        if(Store.arr_uri.size()!=0){
-            for(int i=0;i<Store.arr_uri.size();i++){
-
-                imgurl.add(getRealPathFromURI(Store.arr_uri.get(i)).toString());
-
-                imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),Store.arr_uri.get(i))));
-                imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
-
-
-                imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
-
-                imgcount.setText(String.valueOf(imgarrlist.getSize()));
-
-            }
-        }
-
         if(!Store.content.equals("")){
             content.setText(Store.content);
+            Store.content="";
         }
 
         if(Store.latitude != 0.0 && Store.longitude != 0.0){
             location.setText( AddressTransformation.getAddress(this,Store.latitude,Store.longitude));
+            Store.latitude = 0.0;
+            Store.longitude = 0.0;
         }
     }
 
