@@ -19,5 +19,5 @@ public class Store {
     public static boolean setlist = false;
     public static String userid = "";
 
-    public static double latitude=0.1 , longitude=0.1;
+    public static double latitude=0.0 , longitude=0.0;
 }

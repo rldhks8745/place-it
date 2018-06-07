@@ -259,7 +259,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Intent intent = new Intent(this,LoadLocateActivity.class);
                 startActivity(intent);
 
-
+                location.setText( AddressTransformation.getAddress(this,Store.latitude,Store.longitude));
 
                 break;
 
