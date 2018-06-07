@@ -74,8 +74,15 @@ public class YourPageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    new Data().add_friends(loginId, yourId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Toast.makeText(YourPageActivity.this, "관심 친구에 등록 되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
 }

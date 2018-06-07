@@ -7,7 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.FriendsList;
+import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 /*
  * Created by 노현민 on 2018-04-21.
@@ -18,7 +27,7 @@ public class FriendListFragment extends Fragment{
     private View rootView;
     private ListView listView;
     private FriendListView adapter; // Adapter
-
+    private ArrayList<FriendsList> items;
 
     // 생성자 필수
     public FriendListFragment()
@@ -43,14 +52,19 @@ public class FriendListFragment extends Fragment{
         adapter = new FriendListView();
         listView.setAdapter(adapter);
 
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            items = new Data().readFriends(MainActivity.getInstance().loginId); // 친구 목록 받아옴
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
