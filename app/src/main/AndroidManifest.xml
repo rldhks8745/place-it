@@ -71,7 +71,6 @@
         <activity android:name=".Login.Testactivity" />
         <activity
             android:name=".YourPageActivity"
-            android:label="@string/title_activity_your_page"
             android:theme="@style/AppTheme" />
     </application>
 
