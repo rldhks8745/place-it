@@ -61,7 +61,8 @@ public class FriendListFragment extends Fragment{
 
         try {
             items = new Data().readFriends(MainActivity.getInstance().loginId); // 친구 목록 받아옴
-
+            adapter.add(items);
+            adapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -17,6 +17,39 @@ public class Data {
 
     }
 
+
+    public String count_friends(String user_name) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("user_name",user_name);
+
+        jobj.put("flag","count_friends");
+        jobj.put("count_friends_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
     public String change_board(int board_num, String content, String tag,ArrayList<String> addPhoto,ArrayList<String> delPhoto) throws JSONException {
         String r = "-3";
         String board_number = "-30";
@@ -479,7 +512,7 @@ public class Data {
             e.printStackTrace();
         }
 
-        return result.toString();
+        return result.getString("result");
     }
 
 

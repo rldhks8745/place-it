@@ -118,12 +118,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        Log.i("게시글 번호", String.valueOf(Store.board_num));
+        if(!Store.userid.equals(rbi.user_id)) {
+            toolbar.removeView(delete);
+            toolbar.removeView(change);
+        }
 
         content.setText(rbi.content);
 
         if(rbi.b_photos != null) {
-            //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
 

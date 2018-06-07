@@ -57,22 +57,25 @@
         <activity android:name=".ReadAndWrite.SaveLocateActivity" />
         <activity android:name=".ReadAndWrite.LoadLocateActivity" />
 
+        <activity android:name=".IntroActivity">
+            <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+        </activity>
+
         <!-- Map Activity ( 주재현 ) -->
         <activity android:name=".Cluster.ClusterMap" />
 
         <!-- Map Activity ( 이용훈 ) -->
-        <activity android:name=".Login.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Login.LoginActivity"/>
         <activity android:name=".Login.Membershipactivity" />
         <activity android:name=".Login.Testactivity" />
         <activity
             android:name=".YourPageActivity"
             android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>
