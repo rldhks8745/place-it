@@ -112,7 +112,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //String.valueOf(Store.board_num)
         try {
             //String.valueOf(Store.board_num)
-            rbi = new Data().readBoardInfo("19");
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
         } catch (JSONException e) {
             e.printStackTrace();
         }
