@@ -1,6 +1,7 @@
 package com.mini_mo.viewpager;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 
@@ -20,4 +21,6 @@ public class Store {
     public static String userid = "";
 
     public static double latitude=0.0 , longitude=0.0;
+    public static String content = "";
+    public static ArrayList<Uri> arr_uri = new ArrayList<>();
 }

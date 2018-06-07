@@ -36,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
+import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
 
@@ -169,6 +170,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         like_button.setOnClickListener(this);
         change.setOnClickListener(this);
         delete.setOnClickListener(this);
+        profile.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -184,9 +186,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
 
+            case R.id.profile:
+                Intent intent1 = new Intent(this, YourPageActivity.class);
+                intent1.putExtra("id",rbi.user_id);
+                startActivity(intent1);
+
+                break;
+
             case R.id.change:
-                Intent intent = new Intent(this, ChangeBoard.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(this, ChangeBoard.class);
+                startActivity(intent2);
                 finish();
                 break;
 
