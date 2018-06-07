@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 public class MyPageFragment extends Fragment {
 
-
     private View rootView;
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
