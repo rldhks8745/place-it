@@ -96,6 +96,8 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         bitmaplist = new ArrayList<>();
         imgbuttonlist = new ArrayList<>();
         arr_delete_url = new ArrayList<>();
+        origin_url = new ArrayList<>();
+        imgurl = new ArrayList<>();
 
         send = (ImageButton)findViewById(R.id.send);
         back = (ImageButton)findViewById(R.id.back);
