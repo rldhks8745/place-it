@@ -17,6 +17,38 @@ public class Data {
 
     }
 
+    public String change_user_photo(String user_name, String photo_url,boolean is_photo,boolean is_newPhoto) throws JSONException { //is_photo = 현재 등록되어있는 프사가 있으면 true 아니면 false , is_newPhoto 새로 등록할 사진이 있으면 true 없으면 false
+        String r = "-3";
+
+        if(is_photo) {
+            JSONObject result = null;
+            JSONObject obj = new JSONObject();
+            JSONObject b_d = new JSONObject();
+
+            obj.put("flag", "del_user_phto");
+            b_d.put("user_name", user_name);
+            obj.put("del_user_phto_data", b_d);
+
+            try {
+                result = new ConHttpJson().execute(obj).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            r = "1";
+        }
+        if(is_newPhoto)
+        {
+            new Imagehttp(photo_url, user_name, "write_user_photo").execute();
+
+            r = "1";
+        }
+
+        return r;
+    }
+
     public String plus_good(int board_num) throws JSONException
     {
         JSONObject jobj = new JSONObject();
