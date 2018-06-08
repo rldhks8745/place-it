@@ -126,8 +126,6 @@ public class CustomGPS extends Service implements LocationListener,
     @Override
     public void onLocationChanged(Location location) {
         mCurrentPosition = new LatLng( location.getLatitude(), location.getLongitude());
-        Log.d( TAG, "CustomGPS onLocationChanged : " + "현재위도:" + String.valueOf( location.getLatitude() ) + " 현재경도:" + String.valueOf( location.getLongitude() ) );
-
         // 디비에서 가져온다.
         try
         {
@@ -165,8 +163,6 @@ public class CustomGPS extends Service implements LocationListener,
                 dest.setX( comment.mvecAbsolutePosition.x );
                 dest.setY( comment.mvecAbsolutePosition.y );
 
-                Log.d("CameraActivity", "마커원래지점 desX = " + dest.x + "desY = " + dest.y);
-
                 dest.x -= mCurrentPosition.longitude; // 현재위치에서 코멘트 사이의 벡터
                 dest.y -= mCurrentPosition.latitude;
 
@@ -184,7 +180,6 @@ public class CustomGPS extends Service implements LocationListener,
                 // 평면 방정식 + 직선방정식 ( 평면,직선이 원점을 기준이면 ), t = -D / N * P,            D = 원점으로부터 평면이 떨어진 길이, N = 평면 노말벡터, P = 원점시작->직선벡터
                 double leftRatio = (-(length) / (Vector2.multiply(customMapView.mvecLeftAngle, new Vector2(comentNormal.x*-1.0, comentNormal.y*-1.0 )))) / 50; // left앵글 직선의 몇% 위치에 현재위치가 있나? 0 ~ 1
                 double rightRatio = (-(length) / (Vector2.multiply(customMapView.mvecRightAngle, new Vector2(comentNormal.x*-1.0, comentNormal.y*-1.0 )))) / 50;
-                Log.d("uuu", "leftRatio : " + leftRatio + " rightRatio : " + rightRatio);
 
                 Vector2 intersectLeft = new Vector2(left.x * leftRatio, left.y * leftRatio); // 실제 코멘트평면이 left앵글의 어디지점에 있는가?
                 Vector2 intersectRIght = new Vector2(right.x * rightRatio, right.y * rightRatio); // 실제 코멘트평면이 right앵글의 어디지점에 있는가?
@@ -202,13 +197,11 @@ public class CustomGPS extends Service implements LocationListener,
                     double ratio = curLength / totalLength; // 왼쪽앵글직선 ~ 오른쪽앵글직선 사이에 몇 %에 있냐
                     customMapView.mComments.get(i).mIsinCamera = true;
                     customMapView.mComments.get(i).mScreenWIdthRatio = ratio;
-                    Log.d("uuu", i + "번째 코멘트 O  " + "leftIn : " + leftIn + " rightIn : " + rightIn );
                 }
                 else
                 {
                     customMapView.mComments.get(i).mIsinCamera = false;
                     customMapView.mComments.get(i).mScreenWIdthRatio = 2;
-                    Log.d("uuu", i + "번째 코멘트 O  " + "leftIn : " + leftIn + " rightIn : " + rightIn );
                 }
             }
         }
@@ -225,27 +218,22 @@ public class CustomGPS extends Service implements LocationListener,
         // 카메라 방향
         customMapView.mvecDirection.setX( Math.sin( phoneAngle * toRadian ) );
         customMapView.mvecDirection.setY( Math.cos( phoneAngle * toRadian ) );
-        Log.d("CameraActivity", "바라보는 방향 \nX : " + customMapView.mvecDirection.x + "\nY :" + customMapView.mvecDirection.y + " 카메라 각도 : " + phoneAngle );
 
         // 카메라 왼쪽 (-30도) 방향 구하기
         customMapView.mvecLeftAngle.setX( Math.sin( adjustAngle( phoneAngle - CustomGPS.ANGLE/2 ) * toRadian ) );
         customMapView.mvecLeftAngle.setY( Math.cos( adjustAngle( phoneAngle - CustomGPS.ANGLE/2 ) * toRadian ) );
-        Log.d("CameraActivity", "카메라 왼쪽 벡터 x : " +  customMapView.mvecLeftAngle.x + " y : " +  customMapView.mvecLeftAngle.y);
 
         // 카메라 오른쪽 (+30도) 방향 구하기
         customMapView.mvecRightAngle.setX( Math.sin( adjustAngle( phoneAngle + CustomGPS.ANGLE/2 ) * toRadian ) );
         customMapView.mvecRightAngle.setY( Math.cos( adjustAngle( phoneAngle + CustomGPS.ANGLE/2 ) * toRadian ) );
-        Log.d("CameraActivity", "카메라 오른쪽 벡터 x : " + customMapView.mvecRightAngle.x + " y : " + customMapView.mvecRightAngle.y);
 
         // 카메라 왼쪽 (-30도) 방향 노멀벡터
         customMapView.mvecLeftAngleNormal.setX( Math.sin( adjustAngle( m_cameraActivity.sensorX + (90 - CustomGPS.ANGLE/2) ) * toRadian ) );
         customMapView.mvecLeftAngleNormal.setY( Math.cos( adjustAngle( m_cameraActivity.sensorX + (90 - CustomGPS.ANGLE/2) ) * toRadian ) );
-        Log.d("CameraActivity", "바라보는 방향 왼쪽 벡터 노멀 벡터 \nX : " +  customMapView.mvecLeftAngleNormal.x + "\nY :" +  customMapView.mvecLeftAngleNormal.y + " 카메라 각도 : " + m_cameraActivity.sensorX );
 
         // 카메라 오른쪽 (+30도) 방향 노멀벡터
         customMapView.mvecRightAngleNormal.setX( Math.sin( adjustAngle( m_cameraActivity.sensorX - (90 - CustomGPS.ANGLE/2) ) * toRadian ) );
         customMapView.mvecRightAngleNormal.setY( Math.cos( adjustAngle( m_cameraActivity.sensorX - (90 - CustomGPS.ANGLE/2) ) * toRadian ) );
-        Log.d("CameraActivity", "바라보는 방향 오른쪽 벡터 노멀 벡터 \nX : " + customMapView.mvecRightAngleNormal.x + "\nY :" + customMapView.mvecRightAngleNormal.y + " 카메라 각도 : " + m_cameraActivity.sensorX );
     }
 
     // 각도를 0 ~ 360 사이의 값만 가지게 하려고
@@ -286,19 +274,15 @@ public class CustomGPS extends Service implements LocationListener,
         // 위치 기능 On 돼있나?
         if (!checkLocationServicesStatus()) // 안돼 있으면
         {
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
         }
         else // 돼있으면
         {
             if (ActivityCompat.checkSelfPermission( m_cameraActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission( m_cameraActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
+                    && ActivityCompat.checkSelfPermission( m_cameraActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
                 return;
             }
-
-            Log.d(TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates");
-
             // 현재위치 받아오기 전에 로딩화면 띄우기
             loadingDialog.progressON( CameraActivity.getInstance(), "위치 로딩중..." );
 
@@ -309,8 +293,6 @@ public class CustomGPS extends Service implements LocationListener,
     }
 
     public void stopLocationUpdates() {
-
-        Log.d(TAG,"stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mRequestingLocationUpdates = false;
 
@@ -331,14 +313,12 @@ public class CustomGPS extends Service implements LocationListener,
                 }
                 else
                 {
-                    Log.d( TAG, "onConnected : 퍼미션 가지고 있음");
-                    Log.d( TAG, "onConnected : call startLocationUpdates");
                     startLocationUpdates();
                 }
 
-            }else{
-
-                Log.d( TAG, "onConnected : call startLocationUpdates");
+            }
+            else
+            {
                 startLocationUpdates();
             }
         }

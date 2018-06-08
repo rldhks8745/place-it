@@ -26,11 +26,14 @@ import java.util.Collections;
 
 public class CommentView extends View
 {
+    private static final int MIN_DISTANCE = 0;
+    private static final int MAX_DISTANCE = 50;
+
     private CameraActivity mCameraActivity;
 
     public int mScreenWIdth, mScreenHeight; // 핸드폰 화면 사이즈
-
-    public  Bitmap mCommentImage = null;
+    public int mCommentSize = 50;
+    //public  Bitmap mCommentImage = null;
 
     public CommentView(Context context, @Nullable AttributeSet attrs)
     {
@@ -44,8 +47,8 @@ public class CommentView extends View
 
         mCameraActivity = CameraActivity.getInstance();
 
-        Resources r = context.getResources();
-        mCommentImage = BitmapFactory.decodeResource(r, R.drawable.comment );
+       // Resources r = context.getResources();
+        //mCommentImage = BitmapFactory.decodeResource(r, R.drawable.comment );
 
     }
 
@@ -64,15 +67,16 @@ public class CommentView extends View
 
             myPaint.setStrokeWidth( 1.0f );
             myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            myPaint.setColor(Color.RED);
 
             for( int i=0; i < customMapView.mComments.size(); i++ )
             {
+                myPaint.setColor(Color.RED);
                 CommentVector2 comment = customMapView.mComments.get(i);
                 if( comment.mIsinCamera && ( comment.mDistance <= CustomMapView.COMENT_DISTANCE ) )
                 {
                     float widthRatio = (float) customMapView.mComments.get(i).mScreenWIdthRatio;
                     float radius = (float) ( ( 1 / customMapView.mComments.get(i).mDistance ) );
+                    radius = (float)( ( radius <= 1.0 ) ? 1.0 : radius );
                     float x = (widthRatio != 0.0) ? (float) (mScreenWIdth * customMapView.mComments.get(i).mScreenWIdthRatio) : -100.0f;
 
                     // 삼중연산자
@@ -80,16 +84,16 @@ public class CommentView extends View
                             ( ( (float) -( mCameraActivity.sensorY + 45 ) / 90 ) * mScreenHeight ) + ( float )( customMapView.mComments.get(i).mDistance * 2 ) :
                             -100;
 
-                    canvas.drawCircle( x, y, ( mCommentImage.getWidth() * 5 * radius ) / 2, myPaint ); // 색상 표시
-                    canvas.drawText("" + comment.mCount, x, y, myPaint );
+                    canvas.drawCircle( x, y, ( mCommentSize * radius ) / 2, myPaint ); // 색상 표시
 
-                    Bitmap bitComment = mCommentImage.createScaledBitmap( mCommentImage, (int)( mCommentImage.getWidth() * 5 * radius ),(int)( mCommentImage.getWidth() * 5 * radius ), true);
-                    canvas.drawBitmap( bitComment, x - (bitComment.getWidth()/2), y - (bitComment.getHeight()/2), myPaint ); // 실제 코멘트 이미지 표시
+                    myPaint.setColor(Color.WHITE);
+                    canvas.drawText("" + comment.mCount, x, y, myPaint );
 
                     /** 코멘트 위치 수정 **/
                     comment.mvecScreenPos.x = x;
                     comment.mvecScreenPos.y = y;
-                    comment.radius = mCommentImage.getWidth() * 5 * radius;
+                    comment.radius = mCommentSize * radius;
+
                 }
             }
         }

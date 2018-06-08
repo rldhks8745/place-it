@@ -64,7 +64,7 @@ public class FriendListFragment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO 리스트의 아이템 클릭시
                 Intent intent = new Intent(getActivity(), YourPageActivity.class);
-                intent.putExtra("yourId", adapter.listViewItemList.get(position).user_id);
+                intent.putExtra("Id", adapter.listViewItemList.get(position).user_id);
                 startActivity(intent);
             }
         });

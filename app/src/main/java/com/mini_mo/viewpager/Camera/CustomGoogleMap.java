@@ -188,9 +188,8 @@ public class CustomGoogleMap extends AppCompatActivity
 
         super.onResume();
 
-        if (mGoogleApiClient.isConnected()) {
-
-            Log.d(TAG, "onResume : call startLocationUpdates");
+        if (mGoogleApiClient.isConnected())
+        {
             if (!mRequestingLocationUpdates) startLocationUpdates();
         }
 
@@ -214,21 +213,15 @@ public class CustomGoogleMap extends AppCompatActivity
 
     private void startLocationUpdates() {
 
-        if (!checkLocationServicesStatus()) {
-
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
+        if (!checkLocationServicesStatus())
+        {
             showDialogForLocationServiceSetting();
         }else {
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
             }
-
-
-            Log.d(TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
             mRequestingLocationUpdates = true;
 
@@ -241,8 +234,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
 
     private void stopLocationUpdates() {
-
-        Log.d(TAG,"stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mRequestingLocationUpdates = false;
     }
@@ -253,8 +244,6 @@ public class CustomGoogleMap extends AppCompatActivity
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-        Log.d(TAG, "onMapReady :");
 
         mGoogleMap = googleMap;
 
@@ -273,8 +262,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
             @Override
             public boolean onMyLocationButtonClick() {
-
-                Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화");
                 mMoveMapByAPI = true;
                 return true;
             }
@@ -295,9 +282,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
                 marrLatMarker.add( "" + latLng.latitude );
                 marrLonMarker.add( "" + latLng.longitude);
-
-                Log.d( TAG, "onMapClick : " + "찍은 위도 : " + latLng.latitude + "경도 : " + latLng.longitude + "ArrayList 갯수 : " + marrLatMarker.size() );
-                Log.d( TAG, "onMapClick : " + "현재 위치에서 거리 : " + SphericalUtil.computeDistanceBetween( mCurrentPosition, latLng ));
             }
         });
 
@@ -307,8 +291,6 @@ public class CustomGoogleMap extends AppCompatActivity
             public void onCameraMoveStarted(int reason ) {
 
                 if (mMoveMapByUser == true && mRequestingLocationUpdates){
-
-                    Log.d(TAG, "onCameraMoveStarted : 위치에 따른 카메라 이동 비활성화");
                     mMoveMapByAPI = false;
                 }
 
@@ -341,8 +323,6 @@ public class CustomGoogleMap extends AppCompatActivity
         TextView textView3 = (TextView)findViewById(R.id.textView3);
         textView3.setText( "현재위치 \n위도 : " + mCurrentPosition.latitude + "\n경도 : " + mCurrentPosition.longitude );
 
-        Log.d(TAG, "CustomGPAonLocationChanged : " + "현재위도:" + String.valueOf( location.getLatitude() ) + " 현재경도:" + String.valueOf( location.getLongitude() ) );
-
         String markerTitle = getCurrentAddress(mCurrentPosition);
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
@@ -356,8 +336,6 @@ public class CustomGoogleMap extends AppCompatActivity
     protected void onStart() {
 
         if(mGoogleApiClient != null && mGoogleApiClient.isConnected() == false){
-
-            Log.d(TAG, "onStart: mGoogleApiClient connect");
             mGoogleApiClient.connect();
         }
 
@@ -368,19 +346,12 @@ public class CustomGoogleMap extends AppCompatActivity
     protected void onStop() {
 
         if (mRequestingLocationUpdates) {
-
-            Log.d(TAG, "onStop : call stopLocationUpdates");
             stopLocationUpdates();
         }
 
         if ( mGoogleApiClient.isConnected()) {
-
-            Log.d(TAG, "onStop : mGoogleApiClient disconnect");
             mGoogleApiClient.disconnect();
         }
-
-        Log.d(TAG, "onStop : ");
-
         super.onStop();
     }
 
@@ -392,8 +363,6 @@ public class CustomGoogleMap extends AppCompatActivity
          */
         if( sensorManager != null )
             sensorManager.unregisterListener(listener);
-
-        Log.d(TAG, "onPause : ");
     }
 
     @Override
@@ -414,16 +383,11 @@ public class CustomGoogleMap extends AppCompatActivity
                             PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
                 } else {
-
-                    Log.d(TAG, "onConnected : 퍼미션 가지고 있음");
-                    Log.d(TAG, "onConnected : call startLocationUpdates");
                     startLocationUpdates();
                     mGoogleMap.setMyLocationEnabled(true);
                 }
 
             }else{
-
-                Log.d(TAG, "onConnected : call startLocationUpdates");
                 startLocationUpdates();
                 mGoogleMap.setMyLocationEnabled(true);
             }
@@ -433,15 +397,12 @@ public class CustomGoogleMap extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        Log.d(TAG, "onConnectionFailed");
         setDefaultLocation();
     }
 
 
     @Override
     public void onConnectionSuspended(int cause) {
-
         Log.d(TAG, "onConnectionSuspended");
         if (cause == CAUSE_NETWORK_LOST)
             Log.e(TAG, "onConnectionSuspended(): Google Play services " +
@@ -466,9 +427,6 @@ public class CustomGoogleMap extends AppCompatActivity
                     latlng.longitude,
                     1);
         } catch (IOException ioException) {
-            //네트워크 문제
-            //Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            Log.d( TAG, "지오코더 서비스 사용불가" );
 
             return "지오코더 서비스 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
@@ -479,7 +437,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
 
         if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
             return "주소 미발견";
 
         } else {
@@ -602,12 +559,7 @@ public class CustomGoogleMap extends AppCompatActivity
                     "체크 박스를 설정한 경우로 설정에서 퍼미션 허가해야합니다.");
         } else if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
 
-
-            Log.d(TAG, "checkPermissions : 퍼미션 가지고 있음");
-
             if ( mGoogleApiClient.isConnected() == false) {
-
-                Log.d(TAG, "checkPermissions : 퍼미션 가지고 있음");
                 mGoogleApiClient.connect();
             }
         }
@@ -625,8 +577,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
             if (permissionAccepted) {
                 if ( mGoogleApiClient.isConnected() == false) {
-
-                    Log.d(TAG, "onRequestPermissionsResult : mGoogleApiClient connect");
                     mGoogleApiClient.connect();
                 }
             } else {
@@ -724,11 +674,9 @@ public class CustomGoogleMap extends AppCompatActivity
                 //사용자가 GPS 활성 시켰는지 검사
                 if (checkLocationServicesStatus()) {
                     if (checkLocationServicesStatus()) {
-                        Log.d(TAG, "onActivityResult : 퍼미션 가지고 있음");
 
                         if ( mGoogleApiClient.isConnected() == false ) {
 
-                            Log.d( TAG, "onActivityResult : mGoogleApiClient connect ");
                             mGoogleApiClient.connect();
                         }
                         return;
@@ -746,10 +694,6 @@ public class CustomGoogleMap extends AppCompatActivity
 
         double lat = marker.getPosition().latitude;
         double lon = marker.getPosition().longitude;
-
-        Log.d( TAG, "onActivityResult : 마커 클릭 함 ");
-        Log.d( TAG, "클릭한 마커 위도 : " + lat + " 경도 : " + lon);
-        otherPoint.setText("클릭한 마커 \n위도 : " + lat + " \n경도 : " + lon + "\n현재위치에서 거리 : " + + SphericalUtil.computeDistanceBetween( mCurrentPosition, marker.getPosition() ) );
 
         return true;
     }

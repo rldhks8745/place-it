@@ -25,7 +25,7 @@ public class Data {
 
         JSONObject login_data = new JSONObject();
 
-        login_data.put("board_num",board_num);
+        login_data.put("board_num",board_num+"");
 
         jobj.put("flag","plus_good");
         jobj.put("plus_good_data", login_data);
