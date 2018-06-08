@@ -92,6 +92,22 @@ public class MyPageFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        // 유저 이미지 클릭해서 변경할 때
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        // 상태메세지 변경
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
     public void setLoginId(String id)
@@ -115,6 +131,7 @@ public class MyPageFragment extends Fragment {
             recyclerListView.add(mylistItem);
 
             id.setText(user_info.user_id);
+            // photo 넣는곳
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();

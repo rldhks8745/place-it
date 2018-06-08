@@ -65,8 +65,8 @@ public class CommentView extends View
             Paint myPaint;
             myPaint = new Paint();
 
-            myPaint.setStrokeWidth( 1.0f );
             myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            myPaint.setStrokeWidth( 1.0f );
 
             for( int i=0; i < customMapView.mComments.size(); i++ )
             {
@@ -84,15 +84,16 @@ public class CommentView extends View
                             ( ( (float) -( mCameraActivity.sensorY + 45 ) / 90 ) * mScreenHeight ) + ( float )( customMapView.mComments.get(i).mDistance * 2 ) :
                             -100;
 
-                    canvas.drawCircle( x, y, ( mCommentSize * radius ) / 2, myPaint ); // 색상 표시
+                    canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ) / 2, myPaint ); // 색상 표시
 
                     myPaint.setColor(Color.WHITE);
+                    myPaint.setTextSize( radius * mCommentSize );
                     canvas.drawText("" + comment.mCount, x, y, myPaint );
 
                     /** 코멘트 위치 수정 **/
                     comment.mvecScreenPos.x = x;
                     comment.mvecScreenPos.y = y;
-                    comment.radius = mCommentSize * radius;
+                    comment.radius = mCommentSize * radius + 50;
 
                 }
             }
