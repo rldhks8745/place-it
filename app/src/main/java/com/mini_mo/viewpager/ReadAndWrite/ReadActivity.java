@@ -60,6 +60,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<ImageButton> buttons;
     View.OnClickListener listener;
+
+    Data data;
     //실험용
 
 
@@ -101,6 +103,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         content = (TextView)findViewById(R.id.title);
 
         //실험
+        data = new Data();
+
         listener = this;
         buttons = new ArrayList<>();
 
@@ -212,13 +216,20 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.delete:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("삭제")
+                dialog.setTitle("글 삭제")
                         .setMessage("정말 글을 삭제하시겠습니까?")
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //DELETE문
-                                finish();
+                                try {
+                                    data.delete_board(Store.board_num);
+                                    Store.board_num = -1;
+                                    Toast.makeText(getApplicationContext(),"글 삭제완료!",Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } catch (JSONException e) {
+                                    Toast.makeText(getApplicationContext(),"글 삭제실패!",Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
