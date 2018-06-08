@@ -17,6 +17,70 @@ public class Data {
 
     }
 
+    public String plus_good(int board_num) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("board_num",board_num);
+
+        jobj.put("flag","plus_good");
+        jobj.put("plus_good_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+    public String delete_board(int board_num) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("board_num",board_num);
+
+        jobj.put("flag","delete_board");
+        jobj.put("delete_board_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
 
     public String count_friends(String user_name) throws JSONException
     {
