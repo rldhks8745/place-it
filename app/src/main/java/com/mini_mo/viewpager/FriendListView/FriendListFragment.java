@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.FriendsList;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
-import com.mini_mo.viewpager.Store;
 import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
@@ -33,6 +33,7 @@ public class FriendListFragment extends Fragment{
     private ArrayList<FriendsList> items;
 
     String yourId; // 상대방 아이디
+
 
     // 생성자 필수
     public FriendListFragment()
@@ -63,7 +64,7 @@ public class FriendListFragment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO 리스트의 아이템 클릭시
                 Intent intent = new Intent(getActivity(), YourPageActivity.class);
-                intent.putExtra("yourId", adapter.listViewItemList.get(position).)
+                intent.putExtra("yourId", adapter.listViewItemList.get(position).user_id);
                 startActivity(intent);
             }
         });
