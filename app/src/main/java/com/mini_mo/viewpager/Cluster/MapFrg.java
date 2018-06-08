@@ -77,7 +77,7 @@ public class MapFrg extends Fragment
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<MyItem> mClusterManager = null;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
     Location mCurrentLocatiion;
@@ -253,7 +253,6 @@ public class MapFrg extends Fragment
             public boolean onMyLocationButtonClick() {
 
                 Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화" );
-                read_board.clear();
                 startLocationUpdates();
                 mMoveMapByAPI = true;
                 return true;
@@ -288,7 +287,6 @@ public class MapFrg extends Fragment
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
         }
-
     }
 
 
@@ -366,11 +364,11 @@ public class MapFrg extends Fragment
         mCurrentLocatiion = location;
 
 
-
+        mClusterManager.clearItems();
         getVisibleRegion();
         MainPageFragment.getInstance().recyclerListView.add(read_board);
         MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
-
+        read_board.clear();
         stopLocationUpdates();
     }
 

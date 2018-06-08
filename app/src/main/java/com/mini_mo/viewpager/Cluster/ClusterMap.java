@@ -72,7 +72,7 @@ public class ClusterMap extends AppCompatActivity
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
     private AppCompatActivity mActivity;
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<MyItem> mClusterManager = null;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
     Location mCurrentLocatiion;
@@ -119,6 +119,7 @@ public class ClusterMap extends AppCompatActivity
     public void onResume() {
 
         super.onResume();
+
 
         if (mGoogleApiClient.isConnected()) {
 
@@ -175,7 +176,7 @@ public class ClusterMap extends AppCompatActivity
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
@@ -193,15 +194,19 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
+
         mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
+                mClusterManager.clearItems();
                 getVisibleRegion();
+                clustericon.clear();
             }
         });
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
+        getVisibleRegion();
 
     }
 
@@ -228,10 +233,21 @@ public class ClusterMap extends AppCompatActivity
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
         }
-
+        clustericon.clear();
     }
+    public void setCluster() {
+        myClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<MyItem> cluster) {
 
-    //ClusterMap용 addItem실질적으로 마커를 찍는부분
+                ClusterListView clv = new ClusterListView();
+                clv.ClusterListView();
+                clustericon.clear();
+
+                return false;
+            }
+        });
+    }
 
 
     @Override
@@ -250,7 +266,6 @@ public class ClusterMap extends AppCompatActivity
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location,markerTitle,markerSnippet);
         getVisibleRegion();
-        clustericon.clear();
 
         mCurrentLocatiion = location;
 
