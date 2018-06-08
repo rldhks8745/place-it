@@ -1,9 +1,11 @@
 package com.mini_mo.viewpager;
 
 import android.content.ClipData;
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -11,14 +13,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -114,12 +121,21 @@ public class MyPageFragment extends Fragment {
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+                if(permissionCheck== PackageManager.PERMISSION_DENIED){
 
-                intent.setType( MediaStore.Images.Media.CONTENT_TYPE ); // image Content 타입으로 받아오자
+                    if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
 
-                startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                    }
+                }else{
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+
+                    intent.setType( MediaStore.Images.Media.CONTENT_TYPE ); // image Content 타입으로 받아오자
+
+                    startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
+                }
             }
         });
 
