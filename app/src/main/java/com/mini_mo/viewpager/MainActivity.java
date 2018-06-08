@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.CameraActivity;
+import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
 import com.mini_mo.viewpager.Login.LoginActivity;

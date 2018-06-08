@@ -90,7 +90,7 @@ public class CustomGPS extends Service implements LocationListener,
         }
     }
 
-    public void onResume() {
+    public void onStart() {
 
         // 커넷트 되어 있으면
         if ( mGoogleApiClient.isConnected() ) {
@@ -146,6 +146,7 @@ public class CustomGPS extends Service implements LocationListener,
         {
             e.printStackTrace();
         }
+        loadingDialog.progressOFF();
     }
 
     public void isInCamera()
@@ -296,7 +297,6 @@ public class CustomGPS extends Service implements LocationListener,
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mRequestingLocationUpdates = false;
 
-        loadingDialog.progressOFF();
     }
 
     @Override

@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
@@ -95,8 +96,10 @@ public class MapFrg extends Fragment
 
     private MapView mapView = null;
 
+    public LoadingDialog loadingDialog; // 로딩중 다이얼로그
     public MapFrg() {
         // required
+        loadingDialog = new LoadingDialog();
     }
 
 
@@ -241,6 +244,7 @@ public class MapFrg extends Fragment
     // 구글 맵 초기 상태 결정
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
@@ -262,6 +266,8 @@ public class MapFrg extends Fragment
         mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
+
+        loadingDialog.progressON( MainActivity.getInstance(), "로딩 중");
     }
 
     //디바이스에 출력되는 지도 범위
@@ -372,6 +378,9 @@ public class MapFrg extends Fragment
         MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
 
         stopLocationUpdates();
+
+
+        loadingDialog.progressOFF();
     }
 
     public String getCurrentAddress(LatLng latlng) {

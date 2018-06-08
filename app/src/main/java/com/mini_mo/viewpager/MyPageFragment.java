@@ -1,33 +1,50 @@
 package com.mini_mo.viewpager;
 
+import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
+import com.mini_mo.viewpager.ReadAndWrite.NewImageCrate;
+import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+import static com.mini_mo.viewpager.ReadAndWrite.ImageResizing.ReSizing;
+
 /*
  * Created by 노현민 on 2018-04-19.
  */
 
 public class MyPageFragment extends Fragment {
+
+    private final int GALLERY_CODE=1112; // 이미지 불러오기 후 onActivityResult로 받을 request코드값
 
     private View rootView;
     private NestedScrollView nestedScrollView;
@@ -40,7 +57,7 @@ public class MyPageFragment extends Fragment {
     TextView message;
     TextView follow;
     TextView follower;
-
+    Bitmap icon_bitmap;
     private static MyPageFragment instance = null;
     ArrayList<ListViewItemData> mylistItem;
 
@@ -98,6 +115,11 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+
+                intent.setType( MediaStore.Images.Media.CONTENT_TYPE ); // image Content 타입으로 받아오자
+
+                startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
             }
         });
 
@@ -131,11 +153,87 @@ public class MyPageFragment extends Fragment {
             recyclerListView.add(mylistItem);
 
             id.setText(user_info.user_id);
+
             // photo 넣는곳
+            Glide.with( getActivity().getApplicationContext()).asBitmap().load( user_info.user_photo )
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            icon_bitmap = ReadActivity.ReSizing( ReadActivity.bitmapToByteArray(resource) );
+                            icon.setImageBitmap( icon_bitmap );
+                        }
+                    });
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         recyclerListView.adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+                case GALLERY_CODE:
+                    sendPicture( data ); //갤러리에서 가져오기
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    public void sendPicture( Intent data )
+    {
+        /*** 싱글 사진 로드 ***/
+        Uri imgUri = data.getData(); // intent 객체에서 data 빼내기 ( 여기서는 Image Uri 임 )
+
+        String imagePath = getImageRealPathAndTitleFromURI( imgUri );
+
+        // 프로필 사진에 절대경로로 이미지 표시
+        icon.setImageURI( imgUri );
+        // 서버로 imagePath 보내기
+        try
+        {
+            new Data().change_user_photo( MainActivity.getInstance().loginId, imagePath, true, true );
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String getImageRealPathAndTitleFromURI( Uri contentUri )
+    {
+        String filePath = null;
+
+        String[] proj = { MediaStore.Images.Media.DATA }; // content 테이블에서 DATA, TITLE 열 부분만 받아오기 위해
+
+        // uri에 해당하는 컨텐트 테이블에서 DATA, TITLE 부분만 받아와서 cursor로 가르키고 있는다.
+        Cursor cursor = getActivity().getContentResolver().query( contentUri, proj, null, null, null );
+
+        if( cursor != null && cursor.moveToNext() )  // 커서가 생성 됬을 때, 다음 행 가르켰을때 null이 아니면
+        {
+            int column_index = cursor.getColumnIndexOrThrow( proj[0] ); // data부분 ( 파일경로 )의 index 받아오기
+            filePath = cursor.getString( column_index );
+
+            cursor.close();
+        }
+        return filePath;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if( icon_bitmap != null )
+        {
+            icon_bitmap.recycle();
+            icon_bitmap = null;
+        }
     }
 }

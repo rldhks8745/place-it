@@ -1,5 +1,7 @@
 package com.mini_mo.viewpager;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
@@ -10,17 +12,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
+import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
+import com.mini_mo.viewpager.ReadAndWrite.ReadBoard_Image_Activity;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 public class YourPageActivity extends AppCompatActivity {
 
+    static public YourPageActivity instance = null;
+    public boolean clickImage = false;
 
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
@@ -29,7 +40,7 @@ public class YourPageActivity extends AppCompatActivity {
     String loginId;
     String yourId;
 
-    ImageView icon;
+    public ImageView icon;
     TextView id;
     TextView message;
     TextView follow;
@@ -37,6 +48,18 @@ public class YourPageActivity extends AppCompatActivity {
 
     ArrayList<ListViewItemData> mylistItem;
 
+    public Bitmap icon_bitmap;
+
+    static public YourPageActivity getInstance()
+    {
+        return instance;
+    }
+    public YourPageActivity()
+    {
+        instance = this;
+    }
+    //사진 확대
+    PhotoViewAttacher mAttacher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +101,22 @@ public class YourPageActivity extends AppCompatActivity {
                 Toast.makeText(YourPageActivity.this, "관심 친구에 등록 되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // 상대방 사진 누르면 확대해서 보이기
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickImage = true;
+
+                Intent intent = new Intent( YourPageActivity.getInstance() , ReadBoard_Image_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
+        clickImage = false; // 이미지 클릭했나?
         super.onResume();
         try {
             user_info = new Data().read_myPage(yourId); // 상대방 정보 받아오기
@@ -94,10 +129,36 @@ public class YourPageActivity extends AppCompatActivity {
             follow.setText( friends.substring( 0, friends.indexOf(',') ) );
             follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
+            Glide.with( MainActivity.getInstance().getApplicationContext()).asBitmap().load( user_info.user_photo )
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            icon_bitmap = ReadActivity.ReSizing( ReadActivity.bitmapToByteArray(resource) );
+                            icon.setImageBitmap( icon_bitmap );
+                        }
+                    });
+
             id.setText(user_info.user_id);
+            icon.setImageBitmap( icon_bitmap );
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if( icon_bitmap != null )
+        {
+            icon_bitmap.recycle();
+            icon_bitmap = null;
         }
     }
 }

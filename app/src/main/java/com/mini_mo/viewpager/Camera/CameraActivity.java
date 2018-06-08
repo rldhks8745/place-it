@@ -209,6 +209,18 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
+        {
+            if( m_customGPS.checkLocationServicesStatus() )
+            {
+                m_customGPS.onStart();
+            }
+            else
+            {
+                m_customGPS.showDialogForLocationServiceSetting();
+            }
+        }
     }
 
     @Override
@@ -220,17 +232,6 @@ public class CameraActivity extends AppCompatActivity {
             {
                 m_Custom_Camera.showCamera();
 
-                if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
-                {
-                    if( m_customGPS.checkLocationServicesStatus() )
-                    {
-                        m_customGPS.onResume();
-                    }
-                    else
-                    {
-                        m_customGPS.showDialogForLocationServiceSetting();
-                    }
-                }
                 /************
                  카메라 센서
                  ************/
