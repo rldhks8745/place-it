@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class FriendListView extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<FriendsList> listViewItemList = new ArrayList<FriendsList>() ;
+    public ArrayList<FriendsList> listViewItemList = new ArrayList<FriendsList>() ;
 
     // FriendListView의 생성자
     public FriendListView() {
