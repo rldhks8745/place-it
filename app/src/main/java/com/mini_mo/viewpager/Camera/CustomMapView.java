@@ -94,8 +94,6 @@ public class CustomMapView extends View
                             (float)( CENTER_Y + -1 * ( mComments.get(i).mvecRelativePosition.y * mComments.get(i).mDistance * ratio ) ),
                             5.0f,
                             myPaint);
-                    Log.d("Canvas", "위치 x : " + (float)( CENTER_X + ( mComments.get(i).mvecRelativePosition.x * mComments.get(i).mDistance * ratio ) ) +
-                            " y : " +  (float)( CENTER_Y + -1 * ( mComments.get(i).mvecRelativePosition.y * mComments.get(i).mDistance * ratio ) ) );
                 }
             }
         }

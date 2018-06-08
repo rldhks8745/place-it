@@ -38,6 +38,8 @@ public class MyPageFragment extends Fragment {
     ImageView icon;
     TextView id;
     TextView message;
+    TextView follow;
+    TextView follower;
 
     private static MyPageFragment instance = null;
     ArrayList<ListViewItemData> mylistItem;
@@ -65,6 +67,8 @@ public class MyPageFragment extends Fragment {
         icon = (ImageView) rootView.findViewById(R.id.usericon);
         id = (TextView) rootView.findViewById(R.id.userid);
         message = (TextView) rootView.findViewById(R.id.status);
+        follow = (TextView) rootView.findViewById(R.id.follow);
+        follower = (TextView) rootView.findViewById(R.id.follower);
 
         return rootView;
     }
@@ -102,6 +106,10 @@ public class MyPageFragment extends Fragment {
         try {
             user_info = new Data().read_myPage(loginId);
             mylistItem = new Data().read_myBoard(loginId, 0);
+            String friends = new Data().count_friends(loginId);
+
+            follow.setText( friends.substring( 0, friends.indexOf(',') ) );
+            follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
             recyclerListView.loginId = loginId;
             recyclerListView.listViewItems.clear();
             recyclerListView.add(mylistItem);
