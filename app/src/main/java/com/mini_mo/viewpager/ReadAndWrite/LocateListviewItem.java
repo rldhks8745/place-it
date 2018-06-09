@@ -19,7 +19,7 @@ public class LocateListviewItem {
         this.message = message;
     }
 
-    public int getSaveNumver(){
+    public int getSaveNumber(){
         return save_number;
     }
 

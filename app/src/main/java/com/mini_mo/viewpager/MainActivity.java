@@ -3,12 +3,16 @@ package com.mini_mo.viewpager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,11 +22,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.Camera.CameraActivity;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
 import com.mini_mo.viewpager.Login.LoginActivity;
 import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
+
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -30,8 +43,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+    Data data;
+    User_Info user_info;
+    RoundedBitmapDrawable roundedBitmapDrawable;
+
     SharedPreferences auto;
-    String loginId;
+    public String loginId;
 
     public static MainActivity getInstance(){ return instance; }
 
@@ -48,6 +65,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
+
+        try {
+            user_info = data.read_myPage(Store.userid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+
+                        roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+                        roundedBitmapDrawable.setCircular(true);
+                    }
+                });
+
+        Store.myprofile_img = roundedBitmapDrawable;
 
         /*** Tool bar ***/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -155,6 +191,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+    public Bitmap ReSizing(byte[] bytes){
+        Bitmap bitmap;
+
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opt.inSampleSize = 6;
+        opt.inDither = true;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inTempStorage = new byte[32 * 1024];
+        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
+
+        return bitmap;
+    }
+
+    public byte[] bitmapToByteArray( Bitmap bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray ;
     }
 
 }

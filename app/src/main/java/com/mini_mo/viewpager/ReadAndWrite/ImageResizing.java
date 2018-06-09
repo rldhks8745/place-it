@@ -16,7 +16,7 @@ public class ImageResizing {
 
     public static Bitmap ReSizing(String pathname){
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 12;
+        options.inSampleSize = 6;
         Bitmap bmp = BitmapFactory.decodeFile(pathname, options);
 
         return bmp;
@@ -32,7 +32,7 @@ public class ImageResizing {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 12;
+        opt.inSampleSize = 6;
         opt.inDither = true;
         opt.inPurgeable = true;
         opt.inInputShareable = true;

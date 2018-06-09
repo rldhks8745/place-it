@@ -1,9 +1,11 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,12 +28,18 @@ public class LoadLocateActivity extends AppCompatActivity{
     LocateListviewAdapter locateadapter;
     ListView locatelist;
 
+    Activity activity;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rnw_activity_loadlocate);
 
         locateadapter = new LocateListviewAdapter(this);
         locatelist = (ListView)findViewById(R.id.locatelist);
+
+        data = new Data();
+
+        activity = this;
 
         try {
             save_lists =  data.load_locate(Store.userid);
@@ -51,17 +59,21 @@ public class LoadLocateActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 double[] arr = locateadapter.getLocate(position);
 
-                /*Intent intent = new Intent();
-                intent.putExtra("latitude",arr[0]);
-                intent.putExtra("longitude",arr[1]);
-                startActivity(intent);*/
-
                 Store.latitude = arr[0];
                 Store.longitude = arr[1];
 
+                Intent intent = new Intent(activity,WriteActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(activity,WriteActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

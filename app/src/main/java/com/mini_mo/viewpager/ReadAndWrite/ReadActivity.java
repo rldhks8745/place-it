@@ -36,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
+import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
 
@@ -59,6 +60,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<ImageButton> buttons;
     View.OnClickListener listener;
+
+    Data data;
+
+    int count;
     //실험용
 
 
@@ -78,6 +83,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     int count_state,total_count;
 
+    ImageView profile;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +95,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView time = (TextView)findViewById(R.id.time);
         gps = (TextView)findViewById(R.id.gps);
-        ImageView profile = (ImageView)findViewById(R.id.profile);
+        profile = (ImageView)findViewById(R.id.profile);
         back = (ImageButton)findViewById(R.id.back);
         comment = (Button)findViewById(R.id.comment);
         like_button = (ImageButton)findViewById(R.id.like_button);
@@ -99,13 +106,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         content = (TextView)findViewById(R.id.title);
 
-        change = (ImageButton)findViewById(R.id.change);
-        delete = (ImageButton)findViewById(R.id.delete);
-
         //실험
+        data = new Data();
+
+        count = 0;
+
         listener = this;
         buttons = new ArrayList<>();
 
+        change = (ImageButton)findViewById(R.id.change);
+        delete = (ImageButton)findViewById(R.id.delete);
 
         activity = this;
 
@@ -126,7 +136,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         content.setText(rbi.content);
 
         if(rbi.b_photos != null) {
-            //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
 
@@ -154,11 +164,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
+
         if(rbi.latitude != 0.0 && rbi.longitude != 0.0){
-            gps.setText(AddressTransformation.getAddress(this, rbi.latitude, rbi.longitude));
-        }else {
+            gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
+        }else{
             gps.setText("위치 불안정");
         }
+
         time.setText(rbi.date);
         like_count.setText(String.valueOf(rbi.good));
 
@@ -168,17 +180,30 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         count_state = 0; //DB에서 자기가 이 글에 대해 좋아요 눌렀는 지, 안눌렀는지 알아와야됩니다. (0대신 가져온 값/ 0: FLASE , 1: TRUE)
         total_count = 0; //화면 시작할때 DB에서 좋아요 개수를 불러와 넣기
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-        roundedBitmapDrawable.setCircular(true);
+        Glide.with(getApplicationContext()).asBitmap().load(rbi.user_photo)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-        profile.setImageDrawable(roundedBitmapDrawable);
+                        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+                        roundedBitmapDrawable.setCircular(true);
+
+                        profile.setImageDrawable(roundedBitmapDrawable);
+                    }
+                });
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
+
+
+
 
         back.setOnClickListener(this);
         comment.setOnClickListener(this);
         like_button.setOnClickListener(this);
         change.setOnClickListener(this);
         delete.setOnClickListener(this);
+        profile.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -194,20 +219,35 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
 
+            case R.id.profile:
+                Intent intent1 = new Intent(this, YourPageActivity.class);
+                intent1.putExtra("id",rbi.user_id);
+                startActivity(intent1);
+
+                break;
+
             case R.id.change:
-                Intent intent = new Intent(this, ChangeBoard.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(this, ChangeBoard.class);
+                startActivity(intent2);
+                finish();
                 break;
 
             case R.id.delete:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("삭제")
+                dialog.setTitle("글 삭제")
                         .setMessage("정말 글을 삭제하시겠습니까?")
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //DELETE문
-                                finish();
+                                try {
+                                    data.delete_board(Store.board_num);
+                                    Store.board_num = -1;
+                                    Toast.makeText(getApplicationContext(),"글 삭제완료!",Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } catch (JSONException e) {
+                                    Toast.makeText(getApplicationContext(),"글 삭제실패!",Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -231,7 +271,18 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                 like_button.startAnimation(ani);
 
-                if (count_state == 0) {
+                try {
+                    data.plus_good(Store.board_num);
+
+                    int likecount = Integer.parseInt(like_count.getText().toString());
+                    like_count.setText(String.valueOf((likecount+1)));
+
+                    Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                /*if (count_state == 0) {
                     count_state = 1;
                     Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
                     total_count += 1;
@@ -241,7 +292,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(getApplicationContext(), "좋아요 취소!", Toast.LENGTH_SHORT).show();
                     total_count -= 1;
                     like_count.setText(String.valueOf(total_count));
-                }
+                }*/
                 break;
         }
     }
@@ -258,7 +309,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 12;
+        opt.inSampleSize = 6;
         opt.inDither = true;
         opt.inPurgeable = true;
         opt.inInputShareable = true;
