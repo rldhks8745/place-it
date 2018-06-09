@@ -106,7 +106,6 @@ public class CameraActivity extends AppCompatActivity {
                                     if ((comment.mvecScreenPos.x - comment.radius <= event.getX()) && (comment.mvecScreenPos.x + comment.radius >= event.getX()) &&
                                             (comment.mvecScreenPos.y - comment.radius <= event.getY()) && (comment.mvecScreenPos.y + comment.radius >= event.getY())) {
 
-                                        Log.d("클릭 시", " x좌표 : " + comment.mvecScreenPos.x + " y좌표 : " + comment.mvecScreenPos.y );
                                         Intent intent = new Intent( CameraActivity.getInstance(), CameraCommentsList.class );
                                         intent.putExtra("lat", comment.mvecAbsolutePosition.y);
                                         intent.putExtra("lon", comment.mvecAbsolutePosition.x);
@@ -147,8 +146,6 @@ public class CameraActivity extends AppCompatActivity {
                 intent.putExtra("lat", ( m_customGPS.mCurrentPosition != null) ? m_customGPS.mCurrentPosition.latitude : 37.56 ); // 위도값 전달
                 intent.putExtra("lon",  ( m_customGPS.mCurrentPosition != null) ? m_customGPS.mCurrentPosition.longitude : 126.97 ); // 경도값 전달
                 startActivityForResult(intent, GOOGLE_MAP_RESULT);
-
-                Log.d("CameraActivity : ","MainActivity :  구글맵 클릭했다");
             }
         });
 
@@ -159,8 +156,6 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 m_customGPS.startLocationUpdates();
-
-                Log.d("CameraActivity : ","MainActivity : 현재위치 클릭했다");
             }
         });
 
@@ -214,6 +209,18 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
+        {
+            if( m_customGPS.checkLocationServicesStatus() )
+            {
+                m_customGPS.onStart();
+            }
+            else
+            {
+                m_customGPS.showDialogForLocationServiceSetting();
+            }
+        }
     }
 
     @Override
@@ -225,17 +232,6 @@ public class CameraActivity extends AppCompatActivity {
             {
                 m_Custom_Camera.showCamera();
 
-                if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
-                {
-                    if( m_customGPS.checkLocationServicesStatus() )
-                    {
-                        m_customGPS.onResume();
-                    }
-                    else
-                    {
-                        m_customGPS.showDialogForLocationServiceSetting();
-                    }
-                }
                 /************
                  카메라 센서
                  ************/
@@ -244,15 +240,11 @@ public class CameraActivity extends AppCompatActivity {
 
             }
         }
-
-        Log.d("CameraActivity","onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        Log.d("CameraActivity","MainActivity : onPause");
 
         /************
          카메라 센서
@@ -287,11 +279,9 @@ public class CameraActivity extends AppCompatActivity {
             case CustomGPS.GPS_ENABLE_REQUEST_CODE:
                 //사용자가 GPS 활성 시켰는지 검사
                 if ( m_customGPS.checkLocationServicesStatus() ) {
-                    Log.d( CustomGPS.TAG, "onActivityResult : 퍼미션 가지고 있음");
 
                     if ( !m_customGPS.mGoogleApiClient.isConnected() ) {
 
-                        Log.d( CustomGPS.TAG, "onActivityResult : mGoogleApiClient connect ");
                         m_customGPS.mGoogleApiClient.connect();
                     }
                     return;
@@ -340,6 +330,11 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     /************************************
      *  사용자가 권한 허용/거부 버튼을 눌렀을 때 호출되는 메서드
      ************************************/
@@ -361,7 +356,6 @@ public class CameraActivity extends AppCompatActivity {
                     else // GPS 퍼미션 허용이면
                     {
                         m_customGPS.onConnectGoogleApiClient(); // 커넥션
-                        Log.d( CustomGPS.TAG, "onRequestPermissionsResult : mGoogleApiClient connect");
                     }
                 }
                 break;
@@ -372,7 +366,6 @@ public class CameraActivity extends AppCompatActivity {
                         if ( !m_customGPS.mGoogleApiClient.isConnected())
                         {
                             m_customGPS.onConnectGoogleApiClient();
-                            Log.d( CustomGPS.TAG, "onRequestPermissionsResult : mGoogleApiClient connect");
                         }
                     } else {
                         m_customGPS.checkPermissions();

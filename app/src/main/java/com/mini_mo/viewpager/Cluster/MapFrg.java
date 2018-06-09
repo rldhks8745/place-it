@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
@@ -77,7 +78,7 @@ public class MapFrg extends Fragment
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<MyItem> mClusterManager = null;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
     Location mCurrentLocatiion;
@@ -89,30 +90,32 @@ public class MapFrg extends Fragment
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+            .setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY )
+            .setInterval( UPDATE_INTERVAL_MS )
+            .setFastestInterval( FASTEST_UPDATE_INTERVAL_MS );
 
     private MapView mapView = null;
 
+    public LoadingDialog loadingDialog; // 로딩중 다이얼로그
     public MapFrg() {
         // required
+        loadingDialog = new LoadingDialog();
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.activity_map, container, false);
+        View layout = inflater.inflate( R.layout.activity_map, container, false );
 
-        mapView = (MapView) layout.findViewById(R.id.map);
-        mapView.getMapAsync(this);
+        mapView = (MapView) layout.findViewById( R.id.map );
+        mapView.getMapAsync( this );
 
         return layout;
     }
@@ -124,7 +127,7 @@ public class MapFrg extends Fragment
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() == false) {
 
-            Log.d(TAG, "onStart: mGoogleApiClient connect");
+            Log.d( TAG, "onStart: mGoogleApiClient connect" );
             mGoogleApiClient.connect();
         }
     }
@@ -136,13 +139,13 @@ public class MapFrg extends Fragment
 
         if (mRequestingLocationUpdates) {
 
-            Log.d(TAG, "onStop : call stopLocationUpdates");
+            Log.d( TAG, "onStop : call stopLocationUpdates" );
             stopLocationUpdates();
         }
 
         if (mGoogleApiClient.isConnected()) {
 
-            Log.d(TAG, "onStop : mGoogleApiClient disconnect");
+            Log.d( TAG, "onStop : mGoogleApiClient disconnect" );
             mGoogleApiClient.disconnect();
         }
 
@@ -150,8 +153,8 @@ public class MapFrg extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        super.onSaveInstanceState( outState );
+        mapView.onSaveInstanceState( outState );
     }
 
     @Override
@@ -167,12 +170,6 @@ public class MapFrg extends Fragment
 
                 checkPermissions();
             }
-        }
-
-        if (mGoogleApiClient.isConnected()) {
-
-            Log.d(TAG, "onResume : call startLocationUpdates");
-            if (!mRequestingLocationUpdates) startLocationUpdates();
         }
     }
 
@@ -196,17 +193,17 @@ public class MapFrg extends Fragment
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        super.onActivityCreated( savedInstanceState );
 
         //액티비티가 처음 생성될 때 실행되는 함수
-        mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.getInstance())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
+        mGoogleApiClient = new GoogleApiClient.Builder( MainActivity.getInstance() )
+                .addConnectionCallbacks( this )
+                .addOnConnectionFailedListener( this )
+                .addApi( LocationServices.API )
                 .build();
 
         if (mapView != null) {
-            mapView.onCreate(savedInstanceState);
+            mapView.onCreate( savedInstanceState );
         }
     }
 
@@ -214,23 +211,23 @@ public class MapFrg extends Fragment
 
         if (!checkLocationServicesStatus()) {
 
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
+            Log.d( TAG, "startLocationUpdates : call showDialogForLocationServiceSetting" );
             showDialogForLocationServiceSetting();
         } else {
 
-            if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission( MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission( MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
 
-                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
+                Log.d( TAG, "startLocationUpdates : 퍼미션 안가지고 있음" );
                 return;
             }
 
 
-            Log.d(TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates");
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+            Log.d( TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates" );
+            LocationServices.FusedLocationApi.requestLocationUpdates( mGoogleApiClient, locationRequest, this );
             mRequestingLocationUpdates = true;
 
-            mGoogleMap.setMyLocationEnabled(true);
+            mGoogleMap.setMyLocationEnabled( true );
 
         }
 
@@ -239,70 +236,43 @@ public class MapFrg extends Fragment
 
     private void stopLocationUpdates() {
 
-        Log.d(TAG, "stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        Log.d( TAG, "stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates" );
+        LocationServices.FusedLocationApi.removeLocationUpdates( mGoogleApiClient, this );
         mRequestingLocationUpdates = false;
     }
 
     // 구글 맵 초기 상태 결정
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mGoogleMap = googleMap;
 
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ) );
 
 
-        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+        mGoogleMap.setOnMyLocationButtonClickListener( new GoogleMap.OnMyLocationButtonClickListener() {
 
             @Override
             public boolean onMyLocationButtonClick() {
 
-                Log.d(TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화");
+                Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화" );
+                startLocationUpdates();
                 mMoveMapByAPI = true;
                 return true;
             }
-        });
-        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        } );
+        mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
+        mGoogleMap.setOnCameraIdleListener( mClusterManager );
+        mGoogleMap.setOnMarkerClickListener( mClusterManager );
 
-            @Override
-            public void onMapClick(LatLng latLng) {
-
-                Log.d(TAG, "onMapClick :");
-            }
-        });
-
-        mGoogleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-
-            @Override
-            public void onCameraMoveStarted(int i) {
-
-                if (mMoveMapByUser == true && mRequestingLocationUpdates) {
-
-                    Log.d(TAG, "onCameraMove : 위치에 따른 카메라 이동 비활성화");
-                    mMoveMapByAPI = false;
-                }
-
-                mMoveMapByUser = true;
-
-            }
-        });
-
-        mClusterManager = new ClusterManager<>(this.getActivity(), mGoogleMap);
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
-        mGoogleMap.setOnMarkerClickListener(mClusterManager);
-        addItem2();//마커 찍기
-        getVisibleRegion();//DB에 남서단 동북단 좌표를 보내고 글 read리스트에 저장하기
-
-        MainPageFragment.getInstance().recyclerListView.add(Store.sendboard);
-        MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
-
+        loadingDialog.progressON( MainActivity.getInstance(), "로딩 중");
     }
 
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
-        Log.d("TEST", bounds.toString());
+        Log.d( "TEST", bounds.toString() );
         double max_lat, max_lng, min_lat, min_lng;
         max_lat = bounds.northeast.latitude;
         max_lng = bounds.northeast.longitude;
@@ -311,22 +281,24 @@ public class MapFrg extends Fragment
 
         Data data = new Data();
         try {
-            read_board = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
+            read_board = data.read_board_list( min_lat, min_lng, max_lat, max_lng );
             Store.sendboard = read_board;
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        for(int i = 0 ; i < read_board.size(); i++) {
+            double lat = read_board.get(i).latitude;
+            double lng = read_board.get(i).longitude;
+            MyItem offsetItem2 = new MyItem(lat, lng);
+            mClusterManager.addItem(offsetItem2);
+        }
     }
+
+
     //MapFrg용 실질적으로 마커를 찍는부분
 
-    public void addItem2(){
-        double lat = 35.2706008;
-        double lng = 128.01357559999997;
-            MyItem offsetItem2 = new MyItem( lat,lng );
-            mClusterManager.addItem( offsetItem2 );
 
-        }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -397,11 +369,16 @@ public class MapFrg extends Fragment
         setCurrentLocation(location, markerTitle, markerSnippet);
         mCurrentLocatiion = location;
 
-        Store.sendboard.clear();
 
+        mClusterManager.clearItems();
         getVisibleRegion();
-        MainPageFragment.getInstance().recyclerListView.add(Store.sendboard);
+        MainPageFragment.getInstance().recyclerListView.add(read_board);
         MainPageFragment.getInstance().recyclerListView.adapter.notifyDataSetChanged();
+        read_board.clear();
+        stopLocationUpdates();
+
+
+        loadingDialog.progressOFF();
     }
 
     public String getCurrentAddress(LatLng latlng) {

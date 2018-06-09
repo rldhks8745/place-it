@@ -64,6 +64,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     Data data;
 
     int count;
+
     //실험용
 
 
@@ -146,7 +147,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+                                Bitmap bitmap = ReSizing( bitmapToByteArray( resource ) );
 
                                 buttons.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
 
@@ -304,7 +305,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
-    public Bitmap ReSizing(byte[] bytes){
+    static public Bitmap ReSizing(byte[] bytes){
         Bitmap bitmap;
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -319,7 +320,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         return bitmap;
     }
 
-    public byte[] bitmapToByteArray( Bitmap bitmap ) {
+    static public byte[] bitmapToByteArray( Bitmap bitmap ) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
         bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
         byte[] byteArray = stream.toByteArray() ;

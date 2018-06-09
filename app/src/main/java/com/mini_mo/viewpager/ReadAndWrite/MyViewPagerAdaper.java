@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.widget.ImageView;
 
+import com.google.android.gms.common.images.ImageRequest;
 import com.mini_mo.viewpager.Store;
 
 import java.util.ArrayList;

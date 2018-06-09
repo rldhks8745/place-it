@@ -17,6 +17,187 @@ public class Data {
 
     }
 
+    public String change_user_photo(String user_name, String photo_url,boolean is_photo,boolean is_newPhoto) throws JSONException { //is_photo = 현재 등록되어있는 프사가 있으면 true 아니면 false , is_newPhoto 새로 등록할 사진이 있으면 true 없으면 false
+        String r = "-3";
+
+        if(is_photo) {
+            JSONObject result = null;
+            JSONObject obj = new JSONObject();
+            JSONObject b_d = new JSONObject();
+
+            obj.put("flag", "del_user_phto");
+            b_d.put("user_name", user_name);
+            obj.put("del_user_phto_data", b_d);
+
+            try {
+                result = new ConHttpJson().execute(obj).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            r = "1";
+        }
+        if(is_newPhoto)
+        {
+            new Imagehttp(photo_url, user_name, "write_user_photo").execute();
+
+            r = "1";
+        }
+
+        return r;
+    }
+
+    public String plus_good(int board_num) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("board_num",board_num+"");
+
+        jobj.put("flag","plus_good");
+        jobj.put("plus_good_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+    public String delete_board(int board_num) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("board_num",board_num);
+
+        jobj.put("flag","delete_board");
+        jobj.put("delete_board_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+
+    public String count_friends(String user_name) throws JSONException
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("user_name",user_name);
+
+        jobj.put("flag","count_friends");
+        jobj.put("count_friends_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+    public String change_board(int board_num, String content, String tag,ArrayList<String> addPhoto,ArrayList<String> delPhoto) throws JSONException {
+        String r = "-3";
+        String board_number = "-30";
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject b_d = new JSONObject();
+        obj.put("flag", "change_board");
+        b_d.put("content", content);
+        b_d.put("board_num", board_num);
+        b_d.put("tag", tag);
+        obj.put("change_board_data", b_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        r = "1";
+
+        for (int i = 0; i < delPhoto.size() ; i++)
+        {
+            obj = new JSONObject();
+            b_d = new JSONObject();
+            obj.put("flag", "delete_board_photo");
+            b_d.put("photo_name", delPhoto.get(i));
+            obj.put("delete_board_photo_data", b_d);
+
+            try {
+                result = new ConHttpJson().execute(obj).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        for(int i = 0 ;i < addPhoto.size(); i++)
+        {
+            //board_number = result.getString("result");
+
+            new Imagehttp(addPhoto.get(i), board_num+"", "board_num").execute();
+        }
+
+        return r;
+    }
+
+
     public ArrayList<Save_List> load_locate (String id) throws JSONException
     {
         ArrayList<Save_List> fl = new ArrayList<Save_List>();
@@ -427,7 +608,7 @@ public class Data {
             e.printStackTrace();
         }
 
-        return result.toString();
+        return result.getString("result");
     }
 
 

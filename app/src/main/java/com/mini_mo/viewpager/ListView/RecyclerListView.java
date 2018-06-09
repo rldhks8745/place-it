@@ -27,7 +27,7 @@ public class RecyclerListView {
 
     private RecyclerView recyclerView;
     public RecyclerViewAdapter adapter;
-    private ArrayList<ListViewItemData> listViewItems;
+    public ArrayList<ListViewItemData> listViewItems;
 
     public String loginId;
     int count;
@@ -67,6 +67,7 @@ public class RecyclerListView {
 
     public void add(ArrayList<ListViewItemData> items)
     {
+        listViewItems.clear();
         for( int i = 0; i < items.size(); i++ )
         {
             listViewItems.add(items.get(i));
@@ -82,18 +83,19 @@ public class RecyclerListView {
                     // TODO add listItems
 
                     count += 10;
-                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
                     ArrayList<ListViewItemData> mylistItem = null;
                     try {
                         mylistItem = new Data().read_myBoard(loginId, count);
-                        if( mylistItem != null ) {
+                        if( ( mylistItem.size() != 0 ) && ( mylistItem != null ) ) {
                             add(mylistItem);
+                            // 어댑터에 연결된 ListView를 갱신
+                            adapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    // 어댑터에 연결된 ListView를 갱신
-                    adapter.notifyDataSetChanged();
+
                 }
             }
         });

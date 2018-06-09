@@ -69,6 +69,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         title = (EditText)findViewById(R.id.comment);
         myadapter = new CustomAdapter();
 
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
+        roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+        roundedBitmapDrawable.setCircular(true);
 
         data = new Data();
 

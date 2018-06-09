@@ -141,12 +141,13 @@
         layout="@layout/content_mypage" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/write_fab"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@drawable/edit" />
+        app:srcCompat="@drawable/heart" />
 
 </android.support.design.widget.CoordinatorLayout>

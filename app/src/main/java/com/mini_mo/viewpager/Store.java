@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 
+
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 
 import java.util.ArrayList;

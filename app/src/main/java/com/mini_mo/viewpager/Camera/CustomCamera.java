@@ -147,7 +147,6 @@ public class CustomCamera implements SurfaceHolder.Callback
                                     public void onClick(DialogInterface dialogInterface, int i)
                                     {
                                         m_mainActivity.finish(); // GPS를 허용하지않으면 끈다
-                                        Log.d("CustomGPS","finish()");
                                     }
                                 }
                         ); // 대화창 생성

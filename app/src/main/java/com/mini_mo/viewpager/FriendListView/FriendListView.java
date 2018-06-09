@@ -5,13 +5,13 @@ package com.mini_mo.viewpager.FriendListView;
  */
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.mini_mo.viewpager.DAO.FriendsList;
 import com.mini_mo.viewpager.R;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class FriendListView extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<FriendData> listViewItemList = new ArrayList<FriendData>() ;
+    public ArrayList<FriendsList> listViewItemList = new ArrayList<FriendsList>() ;
 
     // FriendListView의 생성자
     public FriendListView() {
@@ -49,16 +49,17 @@ public class FriendListView extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        ImageView iconImageView = (ImageView) convertView.findViewById(R.id.userProfile) ;
-
+        //ImageView iconImageView = (ImageView) convertView.findViewById(R.id.userProfile) ;
+        TextView userId = (TextView)  convertView.findViewById(R.id.userId);
+        TextView messgae = (TextView)  convertView.findViewById(R.id.message);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        FriendData listViewItem = listViewItemList.get(position);
+        FriendsList listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영 ( Test 중 )
-        //iconImageView.setImageDrawable(listViewItem.getIcon());
-        //titleTextView.setText(listViewItem.getTitle());
-        //descTextView.setText(listViewItem.getDesc());
+        //iconImageView.setImageDrawable(listViewItem. user_photo);
+        userId.setText(listViewItem.user_id);
+        messgae.setText(listViewItem.message);
 
         return convertView;
     }
@@ -75,17 +76,12 @@ public class FriendListView extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
-    // 아이템 데이터 추가를 위한 함수.
-    public void addItem(Drawable icon, String title, String desc) {
-        FriendData item = new FriendData();
-
-        // item.설정자();
-        listViewItemList.add(item);
-    }
-
-    // 아이템 데이터 추가를 위한 함수. ( Test 용 )
-    public void addItem() {
-        FriendData item = new FriendData();
-        listViewItemList.add(item);
+    public void add(ArrayList<FriendsList> items)
+    {
+        listViewItemList.clear();
+        for( int i = 0; i < items.size(); i++ )
+        {
+            listViewItemList.add(items.get(i));
+        }
     }
 }

@@ -82,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 값 설정 ( set )
         viewHolder.id.setText(item.user_id);
         viewHolder.context.setText(item.content);
-        //viewHolder.good.setText(item.good);
+        viewHolder.good.setText(item.good +"");
 
         /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
 
