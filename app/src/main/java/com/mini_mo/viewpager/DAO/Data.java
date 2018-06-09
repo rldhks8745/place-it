@@ -17,6 +17,77 @@ public class Data {
 
     }
 
+
+    public String delete_friend(String id_applicant,String id_respondent) throws JSONException //처음 변수가 본인의 아이디 두번째변수가 삭제할 사람의 아이디
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        login_data.put("id_applicant",id_applicant);
+        login_data.put("id_respondent",id_respondent);
+
+        jobj.put("flag","delete_friend");
+        jobj.put("delete_friend_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
+    public String change_massage(String massage, String id) throws JSONException // 메시지 내용과 본인의 아이디 입니다. 메시지 내용을 없애고 싶으시면 massage를 null으로 주시면 됩니다.
+    {
+        JSONObject jobj = new JSONObject();
+        JSONObject result = null;
+        String r = "-3";
+
+        JSONObject login_data = new JSONObject();
+
+        if(massage == null) {
+            massage = "No Massage";
+        }
+        login_data.put("massage", massage);
+
+        login_data.put("id",id);
+
+        jobj.put("flag","change_massage");
+        jobj.put("change_massage_data", login_data);
+
+        try {
+            result = new ConHttpJson().execute(jobj).get();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        if(result != null)
+        {
+
+            r = result.getString("result");
+        }
+
+        return r;
+
+    }
+
     public String change_user_photo(String user_name, String photo_url,boolean is_photo,boolean is_newPhoto) throws JSONException { //is_photo = 현재 등록되어있는 프사가 있으면 true 아니면 false , is_newPhoto 새로 등록할 사진이 있으면 true 없으면 false
         String r = "-3";
 
