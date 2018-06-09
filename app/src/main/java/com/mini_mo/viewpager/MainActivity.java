@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
 
+        data = new Data();
+
         try {
             user_info = data.read_myPage(Store.userid);
         } catch (JSONException e) {
