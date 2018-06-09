@@ -13,9 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
@@ -84,6 +88,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.context.setText(item.content);
         viewHolder.good.setText(item.good +"");
 
+        // 사진 넣기
+        Glide.with( MainActivity.getInstance() )
+                .load( item.user_photo )
+                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
+                .into( viewHolder.userIcon );
+
         /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
 
         //Here it is simply write onItemClick listener here
@@ -122,6 +132,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView id;
         public TextView context;
         public TextView good;
+        public ImageView userIcon;
 
         public final View mView;
         public ViewHolder(View itemView){
@@ -133,6 +144,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             id = (TextView) itemView.findViewById(R.id.userid);
             context = (TextView) itemView.findViewById(R.id.context);
             good = (TextView) itemView.findViewById(R.id.good);
+            userIcon = (ImageView)itemView.findViewById(R.id.userIcon);
         }
     }
 

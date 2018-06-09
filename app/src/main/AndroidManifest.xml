@@ -76,6 +76,7 @@
             android:name=".YourPageActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".ProfileImageActivity" />
+        <activity android:name=".StateMessageActivity" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
 
     </application>
 

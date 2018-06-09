@@ -117,6 +117,8 @@ public class CameraActivity extends AppCompatActivity {
 
                                          */
                                         Toast.makeText(CameraActivity.getInstance(), "클릭한 코멘트 개수 : " + comment.mCount, Toast.LENGTH_SHORT).show();
+
+                                        return true;
                                     }
                                 }
 

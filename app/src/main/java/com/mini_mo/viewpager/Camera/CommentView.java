@@ -76,7 +76,7 @@ public class CommentView extends View
                 {
                     float widthRatio = (float) customMapView.mComments.get(i).mScreenWIdthRatio;
                     float radius = (float) ( ( 1 / customMapView.mComments.get(i).mDistance ) );
-                    radius = (float)( ( radius <= 1.0 ) ? 1.0 : radius );
+                    radius = (float)( ( radius >= 1.0 ) ? 1.0 : radius );
                     float x = (widthRatio != 0.0) ? (float) (mScreenWIdth * customMapView.mComments.get(i).mScreenWIdthRatio) : -100.0f;
 
                     // 삼중연산자
@@ -84,7 +84,7 @@ public class CommentView extends View
                             ( ( (float) -( mCameraActivity.sensorY + 45 ) / 90 ) * mScreenHeight ) + ( float )( customMapView.mComments.get(i).mDistance * 2 ) :
                             -100;
 
-                    canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ) / 2, myPaint ); // 색상 표시
+                    canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ), myPaint ); // 색상 표시
 
                     myPaint.setColor(Color.WHITE);
                     myPaint.setTextSize( radius * mCommentSize );

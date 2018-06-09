@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -65,7 +66,7 @@ public class MyPageFragment extends Fragment {
     TextView message;
     TextView follow;
     TextView follower;
-    Bitmap icon_bitmap;
+
     private static MyPageFragment instance = null;
     ArrayList<ListViewItemData> mylistItem;
 
@@ -145,6 +146,11 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent( MyPageFragment.this.getContext(), StateMessageActivity.class ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+                intent.putExtra("loginId", loginId);
+                intent.putExtra("stateMessage", message.getText().toString() );
+
+                startActivity( intent );
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -172,14 +178,11 @@ public class MyPageFragment extends Fragment {
             id.setText(user_info.user_id);
 
             // photo 넣는곳
-            Glide.with( getActivity().getApplicationContext()).asBitmap().load( user_info.user_photo )
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            icon_bitmap = ReadActivity.ReSizing( ReadActivity.bitmapToByteArray(resource) );
-                            icon.setImageBitmap( icon_bitmap );
-                        }
-                    });
+            Glide.with( this.getContext() )
+                    .load( user_info.user_photo )
+                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
+                    .into( icon );
+
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -247,10 +250,10 @@ public class MyPageFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if( icon_bitmap != null )
-        {
-            icon_bitmap.recycle();
-            icon_bitmap = null;
-        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

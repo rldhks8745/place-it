@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -129,17 +130,13 @@ public class YourPageActivity extends AppCompatActivity {
             follow.setText( friends.substring( 0, friends.indexOf(',') ) );
             follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
-            Glide.with( MainActivity.getInstance().getApplicationContext()).asBitmap().load( user_info.user_photo )
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            icon_bitmap = ReadActivity.ReSizing( ReadActivity.bitmapToByteArray(resource) );
-                            icon.setImageBitmap( icon_bitmap );
-                        }
-                    });
+
+            Glide.with( this )
+                    .load( user_info.user_photo )
+                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
+                    .into( icon );
 
             id.setText(user_info.user_id);
-            icon.setImageBitmap( icon_bitmap );
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();

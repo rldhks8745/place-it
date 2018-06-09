@@ -5,16 +5,26 @@ package com.mini_mo.viewpager.FriendListView;
  */
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.FriendsList;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class FriendListView extends BaseAdapter {
 
@@ -39,7 +49,6 @@ public class FriendListView extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final int pos = position;
         final Context context = parent.getContext();
 
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
@@ -49,7 +58,7 @@ public class FriendListView extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        //ImageView iconImageView = (ImageView) convertView.findViewById(R.id.userProfile) ;
+        ImageView iconImageView = (ImageView) convertView.findViewById(R.id.userProfile) ;
         TextView userId = (TextView)  convertView.findViewById(R.id.userId);
         TextView messgae = (TextView)  convertView.findViewById(R.id.message);
 
@@ -60,6 +69,13 @@ public class FriendListView extends BaseAdapter {
         //iconImageView.setImageDrawable(listViewItem. user_photo);
         userId.setText(listViewItem.user_id);
         messgae.setText(listViewItem.message);
+
+        // photo 비트맵으로 전환
+        // 개꿀 글라이드
+        Glide.with( context )
+                .load( listViewItemList.get( position ).user_photo )
+                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
+                .into( iconImageView );
 
         return convertView;
     }
@@ -76,12 +92,15 @@ public class FriendListView extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
-    public void add(ArrayList<FriendsList> items)
+    public void add(ArrayList<FriendsList> items, Context context )
     {
-        listViewItemList.clear();
+        listViewItemList.clear(); // 클리어
+
         for( int i = 0; i < items.size(); i++ )
         {
-            listViewItemList.add(items.get(i));
+            listViewItemList.add( items.get(i) );
         }
     }
+
+
 }

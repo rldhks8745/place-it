@@ -77,10 +77,15 @@ public class FriendListFragment extends Fragment{
         super.onResume();
         try {
             items = new Data().readFriends(MainActivity.getInstance().loginId); // 친구 목록 받아옴
-            adapter.add(items);
+            adapter.add( items, this.getContext() );
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

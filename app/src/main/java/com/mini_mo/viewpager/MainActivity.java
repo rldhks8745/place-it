@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        data = new Data();
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
