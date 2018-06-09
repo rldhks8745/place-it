@@ -51,6 +51,7 @@ import static com.mini_mo.viewpager.ReadAndWrite.ImageResizing.ReSizing;
 
 public class MyPageFragment extends Fragment {
 
+    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     private final int GALLERY_CODE=1112; // 이미지 불러오기 후 onActivityResult로 받을 request코드값
 
     private View rootView;
