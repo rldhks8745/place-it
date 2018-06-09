@@ -68,11 +68,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
 
+        data = new Data();
+
         try {
             user_info = data.read_myPage(Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        /*Glide.with( context )
+                .load( listViewItemList.get( position ).user_photo )
+                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
+                .into( iconImageView );*/
 
         Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
                 .into(new SimpleTarget<Bitmap>() {
