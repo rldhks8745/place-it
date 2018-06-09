@@ -18,6 +18,55 @@ public class Data {
     }
 
 
+    public ArrayList<ListViewItemData> search_board(String tag) throws JSONException //매개변수 = 검색할 태그 (태그 하나만 검색가능.)(#부분 필요 x)
+    {
+        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "search_board");
+        u_n.put("tag", tag);
+
+        obj.put("search_board_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("read_board_list_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_board_list_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                ListViewItemData t = new ListViewItemData();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num");
+                t.content = tjo.getString("content");
+                t.date_board = tjo.getString("date_board");
+                t.good = tjo.getInt("good");
+                t.latitude = tjo.getDouble("board_latitude");
+                t.longitude = tjo.getDouble("board_longitude");
+                t.user_id = tjo.getString("user_id");
+                t.user_photo = tjo.getString("user_photo");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+
+    }
+
     public String delete_friend(String id_applicant,String id_respondent) throws JSONException //처음 변수가 본인의 아이디 두번째변수가 삭제할 사람의 아이디
     {
         JSONObject jobj = new JSONObject();
