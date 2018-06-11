@@ -708,7 +708,7 @@ public class Data {
 
 
 
-    public String add_friends(String id_applicant, String id_respondent) throws JSONException
+    public int add_friends(String id_applicant, String id_respondent) throws JSONException
     {
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -727,7 +727,7 @@ public class Data {
             e.printStackTrace();
         }
 
-        return result.getString("result");
+        return Integer.parseInt( result.getString("result") );
     }
 
 

@@ -112,7 +112,7 @@ public class CameraActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         /*
 
-                                        여기다가
+                                        여기다가1
                                         comment.mvecAbsolutePosition.y (위도), comment.mvecAbsolutePosition.x (경도)인 모든 코멘트 찾아서
 
                                          */

@@ -89,8 +89,9 @@ public class YourPageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int result;
                 try {
-                    new Data().add_friends(loginId, yourId);
+                    result = new Data().add_friends(loginId, yourId);
 
                     String friends = new Data().count_friends(yourId);
                     follow.setText( friends.substring( 0, friends.indexOf(',') ) );
@@ -98,8 +99,16 @@ public class YourPageActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+
+                    result = -1;
                 }
-                Toast.makeText(YourPageActivity.this, "관심 친구에 등록 되었습니다.", Toast.LENGTH_SHORT).show();
+
+                if( result == 1 )
+                    Toast.makeText(YourPageActivity.this, "관심 친구에 등록 되었습니다.", Toast.LENGTH_SHORT).show();
+                else if( result == 0 )
+                    Toast.makeText(YourPageActivity.this, "관심 친구가 삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+                else if( result < 0 )
+                    Toast.makeText(YourPageActivity.this, "서버에 연결할 수 없습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
