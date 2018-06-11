@@ -188,21 +188,15 @@ public class ClusterMap extends AppCompatActivity
             @Override
             public boolean onMyLocationButtonClick() {
 
-                Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화" );
-                startLocationUpdates();
+                Log.d( TAG, "onMyLocationButtonClick ㅡ" );
+                mClusterManager.clearItems();
+                getVisibleRegion();
+                clustericon.clear();
                 mMoveMapByAPI = true;
                 return true;
             }
         } );
 
-        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                mClusterManager.clearItems();
-                getVisibleRegion();
-                clustericon.clear();
-            }
-        });
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
