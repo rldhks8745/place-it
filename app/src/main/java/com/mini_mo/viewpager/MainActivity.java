@@ -63,36 +63,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
-        data = new Data();
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
 
-        data = new Data();
-
-        try {
-            user_info = data.read_myPage(Store.userid);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         /*Glide.with( context )
                 .load( listViewItemList.get( position ).user_photo )
                 .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
                 .into( iconImageView );*/
 
-        Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                        roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-                        roundedBitmapDrawable.setCircular(true);
-                    }
-                });
-
-        Store.myprofile_img = roundedBitmapDrawable;
 
         /*** Tool bar ***/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
