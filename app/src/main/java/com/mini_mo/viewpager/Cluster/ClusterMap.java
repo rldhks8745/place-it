@@ -180,9 +180,6 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ) );
-
-
         mGoogleMap.setOnMyLocationButtonClickListener( new GoogleMap.OnMyLocationButtonClickListener() {
 
             @Override
@@ -196,7 +193,8 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
-
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 17 ) );
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(16));
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
@@ -228,19 +226,6 @@ public class ClusterMap extends AppCompatActivity
             mClusterManager.addItem(offsetItem2);
         }
         clustericon.clear();
-    }
-    public void setCluster() {
-        myClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
-            @Override
-            public boolean onClusterClick(Cluster<MyItem> cluster) {
-
-                ClusterListView clv = new ClusterListView();
-                clv.ClusterListView();
-                clustericon.clear();
-
-                return false;
-            }
-        });
     }
 
 

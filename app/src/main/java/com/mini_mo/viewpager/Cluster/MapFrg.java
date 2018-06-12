@@ -36,7 +36,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -45,7 +44,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
-import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
@@ -130,7 +128,7 @@ public class MapFrg extends Fragment
             Log.d( TAG, "onStart: mGoogleApiClient connect" );
             mGoogleApiClient.connect();
         }
-    }
+        }
 
     @Override
     public void onStop() {
@@ -248,8 +246,6 @@ public class MapFrg extends Fragment
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( true );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ) );
-
 
         mGoogleMap.setOnMyLocationButtonClickListener( new GoogleMap.OnMyLocationButtonClickListener() {
 
@@ -262,6 +258,8 @@ public class MapFrg extends Fragment
                 return true;
             }
         } );
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 17 ) );
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(16));
         mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
@@ -321,6 +319,7 @@ public class MapFrg extends Fragment
                     Log.d(TAG, "onConnected : 퍼미션 가지고 있음");
                     Log.d(TAG, "onConnected : call startLocationUpdates");
                     startLocationUpdates();
+                    mClusterManager.cluster();
                     mGoogleMap.setMyLocationEnabled(true);
                 }
 
@@ -443,7 +442,6 @@ public class MapFrg extends Fragment
 
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
-        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
@@ -466,20 +464,6 @@ public class MapFrg extends Fragment
 
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
-        String markerTitle = "위치정보 가져올 수 없음";
-        String markerSnippet = "위치 퍼미션과 GPS 활성 요부 확인하세요";
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mGoogleMap.addMarker(markerOptions);
-
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mGoogleMap.moveCamera(cameraUpdate);
 
