@@ -183,27 +183,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
-    public Bitmap ReSizing(byte[] bytes){
-        Bitmap bitmap;
-
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 6;
-        opt.inDither = true;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inTempStorage = new byte[32 * 1024];
-        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
-
-        return bitmap;
-    }
-
-    public byte[] bitmapToByteArray( Bitmap bitmap ) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
-        return byteArray ;
-    }
-
 }

@@ -266,6 +266,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.back:
+                Store.board_num = -1;
                 finish();
                 break;
 
@@ -306,6 +307,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        Store.board_num = -1;
         finish();
         super.onBackPressed();
     }

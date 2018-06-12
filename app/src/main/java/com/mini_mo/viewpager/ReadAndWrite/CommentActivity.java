@@ -99,12 +99,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             myprofile.setImageDrawable(roundedBitmapDrawable);
                         }
                     });
-        }else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-            roundedBitmapDrawable.setCircular(true);
-
-            myprofile.setImageDrawable(roundedBitmapDrawable);
         }
 
         roundedBitmapDrawable = null;
