@@ -86,6 +86,8 @@ public class Imagehttp extends AsyncTask<String ,String ,String> {
 
                 conn.setRequestMethod("POST");
 
+                conn.setRequestProperty("Accept-Charset","UTF-8");
+
                 conn.setRequestProperty("Connection", "Keep-Alive");
 
                 conn.setRequestProperty("ENCTYPE", "multipart/form-data");
