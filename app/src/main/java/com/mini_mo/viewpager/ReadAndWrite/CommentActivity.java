@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -15,12 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ReadCommentInfo;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
@@ -31,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TooManyListenersException;
 
 /**
  * Created by sasor on 2018-04-25.
@@ -41,6 +46,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     RoundedBitmapDrawable roundedBitmapDrawable;
 
     Data data;
+    User_Info user_info;
 
     int count,temp;
 
@@ -69,44 +75,86 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         title = (EditText)findViewById(R.id.comment);
         myadapter = new CustomAdapter();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-        roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-        roundedBitmapDrawable.setCircular(true);
+        comment_list.setAdapter(myadapter);
 
         data = new Data();
 
-        myprofile.setImageDrawable(Store.myprofile_img);
-
-        count = 0;
-        temp = 0;
-
         try {
             rci = data.readComment(String.valueOf(Store.board_num));
+            user_info = data.read_myPage(Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        for(int i=0;i<rci.size();i++){
-            ReadCommentInfo readCommentInfo = rci.get(i);
-
-            Glide.with(getApplicationContext()).asBitmap().load(rci.get(i).user_photo)
+        if(user_info.user_photo!=null) {
+            Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+                            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
                             roundedBitmapDrawable.setCircular(true);
+
+                            myprofile.setImageDrawable(roundedBitmapDrawable);
                         }
                     });
+        }else {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
+            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+            roundedBitmapDrawable.setCircular(true);
 
-            myadapter.addItem(roundedBitmapDrawable,readCommentInfo.comment_content,readCommentInfo.comment_date);
+            myprofile.setImageDrawable(roundedBitmapDrawable);
+        }
 
+        roundedBitmapDrawable = null;
+        count = 0;
+        temp = 0;
+
+
+
+        for(int i=0;i<rci.size();i++){
+            final ReadCommentInfo readCommentInfo = rci.get(i);
+            final String content = readCommentInfo.comment_content;
+            final String date = readCommentInfo.comment_date;
+
+            Log.i("사진"+i , rci.get(i).user_photo);
+
+            try {
+                user_info = data.read_myPage(rci.get(i).comment_id);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(user_info.user_photo!=null) {
+
+                Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+
+                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                                roundedBitmapDrawable.setCircular(true);
+
+                                myadapter.addItem(roundedBitmapDrawable,content,date);
+                            }
+                        });
+
+            }else{
+                Bitmap userbitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
+                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),userbitmap);
+                roundedBitmapDrawable.setCircular(true);
+
+                myadapter.addItem(roundedBitmapDrawable,content,date);
+            }
+
+            roundedBitmapDrawable = null;
             count++;
         }
 
         comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        comment_list.setAdapter(myadapter);
+        myadapter.notifyDataSetChanged();
         back.setOnClickListener(this);
         send.setOnClickListener(this);
 
@@ -123,42 +171,64 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.send:
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 send.startAnimation(ani);
-
-                try {
-                    data.writeComment(String.valueOf(Store.board_num),Store.userid,title.getText().toString());
-
-                    myadapter = new CustomAdapter();
-
+                if(!title.getText().toString().equals("")) {
                     try {
-                        rci = data.readComment(String.valueOf(Store.board_num));
+                        data.writeComment(String.valueOf(Store.board_num), Store.userid, title.getText().toString());
+
+                        try {
+                            rci = data.readComment(String.valueOf(Store.board_num));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (int i = count; i < rci.size(); i++) {
+                            ReadCommentInfo readCommentInfo = rci.get(i);
+
+                            try {
+                                user_info = data.read_myPage(rci.get(i).comment_id);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (user_info.user_photo != null) {
+
+                                Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
+                                        .into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+
+                                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                                                roundedBitmapDrawable.setCircular(true);
+                                            }
+                                        });
+
+                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_date);
+                            }
+
+                            if (user_info.user_photo == null) {
+                                Bitmap userbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.user);
+                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), userbitmap);
+                                roundedBitmapDrawable.setCircular(true);
+
+                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_date);
+                            }
+
+                            roundedBitmapDrawable = null;
+                            count++;
+                        }
+
+                        comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                        myadapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    for(int i=0;i<rci.size();i++){
-                            ReadCommentInfo readCommentInfo = rci.get(i);
-
-                            Glide.with(getApplicationContext()).asBitmap().load(rci.get(i).user_photo)
-                                    .into(new SimpleTarget<Bitmap>() {
-                                        @Override
-                                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                                            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-                                            roundedBitmapDrawable.setCircular(true);
-                                        }
-                                    });
-
-                            myadapter.addItem(roundedBitmapDrawable,readCommentInfo.comment_content,readCommentInfo.comment_date);
-                    }
-
-                    comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-                    comment_list.setAdapter(myadapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    title.setText("");
+                }else{
+                    Util.Toast(this,"내용을 입력하세요!");
                 }
 
-                title.setText("");
+
 
                 break;
         }
