@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 import com.mini_mo.viewpager.YourPageActivity;
@@ -62,6 +63,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     View.OnClickListener listener;
 
     Data data;
+    User_Info user_info;
 
     int count;
 
@@ -181,22 +183,26 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         count_state = 0; //DB에서 자기가 이 글에 대해 좋아요 눌렀는 지, 안눌렀는지 알아와야됩니다. (0대신 가져온 값/ 0: FLASE , 1: TRUE)
         total_count = 0; //화면 시작할때 DB에서 좋아요 개수를 불러와 넣기
 
-        Glide.with(getApplicationContext()).asBitmap().load(rbi.user_photo)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+        try {
+            user_info = data.read_myPage(rbi.user_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-                        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
-                        roundedBitmapDrawable.setCircular(true);
+        if(user_info.user_photo!=null) {
+            Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                        profile.setImageDrawable(roundedBitmapDrawable);
-                    }
-                });
+                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                            roundedBitmapDrawable.setCircular(true);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-
-
+                            profile.setImageDrawable(roundedBitmapDrawable);
+                        }
+                    });
+        }
 
 
         back.setOnClickListener(this);

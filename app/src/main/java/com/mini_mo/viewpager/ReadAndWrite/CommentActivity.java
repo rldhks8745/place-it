@@ -141,12 +141,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         });
 
-            }else{
-                Bitmap userbitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user);
-                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),userbitmap);
-                roundedBitmapDrawable.setCircular(true);
-
-                myadapter.addItem(roundedBitmapDrawable,content,date);
             }
 
             roundedBitmapDrawable = null;
@@ -202,14 +196,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                 roundedBitmapDrawable.setCircular(true);
                                             }
                                         });
-
-                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_date);
-                            }
-
-                            if (user_info.user_photo == null) {
-                                Bitmap userbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.user);
-                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), userbitmap);
-                                roundedBitmapDrawable.setCircular(true);
 
                                 myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_date);
                             }
