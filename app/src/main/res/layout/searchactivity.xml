@@ -8,42 +8,44 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DDEAC0">
+            android:background="@color/colorPrimary">
 
             <ImageButton
                 android:id="@+id/searchbutton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/search2"
+                android:background="@drawable/search"
                 android:clickable="true"
                 android:scaleType="centerInside" />
+
+            <TextView
+                android:id="@+id/searchline"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:gravity="center|left"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:background="@null"
+                android:textSize="20dp"
+                android:text="검색결과" />
 
 
         </android.support.v7.widget.Toolbar>
 
-        <EditText
-            android:id="@+id/searchline"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:background="@null"
-            android:hint="태그 검색" />
+
     </FrameLayout>
 
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9" />
+        android:layout_weight="10"/>
 
 
 </LinearLayout>

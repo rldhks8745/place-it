@@ -1,6 +1,7 @@
 package com.mini_mo.viewpager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -19,7 +20,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.support.v7.widget.SearchView;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +40,7 @@ import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.FriendListView.FriendListFragment;
 import com.mini_mo.viewpager.Login.LoginActivity;
 import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
+import com.mini_mo.viewpager.ReadAndWrite.Util;
 
 import org.json.JSONException;
 
@@ -47,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Data data;
     User_Info user_info;
     RoundedBitmapDrawable roundedBitmapDrawable;
+    SearchView searchView;
+
+    Activity activity;
 
     SharedPreferences auto;
     public String loginId;
@@ -63,6 +74,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+       // View mainview = (View) this.getLayoutInflater().inflate(R.layout.activity_main, null);
+
+
+
+        activity = this;
+
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
@@ -77,6 +94,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /*** Tool bar ***/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //실험
+        searchView = (SearchView) findViewById(R.id.searchView);
+
+
+        // SearchView 검색어 입력/검색 이벤트 처리
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query.equals("") || query.equals(" ")) {
+                    Util.Toast(activity, "검색어를 입력하세요!");
+
+                }else {
+                    Intent intent = new Intent(activity, SearchActivity.class);
+                    intent.putExtra("content",query);
+                    startActivity(intent);
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+
+        //실험
 
         /*** View Pager ***/
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -97,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
     }
 

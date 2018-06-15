@@ -25,6 +25,7 @@
             app:srcCompat="@drawable/user" />
 
         <LinearLayout
+            android:id="@+id/test1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
@@ -63,6 +64,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/test2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"

@@ -199,7 +199,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
-                Log.i("현재 아이디 : ", Store.userid);
+                Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
 
                 try {
                     String str = data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString()+"#"), latitude ,longitude, imgurl);

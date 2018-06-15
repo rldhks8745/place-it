@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -24,6 +27,7 @@ import com.mini_mo.viewpager.DAO.ReadCommentInfo;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ReadAndWrite.ImageResizing;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
+import com.mini_mo.viewpager.ReadAndWrite.Util;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 import org.json.JSONException;
@@ -34,23 +38,27 @@ public class SearchActivity extends AppCompatActivity{
 
     Data data;
     SearchListViewAdapter searchadapter;
-    ArrayList<ListViewItemData> listViewItemData;
+    ArrayList<ListViewItemData> listViewItemDatas;
     RoundedBitmapDrawable roundedBitmapDrawable;
     User_Info user_info;
     ArrayList<ReadCommentInfo> rci;
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
+    ListViewItemData listViewItemData;
 
     ImageButton searchbutton;
 
-    EditText searchline;
+    Intent intent;
+
+    TextView searchline;
 
     ListView listView;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchactivity);
 
+        intent = getIntent();
         searchbutton = (ImageButton)findViewById(R.id.searchbutton);
-        searchline = (EditText)findViewById(R.id.searchline);
+        searchline = (TextView)findViewById(R.id.searchline);
 
         listView = (ListView)findViewById(R.id.listview);
 
@@ -58,19 +66,26 @@ public class SearchActivity extends AppCompatActivity{
 
         listView.setAdapter(searchadapter);
 
+        listViewItemDatas = new ArrayList<>();
+        data = new Data();
+
+        Util.Log("인텐트",intent.getStringExtra("content"));
+
         try {
-            listViewItemData = data.search_board(searchline.getText().toString());
+            listViewItemDatas = data.search_board(intent.getStringExtra("content"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        for(int i=0;i<listViewItemData.size();i++){
-            final ListViewItemData searchlistitem = listViewItemData.get(i);
+        for(int i=0;i<listViewItemDatas.size();i++){
+            listViewItemData = listViewItemDatas.get(i);
 
             try {
-                user_info = data.read_myPage(listViewItemData.get(i).user_id);
-                rci = data.readComment(String.valueOf(listViewItemData.get(i).board_num));
-                rbi = new Data().readBoardInfo(String.valueOf(listViewItemData.get(i).board_num));
+                user_info = data.read_myPage(listViewItemDatas.get(i).user_id);
+                rci = data.readComment(String.valueOf(listViewItemDatas.get(i).board_num));
+                rbi = data.readBoardInfo(String.valueOf(listViewItemDatas.get(i).board_num));
+
+                Util.Log("rci 사이즈",String.valueOf(rci.size()));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -81,14 +96,31 @@ public class SearchActivity extends AppCompatActivity{
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                int count=0;
                                 Bitmap bitmap = ImageResizing.ReSizing(ImageResizing.bitmapToByteArray(resource));
 
                                 roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
                                 roundedBitmapDrawable.setCircular(true);
 
-                                searchadapter.addItem(searchlistitem.board_num,searchlistitem.content,searchlistitem.date_board,
-                                        searchlistitem.good,searchlistitem.latitude,searchlistitem.longitude,
-                                        searchlistitem.user_id,roundedBitmapDrawable,rci.size(),rbi.b_photos.size());
+                                if(rbi.b_photos == null){
+                                    count = 0;
+                                }
+
+                                Util.Log("객체 안속", listViewItemData.board_num+"\n"+
+                                        listViewItemData.content+"\n"+
+                                        listViewItemData.date_board+"\n"+
+                                        listViewItemData.good+"\n"+
+                                        listViewItemData.latitude+"\n"+
+                                        listViewItemData.longitude+"\n"+
+                                        listViewItemData.user_id+"\n"+
+                                        listViewItemData.user_photo);
+
+
+                                searchadapter.addItem(listViewItemData.board_num,listViewItemData.content,listViewItemData.date_board,
+                                        listViewItemData.good,listViewItemData.latitude,listViewItemData.longitude,
+                                        listViewItemData.user_id,roundedBitmapDrawable,rci.size(),count);
+
+                                searchadapter.notifyDataSetChanged();
                             }
                         });
 
@@ -97,7 +129,7 @@ public class SearchActivity extends AppCompatActivity{
             roundedBitmapDrawable = null;
         }
 
-        searchadapter.notifyDataSetChanged();
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,6 +142,11 @@ public class SearchActivity extends AppCompatActivity{
                 finish();
             }
         });
+    }
+
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
 }

@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.LocateListviewItem;
+import com.mini_mo.viewpager.ReadAndWrite.Util;
 
 import org.w3c.dom.Text;
 
@@ -57,9 +60,14 @@ public class SearchListViewAdapter extends BaseAdapter {
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
+
+        LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.test1);
+        TableRow tableRow = (TableRow)convertView.findViewById(R.id.test2);
+
+
         TableLayout tableLayout = (TableLayout)convertView.findViewById(R.id.table);
         ImageView profile = (ImageView)convertView.findViewById(R.id.userIcon);
-        TextView id = (TextView)convertView.findViewById(R.id.userId);
+        TextView id = (TextView)convertView.findViewById(R.id.userid);
         TextView text = (TextView)convertView.findViewById(R.id.context);
         TextView good = (TextView)convertView.findViewById(R.id.good);
 
@@ -71,12 +79,19 @@ public class SearchListViewAdapter extends BaseAdapter {
         SearchListViewItem myItem = getItem(position);
 
         if(myItem.getCommentSize() == 0) {
-            tableLayout.removeView(comment);
+            tableRow.removeView(comment);
         }
 
         if(myItem.getPhotoSize() == 0) {
-            tableLayout.removeView(photo);
+            linearLayout.removeView(photo);
         }
+
+        Util.Log("아이템 안속", myItem.getContent()+"\n"+
+                myItem.getUser_id()+"\n"+
+                myItem.getUser_photo()+"\n"+
+                myItem.getCommentSize()+"\n"+
+                myItem.getPhotoSize()+"\n"+
+                String.valueOf(myItem.getGood()));
 
         //여기서 리스트뷰 xml에 각각 값들 주면 됨.
         profile.setImageDrawable(myItem.getUser_photo());

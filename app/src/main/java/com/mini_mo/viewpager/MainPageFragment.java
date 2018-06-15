@@ -54,7 +54,10 @@ public class MainPageFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //ItemListView listView = new ItemListView(rootView);
 
-        recyclerListView = new RecyclerListView(getContext(), view,this);
+        if(Store.rlv == null)
+            recyclerListView = new RecyclerListView(getContext(), view,this);
+        else
+            recyclerListView = Store.rlv;
 
         /* Google Map의 세로 드래그 문제를 해결 하기 위한 부분*/
         AppBarLayout appBar = (AppBarLayout) rootView.findViewById(R.id.app_bar);
@@ -83,5 +86,12 @@ public class MainPageFragment extends Fragment{
         });
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        Store.rlv = recyclerListView;
+
+        super.onDestroy();
     }
 }

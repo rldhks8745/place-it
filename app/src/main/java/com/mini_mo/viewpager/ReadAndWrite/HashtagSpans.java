@@ -54,7 +54,7 @@ public class HashtagSpans {
             start = startend[0];
             end = startend[1];
 
-            buffer.append((changebody.substring(start,end))+" ");
+            buffer.append((changebody.substring(start,end)));
         }
 
         return buffer;
