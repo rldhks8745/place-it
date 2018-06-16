@@ -102,8 +102,13 @@ public class SearchActivity extends AppCompatActivity{
                                 roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
                                 roundedBitmapDrawable.setCircular(true);
 
-                                if(rbi.b_photos == null){
+
+
+                                if(rbi.b_photos == null || rbi.b_photos.size() == 0){
                                     count = 0;
+                                }else{
+                                    count = rbi.b_photos.size();
+                                    Util.Log("사진 유무",rbi.b_photos.get(0));
                                 }
 
                                 Util.Log("객체 안속", listViewItemData.board_num+"\n"+

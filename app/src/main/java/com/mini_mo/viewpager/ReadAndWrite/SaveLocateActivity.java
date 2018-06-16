@@ -2,13 +2,11 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -61,7 +59,7 @@ public class SaveLocateActivity extends AppCompatActivity implements View.OnClic
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rnw_activity_savelocate2);
+        setContentView(R.layout.rnw_activity_savelocate);
 
         title = (EditText)findViewById(R.id.title);
         save = (Button)findViewById(R.id.save);
