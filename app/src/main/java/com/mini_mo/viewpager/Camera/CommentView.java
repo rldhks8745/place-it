@@ -87,7 +87,8 @@ public class CommentView extends View
                     canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ), myPaint ); // 색상 표시
 
                     myPaint.setColor(Color.WHITE);
-                    myPaint.setTextSize( radius * mCommentSize );
+                    myPaint.setTextSize( 50 );
+                    myPaint.setTextAlign( Paint.Align.CENTER );
                     canvas.drawText("" + comment.mCount, x, y, myPaint );
 
                     /** 코멘트 위치 수정 **/

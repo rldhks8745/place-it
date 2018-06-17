@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.Camera;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,11 +22,11 @@ import java.util.ArrayList;
 public class CameraCommentsList extends AppCompatActivity {
 
     private RecyclerListView recyclerListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_commentslist_activity);
-
         Intent intent = getIntent();
         double lat = intent.getDoubleExtra("lat", 37.0);
         double lon = intent.getDoubleExtra("lon", 128.0);

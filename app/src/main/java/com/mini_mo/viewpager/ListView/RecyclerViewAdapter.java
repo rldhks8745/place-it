@@ -32,8 +32,8 @@ import java.util.ArrayList;
 // ViewHolder : 뷰들을 홀더에 꼽아놓듯 보관하는 객체
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
 
-    public static Fragment instance ;
-    public AppCompatActivity activity;
+    public static Fragment instance = null ;
+    public AppCompatActivity activity = null ;
 
     private ArrayList<ListViewItemData> listViewItems;
     private int itemLayout;
@@ -89,9 +89,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.good.setText(item.good +"");
 
         // 사진 넣기
-        Glide.with( MainActivity.getInstance() )
+        Glide.with( viewHolder.mView )
                 .load( item.user_photo )
-                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
+                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ))
                 .into( viewHolder.userIcon );
 
         /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
