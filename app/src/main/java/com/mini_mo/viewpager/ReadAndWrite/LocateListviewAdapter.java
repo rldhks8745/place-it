@@ -40,7 +40,14 @@ public class LocateListviewAdapter extends BaseAdapter {
 
     @Override
     public LocateListviewItem getItem(int position) {
-        return LocateItems.get(position);
+
+        if (position == getCount()){
+            position--;
+        }
+
+        Util.Log("포지션 값3" , String.valueOf(position));
+
+        return LocateItems.get((position));
     }
 
     @Override
@@ -51,7 +58,6 @@ public class LocateListviewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final int pos = position;
         final Context context = parent.getContext();
 
         /* 'listview_custom' Layout을 inflate하여 convertView 참조 획득 */
@@ -65,6 +71,7 @@ public class LocateListviewAdapter extends BaseAdapter {
         TextView tv_locate = (TextView) convertView.findViewById(R.id.locate) ;
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
+
         LocateListviewItem myItem = getItem(position);
 
         String address = AddressTransformation.getAddress(activity,myItem.getLatitude(),myItem.getLongitude());
