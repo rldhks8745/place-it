@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -73,7 +74,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         comment_list = (ListView)findViewById(R.id.listview);
         title = (EditText)findViewById(R.id.comment);
-        myadapter = new CustomAdapter();
+        myadapter = new CustomAdapter(this);
+
 
         comment_list.setAdapter(myadapter);
 
@@ -152,6 +154,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
 
         switch (v.getId()){
+            case R.id.image:
+
+                break;
+
             case R.id.back:
                 finish();
                 break;

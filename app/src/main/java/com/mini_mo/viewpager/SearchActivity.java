@@ -144,7 +144,6 @@ public class SearchActivity extends AppCompatActivity{
 
                 Intent intent = new Intent(SearchActivity.this,ReadActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

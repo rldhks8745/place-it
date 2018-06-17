@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Store {
 
     public static int board_num = 0;
+    public static int testint = 0;
     public static RoundedBitmapDrawable myprofile_img=null;
 
     public static ArrayList<Bitmap> readboard_image = new ArrayList<>();
