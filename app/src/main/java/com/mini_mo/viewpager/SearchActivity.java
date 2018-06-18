@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.mini_mo.viewpager.Camera.CameraActivity;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.DAO.ReadCommentInfo;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity{
 
+    public static SearchActivity instance;
+
     Data data;
     SearchListViewAdapter searchadapter;
     ArrayList<ListViewItemData> listViewItemDatas;
@@ -46,21 +49,32 @@ public class SearchActivity extends AppCompatActivity{
     ListViewItemData listViewItemData;
 
     ImageButton searchbutton;
+    ImageButton cameraButton;
 
     Intent intent;
 
     TextView searchline;
 
     ListView listView;
+
+    public static SearchActivity getInstance()
+    {
+        return instance;
+    }
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchactivity);
+        instance = this;
+
+        SearchListViewAdapter.isShowing = true;
 
         intent = getIntent();
         searchbutton = (ImageButton)findViewById(R.id.searchbutton);
         searchline = (TextView)findViewById(R.id.searchline);
 
         listView = (ListView)findViewById(R.id.listview);
+
+        cameraButton = (ImageButton)findViewById(R.id.camera_button);
 
         searchadapter = new SearchListViewAdapter();
 
@@ -134,6 +148,13 @@ public class SearchActivity extends AppCompatActivity{
             roundedBitmapDrawable = null;
         }
 
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( SearchActivity.getInstance() , CameraActivity.class );
+                startActivity( intent );
+            }
+        });
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -152,6 +173,8 @@ public class SearchActivity extends AppCompatActivity{
     public void onBackPressed() {
         finish();
         super.onBackPressed();
+
+        SearchListViewAdapter.isShowing = false;
     }
 
 }

@@ -24,13 +24,20 @@ import java.util.ArrayList;
 
 public class SearchListViewAdapter extends BaseAdapter {
 
+    public static SearchListViewAdapter instance;
+    public static boolean isShowing = false;
     Activity activity;
 
     /* 아이템을 세트로 담기 위한 어레이 */
-    private ArrayList<SearchListViewItem> searchListViewItems = new ArrayList<>();
+    public ArrayList<SearchListViewItem> searchListViewItems = new ArrayList<>();
+
+    public static SearchListViewAdapter getInstance()
+    {
+           return instance;
+    }
 
     public SearchListViewAdapter(){
-
+        instance = this;
     }
 
     @Override
