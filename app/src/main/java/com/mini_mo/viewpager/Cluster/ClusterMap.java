@@ -193,8 +193,7 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 17 ) );
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(16));
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 10 ) );
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
@@ -204,6 +203,8 @@ public class ClusterMap extends AppCompatActivity
 
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
+
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 16) );
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d( "TEST", bounds.toString() );
         double max_lat, max_lng, min_lat, min_lng;
@@ -225,6 +226,7 @@ public class ClusterMap extends AppCompatActivity
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
         }
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
         clustericon.clear();
     }
 

@@ -258,11 +258,10 @@ public class MapFrg extends Fragment
                 return true;
             }
         } );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 17 ) );
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(16));
         mClusterManager = new ClusterManager<>( this.getActivity(), mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
+        getVisibleRegion();
 
         loadingDialog.progressON( MainActivity.getInstance(), "로딩 중");
     }
@@ -291,6 +290,8 @@ public class MapFrg extends Fragment
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
         }
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 12) );
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(11));
     }
 
 
