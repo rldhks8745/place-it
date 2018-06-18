@@ -8,8 +8,8 @@ public class SearchListViewItem{
     private String content;
     private String date_board;
     private int good;
-    private double latitude;
-    private double longitude;
+    public double latitude;
+    public double longitude;
     private String user_id;
     private RoundedBitmapDrawable user_photo;
     private int comment,photo;
