@@ -32,10 +32,11 @@
 
                 <ImageView
                     android:id="@+id/usericon"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:layout_gravity="center"
                     android:layout_weight="3"
-                    android:scaleType="centerInside"
+                    android:scaleType="centerCrop"
                     app:srcCompat="@drawable/user" />
 
                 <TextView

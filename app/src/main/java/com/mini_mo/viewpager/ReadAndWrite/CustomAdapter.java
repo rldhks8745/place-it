@@ -1,15 +1,18 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 
 import java.util.ArrayList;
 
@@ -22,8 +25,10 @@ public class CustomAdapter extends BaseAdapter {
     /* 아이템을 세트로 담기 위한 어레이 */
     private ArrayList<CustomListviewitem> mItems = new ArrayList<>();
 
-    public CustomAdapter(){
+    View.OnClickListener clickListener;
 
+    public CustomAdapter(View.OnClickListener listener){
+        clickListener = listener;
     }
 
     @Override
@@ -54,9 +59,11 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        ImageView iv_img = (ImageView) convertView.findViewById(R.id.image) ;
+        ImageButton iv_img = (ImageButton) convertView.findViewById(R.id.image) ;
         TextView tv_title = (TextView) convertView.findViewById(R.id.title) ;
         TextView tv_date = (TextView) convertView.findViewById(R.id.date) ;
+
+        iv_img.setFocusable(true);
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         CustomListviewitem myItem = getItem(position);
@@ -69,7 +76,7 @@ public class CustomAdapter extends BaseAdapter {
         tv_date.setText(myItem.getDate());
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
-
+        iv_img.setOnClickListener(clickListener);
 
         return convertView;
     }
