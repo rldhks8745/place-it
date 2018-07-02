@@ -22,13 +22,14 @@ import java.util.ArrayList;
 public class ClusterListView extends AppCompatActivity {
 
     private RecyclerListView recyclerListView;
-    ArrayList<MyItem> ary;
-
-    Data data = new Data();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_commentslist_activity);
+        Intent intent = getIntent();
+        double lat = intent.getDoubleExtra("lat", 37.0);
+        double lon = intent.getDoubleExtra("lon", 128.0);
+        /*
         Intent intent = getIntent();
         ary = intent.getDoubleExtra("location", MyItem.getPosition);
         /*

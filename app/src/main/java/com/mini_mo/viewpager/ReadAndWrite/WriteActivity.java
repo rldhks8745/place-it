@@ -202,7 +202,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
 
                 try {
-                    String str = data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString()+"#"), latitude ,longitude, imgurl);
+                    String str;
+                    if(Store.check){
+                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl);
+                    }else {
+                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl);
+                    }
                     if(str.equals("-3")){
                         Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
                     }else{

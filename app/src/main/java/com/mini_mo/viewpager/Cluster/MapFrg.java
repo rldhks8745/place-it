@@ -232,6 +232,7 @@ public class MapFrg extends Fragment
     }
 
 
+
     private void stopLocationUpdates() {
 
         Log.d( TAG, "stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates" );
@@ -268,6 +269,8 @@ public class MapFrg extends Fragment
 
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
+
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 16) );
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d( "TEST", bounds.toString() );
         double max_lat, max_lng, min_lat, min_lng;
@@ -275,6 +278,7 @@ public class MapFrg extends Fragment
         max_lng = bounds.northeast.longitude;
         min_lat = bounds.southwest.latitude;
         min_lng = bounds.southwest.longitude;
+
 
         Data data = new Data();
         try {
@@ -290,8 +294,6 @@ public class MapFrg extends Fragment
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
         }
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 12) );
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy(11));
     }
 
 

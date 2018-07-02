@@ -193,6 +193,8 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
+
+
         mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 10 ) );
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );

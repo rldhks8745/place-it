@@ -59,6 +59,8 @@ public class LoadLocateActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 double[] arr = locateadapter.getLocate(position);
 
+                Store.check = true;
+
                 Store.latitude = arr[0];
                 Store.longitude = arr[1];
 
