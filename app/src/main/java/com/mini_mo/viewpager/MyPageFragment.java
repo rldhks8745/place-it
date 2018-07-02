@@ -38,20 +38,20 @@ public class MyPageFragment extends Fragment {
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     private final int GALLERY_CODE=1112; // 이미지 불러오기 후 onActivityResult로 받을 request코드값
 
-    private View rootView;
+    private View view;
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
     private User_Info user_info; // 사용자 정보
     String loginId; // 로그인 아이디
 
-    ImageView icon;
-    TextView id;
-    TextView message;
-    TextView follow;
-    TextView follower;
+    ArrayList<ListViewItemData> mylistItem;
+    private TextView followers;
+    private TextView following;
+    private TextView userId;
+    private TextView message;
+    private ImageView usericon;
 
     private static MyPageFragment instance = null;
-    ArrayList<ListViewItemData> mylistItem;
 
     public static MyPageFragment getInstance()
     {
@@ -72,19 +72,20 @@ public class MyPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_mypage, container, false);
-        icon = (ImageView) rootView.findViewById(R.id.usericon);
-        id = (TextView) rootView.findViewById(R.id.userid);
-        message = (TextView) rootView.findViewById(R.id.status);
-        follow = (TextView) rootView.findViewById(R.id.follow);
-        follower = (TextView) rootView.findViewById(R.id.follower);
+        view = inflater.inflate(R.layout.activity_mypage, container, false);
 
-        return rootView;
+        followers = (TextView) view.findViewById(R.id.follwers);
+        following = (TextView) view.findViewById(R.id.following);
+        userId = (TextView) view.findViewById(R.id.userid);
+        message = (TextView) view.findViewById(R.id.message);
+        usericon = (ImageView) view.findViewById(R.id.usericon);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        nestedScrollView = (NestedScrollView) rootView.findViewById(R.id.include);
+        nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
         recyclerListView = new RecyclerListView(getContext(), view, this);
 
 
@@ -92,7 +93,7 @@ public class MyPageFragment extends Fragment {
         recyclerListView.loadItems(nestedScrollView, getContext());
 
         /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
-        FloatingActionButton writeButton = (FloatingActionButton) rootView.findViewById(R.id.write_fab);
+        FloatingActionButton writeButton = (FloatingActionButton) view.findViewById(R.id.write_fab);
         writeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +104,7 @@ public class MyPageFragment extends Fragment {
         });
 
         // 유저 이미지 클릭해서 변경할 때
-        icon.setOnClickListener(new View.OnClickListener() {
+        usericon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -152,19 +153,19 @@ public class MyPageFragment extends Fragment {
             mylistItem = new Data().read_myBoard(loginId, 0);
             String friends = new Data().count_friends(loginId);
 
-            follow.setText( friends.substring( 0, friends.indexOf(',') ) );
-            follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
+            following.setText( friends.substring( 0, friends.indexOf(',') ) );
+            followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
             recyclerListView.loginId = loginId;
             recyclerListView.listViewItems.clear();
             recyclerListView.add(mylistItem);
 
-            id.setText(user_info.user_id);
+            userId.setText(user_info.user_id);
 
             // photo 넣는곳
             Glide.with( this.getContext() )
                     .load( user_info.user_photo )
                     .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
-                    .into( icon );
+                    .into( usericon );
 
             message.setText(user_info.massage);
         } catch (JSONException e) {
@@ -198,7 +199,7 @@ public class MyPageFragment extends Fragment {
         String imagePath = getImageRealPathAndTitleFromURI( imgUri );
 
         // 프로필 사진에 절대경로로 이미지 표시
-        icon.setImageURI( imgUri );
+        usericon.setImageURI( imgUri );
         // 서버로 imagePath 보내기
         try
         {
