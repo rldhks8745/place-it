@@ -41,8 +41,8 @@ public class MyPageFragment extends Fragment {
     private View rootView;
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
-    private User_Info user_info;
-    String loginId;
+    private User_Info user_info; // 사용자 정보
+    String loginId; // 로그인 아이디
 
     ImageView icon;
     TextView id;
