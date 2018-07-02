@@ -17,9 +17,9 @@ public class Data {
     }
 
 
-    public ArrayList<ListViewItemData> search_board(String tag) throws JSONException //매개변수 = 검색할 태그 (태그 하나만 검색가능.)(#부분 필요 x)
+    public ArrayList<ListViewItem> search_board(String tag) throws JSONException //매개변수 = 검색할 태그 (태그 하나만 검색가능.)(#부분 필요 x)
     {
-        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        ArrayList<ListViewItem> fl = new ArrayList<ListViewItem>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -47,7 +47,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_data");
             for (int i = 0; i < f_cnt; i++)
             {
-                ListViewItemData t = new ListViewItemData();
+                ListViewItem t = new ListViewItem();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");
@@ -408,9 +408,9 @@ public class Data {
         return result.toString();
     }
 
-    public ArrayList<ListViewItemData> read_board_camera (double latitude, double longitude) throws JSONException
+    public ArrayList<ListViewItem> read_board_camera (double latitude, double longitude) throws JSONException
     {
-        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        ArrayList<ListViewItem> fl = new ArrayList<ListViewItem>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -439,7 +439,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_camera");
             for (int i = 0; i < f_cnt; i++)
             {
-                ListViewItemData t = new ListViewItemData();
+                ListViewItem t = new ListViewItem();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");
@@ -558,9 +558,9 @@ public class Data {
         return fl;
     }
 
-    public ArrayList<ListViewItemData> read_myBoard (String userId, int limit) throws JSONException
+    public ArrayList<ListViewItem> read_myBoard (String userId, int limit) throws JSONException
     {
-        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        ArrayList<ListViewItem> fl = new ArrayList<ListViewItem>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -589,7 +589,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_data");
             for (int i = 0; i < f_cnt; i++)
             {
-                ListViewItemData t = new ListViewItemData();
+                ListViewItem t = new ListViewItem();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");
@@ -607,9 +607,9 @@ public class Data {
         return fl;
     }
 
-    public ArrayList<ListViewItemData> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng) throws JSONException
+    public ArrayList<ListViewItem> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng) throws JSONException
     {
-        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        ArrayList<ListViewItem> fl = new ArrayList<ListViewItem>();
         int f_cnt = 0;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
@@ -640,7 +640,7 @@ public class Data {
             JSONArray tmp = result.getJSONArray("read_board_list_data");
             for (int i = 0; i < f_cnt; i++)
             {
-                ListViewItemData t = new ListViewItemData();
+                ListViewItem t = new ListViewItem();
                 JSONObject tjo = tmp.getJSONObject(i);
                 t.board_num = tjo.getInt("board_num");
                 t.content = tjo.getString("content");

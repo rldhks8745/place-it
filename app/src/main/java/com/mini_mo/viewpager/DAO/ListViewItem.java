@@ -1,6 +1,6 @@
 package com.mini_mo.viewpager.DAO;
 
-public class ListViewItemData
+public class ListViewItem
 {
     public int board_num;
     public String content;
