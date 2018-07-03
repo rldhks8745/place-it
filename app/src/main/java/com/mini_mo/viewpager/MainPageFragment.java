@@ -59,7 +59,7 @@ public class MainPageFragment extends Fragment{
         else
             recyclerListView = Store.rlv;
 
-        /* Google Map의 세로 드래그 문제를 해결 하기 위한 부분*/
+        /* Google Map의 세로 드래그 문제를 해결 하기 위한 부분
         AppBarLayout appBar = (AppBarLayout) rootView.findViewById(R.id.app_bar);
         if (appBar.getLayoutParams() != null) {
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBar.getLayoutParams();
@@ -72,8 +72,9 @@ public class MainPageFragment extends Fragment{
             });
             layoutParams.setBehavior(appBarLayoutBehaviour);
         }
+        */
 
-        /** floating Button 클릭 이벤트 ( 위로 스크롤 하기 ) **/
+        /* floating Button 클릭 이벤트 ( 위로 스크롤 하기 )
         FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.up_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,7 @@ public class MainPageFragment extends Fragment{
                 appBarLayout.setExpanded(true);
             }
         });
-
+        */
         super.onViewCreated(view, savedInstanceState);
     }
 
