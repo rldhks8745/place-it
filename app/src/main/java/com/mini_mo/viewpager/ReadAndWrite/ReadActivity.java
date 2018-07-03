@@ -40,6 +40,7 @@ import com.mini_mo.viewpager.Store;
 import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -56,50 +57,44 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
 
     Activity activity;
-
     InputStream inputStream;
-
     ArrayList<ImageButton> buttons;
     View.OnClickListener listener;
-
     Data data;
     User_Info user_info;
-
     int count;
 
     //실험용
 
 
-    Geocoder geocoder = null;
-
 
     ImageList imgarrlist;
-    ImageButton like_button,back,change,delete;
 
-    LinearLayout imglist;
+    LinearLayout imglist,bar;
 
+    ImageButton like_button,change,delete;
+    ImageView profile,back;
     Button comment = null;
+    TextView userid,gps,like_count,content;
 
     Animation ani=null;
-
-    TextView gps,like_count,content;
+    Geocoder geocoder = null;
 
     int count_state,total_count;
 
-    ImageView profile;
 
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rnw_activity_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_readboard);
 
-        TextView time = (TextView)findViewById(R.id.time);
+        TextView time = (TextView)findViewById(R.id.date);
+        userid = (TextView)findViewById(R.id.userid);
+        bar = (LinearLayout)findViewById(R.id.bar);
         gps = (TextView)findViewById(R.id.gps);
         profile = (ImageView)findViewById(R.id.profile);
-        back = (ImageButton)findViewById(R.id.back);
+        back = (ImageView) findViewById(R.id.back);
         comment = (Button)findViewById(R.id.comment);
         like_button = (ImageButton)findViewById(R.id.like_button);
         like_count = (TextView)findViewById(R.id.like_count);
@@ -132,11 +127,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(!Store.userid.equals(rbi.user_id)) {
-            toolbar.removeView(delete);
-            toolbar.removeView(change);
+            bar.removeView(delete);
+            bar.removeView(change);
         }
 
-        content.setText(rbi.content);
+        userid.setText(rbi.user_id.toString());
+        content.setText(rbi.content.toString());
 
         if(rbi.b_photos != null) {
 
