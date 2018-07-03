@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-/**
- * Created by userForGame on 2018-06-08.
- */
 
 public class ProfileImageActivity extends AppCompatActivity {
     ImageView profileImage;

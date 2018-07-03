@@ -1,7 +1,5 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,16 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ReadCommentInfo;
 import com.mini_mo.viewpager.DAO.User_Info;
-import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
@@ -36,11 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TooManyListenersException;
-
-/**
- * Created by sasor on 2018-04-25.
- */
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -51,7 +41,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     int count,temp;
 
-    ImageButton back =null, send = null;
+    ImageView send = null;
     ImageView myprofile;
 
     Animation ani=null;
@@ -67,10 +57,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.rnw_activity_comment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        back = (ImageButton)findViewById(R.id.back);
-        send = (ImageButton)findViewById(R.id.send);
+        send = (ImageView)findViewById(R.id.send);
 
-        myprofile = (ImageView)findViewById(R.id.myprofile);
+        myprofile = (ImageView)findViewById(R.id.usericon);
 
         comment_list = (ListView)findViewById(R.id.listview);
         title = (EditText)findViewById(R.id.comment);
@@ -145,7 +134,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         myadapter.notifyDataSetChanged();
-        back.setOnClickListener(this);
         send.setOnClickListener(this);
 
     }
@@ -155,12 +143,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         switch (v.getId()){
             case R.id.image:
-
                 break;
 
-            case R.id.back:
-                finish();
-                break;
 
             case R.id.send:
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);

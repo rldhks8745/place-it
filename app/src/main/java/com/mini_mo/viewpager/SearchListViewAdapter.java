@@ -6,7 +6,6 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,11 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
-import com.mini_mo.viewpager.ReadAndWrite.LocateListviewItem;
 import com.mini_mo.viewpager.ReadAndWrite.Util;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

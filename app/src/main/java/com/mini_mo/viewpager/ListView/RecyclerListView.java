@@ -39,7 +39,7 @@ public class RecyclerListView {
     public RecyclerListView(Context context, View view, Fragment fragment)
     {
         listViewItems = new ArrayList<ListViewItemData>();
-        adapter = new RecyclerViewAdapter(listViewItems, R.layout.group_listview, fragment);
+        adapter = new RecyclerViewAdapter(listViewItems, R.layout.listview_item1, fragment);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
@@ -50,7 +50,7 @@ public class RecyclerListView {
     public RecyclerListView(Context context, View view, AppCompatActivity activity )
     {
         listViewItems = new ArrayList<ListViewItemData>();
-        adapter = new RecyclerViewAdapter(listViewItems, R.layout.group_listview, activity);
+        adapter = new RecyclerViewAdapter(listViewItems, R.layout.listview_item1, activity);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);

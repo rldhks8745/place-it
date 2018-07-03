@@ -14,13 +14,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
-import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.ReadAndWrite.ReadBoard_Image_Activity;
 
 import org.json.JSONException;
@@ -41,13 +38,12 @@ public class YourPageActivity extends AppCompatActivity {
     String loginId;
     String yourId;
 
-    public ImageView icon;
-    TextView id;
-    TextView message;
-    TextView follow;
-    TextView follower;
-
     ArrayList<ListViewItemData> mylistItem;
+    private TextView followers;
+    private TextView following;
+    private TextView userId;
+    private TextView message;
+    private ImageView usericon;
 
     public Bitmap icon_bitmap;
 
@@ -75,17 +71,18 @@ public class YourPageActivity extends AppCompatActivity {
         recyclerListView.loadItems(nestedScrollView, this);
 
         // 레이아웃 객체화
-        icon = (ImageView) findViewById(R.id.usericon);
-        id = (TextView) findViewById(R.id.userid);
-        message = (TextView) findViewById(R.id.status);
-        follow = (TextView) findViewById(R.id.follow);
-        follower = (TextView) findViewById(R.id.follower);
+        followers = (TextView) view.findViewById(R.id.follwers);
+        following = (TextView) view.findViewById(R.id.following);
+        userId = (TextView) view.findViewById(R.id.userid);
+        message = (TextView) view.findViewById(R.id.message);
+        usericon = (ImageView) view.findViewById(R.id.usericon);
+
 
         yourId = getIntent().getStringExtra("id"); // 글쓴이 아이디
         loginId = MainActivity.getInstance().loginId; // 사용자 아이디
 
         //관심친구 추가
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.write_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,8 +91,8 @@ public class YourPageActivity extends AppCompatActivity {
                     result = new Data().add_friends(loginId, yourId);
 
                     String friends = new Data().count_friends(yourId);
-                    follow.setText( friends.substring( 0, friends.indexOf(',') ) );
-                    follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
+                    following.setText( friends.substring( 0, friends.indexOf(',') ) );
+                    followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -113,7 +110,7 @@ public class YourPageActivity extends AppCompatActivity {
         });
 
         // 상대방 사진 누르면 확대해서 보이기
-        icon.setOnClickListener(new View.OnClickListener() {
+        usericon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clickImage = true;
@@ -136,16 +133,16 @@ public class YourPageActivity extends AppCompatActivity {
             recyclerListView.add(mylistItem);
 
             String friends = new Data().count_friends(yourId);
-            follow.setText( friends.substring( 0, friends.indexOf(',') ) );
-            follower.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
+            following.setText( friends.substring( 0, friends.indexOf(',') ) );
+            followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
 
             Glide.with( this )
                     .load( user_info.user_photo )
                     .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
-                    .into( icon );
+                    .into( usericon );
 
-            id.setText(user_info.user_id);
+            userId.setText(user_info.user_id);
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();

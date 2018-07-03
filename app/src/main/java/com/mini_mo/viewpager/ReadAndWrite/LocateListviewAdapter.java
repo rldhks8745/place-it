@@ -67,7 +67,7 @@ public class LocateListviewAdapter extends BaseAdapter {
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        TextView tv_message = (TextView) convertView.findViewById(R.id.message) ;
+        TextView tv_message = (TextView) convertView.findViewById(R.id.contents) ;
         TextView tv_locate = (TextView) convertView.findViewById(R.id.locate) ;
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */

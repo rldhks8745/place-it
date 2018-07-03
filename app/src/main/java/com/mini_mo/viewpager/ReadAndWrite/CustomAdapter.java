@@ -59,9 +59,9 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        ImageButton iv_img = (ImageButton) convertView.findViewById(R.id.image) ;
-        TextView tv_title = (TextView) convertView.findViewById(R.id.title) ;
-        TextView tv_date = (TextView) convertView.findViewById(R.id.date) ;
+        ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon) ;
+        TextView tv_title = (TextView) convertView.findViewById(R.id.userid) ;
+        TextView tv_date = (TextView) convertView.findViewById(R.id.contents) ;
 
         iv_img.setFocusable(true);
 
@@ -77,7 +77,6 @@ public class CustomAdapter extends BaseAdapter {
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
         iv_img.setOnClickListener(clickListener);
-
         return convertView;
     }
 

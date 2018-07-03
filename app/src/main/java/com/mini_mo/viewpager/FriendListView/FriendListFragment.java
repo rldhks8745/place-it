@@ -50,6 +50,7 @@ public class FriendListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.content_friendlist, container, false);
+
         return rootView;
     }
     @Override

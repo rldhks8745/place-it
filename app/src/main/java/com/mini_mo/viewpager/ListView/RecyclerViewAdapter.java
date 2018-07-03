@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 // RecyclerView 어댑터
 // ViewHolder : 뷰들을 홀더에 꼽아놓듯 보관하는 객체
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     public static Fragment instance = null ;
     public AppCompatActivity activity = null ;
@@ -84,9 +84,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         final ListViewItemData item = listViewItems.get(position);
 
         // 값 설정 ( set )
-        viewHolder.id.setText(item.user_id);
-        viewHolder.context.setText(item.content);
-        viewHolder.good.setText(item.good +"");
+        viewHolder.userId.setText(item.user_id);
+        viewHolder.contents.setText(item.content);
+        viewHolder.date.setText(item.date_board);
 
         // 사진 넣기
         Glide.with( viewHolder.mView )
@@ -127,39 +127,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     /**
      * 뷰 재활용을 위한 viewHolder
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-
-        public TextView id;
-        public TextView context;
-        public TextView good;
-        public ImageView userIcon;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
-        public ViewHolder(View itemView){
-            super(itemView);
 
+        // 뷰 재활용을 위한 ViewHolder
+        public ImageView userIcon;
+        public TextView userId;
+        public TextView date;
+        public TextView contents;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
             mView = itemView;
 
             // 레이아웃 객체화 findViewById
-            id = (TextView) itemView.findViewById(R.id.userid);
-            context = (TextView) itemView.findViewById(R.id.context);
-            good = (TextView) itemView.findViewById(R.id.good);
-            userIcon = (ImageView)itemView.findViewById(R.id.userIcon);
+            userIcon = (ImageView) itemView.findViewById(R.id.usericon);
+            userId = (TextView) itemView.findViewById(R.id.userid);
+            date = (TextView) itemView.findViewById(R.id.date);
+            contents = (TextView) itemView.findViewById(R.id.contents);
         }
     }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent;
-
-        if( instance != null ) {
-            intent = new Intent(instance.getActivity(), ReadActivity.class);
-        }
-        else
-            intent = new Intent( activity, ReadActivity.class );
-        //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
-        instance.startActivity(intent);
-        Store.board_num = Store.sendboard.get(position).board_num;
-        instance.getActivity().overridePendingTransition(R.anim.goup, R.anim.godown);
-     }
 }

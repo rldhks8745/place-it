@@ -6,15 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +24,6 @@ import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ReadAndWrite.ImageResizing;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.ReadAndWrite.Util;
-import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 import org.json.JSONException;
 

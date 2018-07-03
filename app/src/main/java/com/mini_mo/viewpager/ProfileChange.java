@@ -15,18 +15,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.mini_mo.viewpager.ReadAndWrite.ImageResizing;
-import com.mini_mo.viewpager.ReadAndWrite.NewImageCrate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
