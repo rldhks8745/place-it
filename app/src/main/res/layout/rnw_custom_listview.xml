@@ -29,7 +29,7 @@
                 android:id="@+id/userid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="user id"
+                android:hint="user id"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
                 android:id="@+id/contents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="contents"
+                android:hint="contents"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

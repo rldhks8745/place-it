@@ -101,7 +101,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
             final String content = readCommentInfo.comment_content;
-            final String date = readCommentInfo.comment_date;
+            final String id = rci.get(i).comment_id;
 
             Log.i("사진"+i , rci.get(i).user_photo);
 
@@ -122,7 +122,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
                                 roundedBitmapDrawable.setCircular(true);
 
-                                myadapter.addItem(roundedBitmapDrawable,content,date);
+                                myadapter.addItem(roundedBitmapDrawable,content,id);
                             }
                         });
 
@@ -181,7 +181,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                             }
                                         });
 
-                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_date);
+                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_id);
                             }
 
                             roundedBitmapDrawable = null;

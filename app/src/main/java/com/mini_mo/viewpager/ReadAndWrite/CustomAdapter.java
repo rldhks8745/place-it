@@ -60,8 +60,9 @@ public class CustomAdapter extends BaseAdapter {
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
         ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon) ;
-        TextView tv_title = (TextView) convertView.findViewById(R.id.userid) ;
-        TextView tv_date = (TextView) convertView.findViewById(R.id.contents) ;
+        TextView tv_id = (TextView) convertView.findViewById(R.id.userid) ;
+        TextView tv_title = (TextView) convertView.findViewById(R.id.contents) ;
+
 
         iv_img.setFocusable(true);
 
@@ -72,8 +73,9 @@ public class CustomAdapter extends BaseAdapter {
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         iv_img.setImageDrawable(myItem.getIcon());
+        tv_id.setText(myItem.getId());
         tv_title.setText(myItem.getTile());
-        tv_date.setText(myItem.getDate());
+
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
         iv_img.setOnClickListener(clickListener);
@@ -81,15 +83,16 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(RoundedBitmapDrawable icon, String title, String date) {
+    public void addItem(RoundedBitmapDrawable icon, String title, String id) {
 
         CustomListviewitem mItem = new CustomListviewitem();
 
         /* MyItem에 아이템을 setting한다. */
 
-        mItem.setTitle(title);
-        mItem.setDate(date);
         mItem.setIcon(icon);
+        mItem.setId(id);
+        mItem.setTitle(title);
+
 
         /* mItems에 MyItem을 추가한다. */
         mItems.add(mItem);

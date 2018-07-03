@@ -9,7 +9,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 public class CustomListviewitem {
     private RoundedBitmapDrawable icon;
     private String title;
-    private String date;
+    private String id;
 
     public RoundedBitmapDrawable getIcon() {
         return icon;
@@ -19,8 +19,8 @@ public class CustomListviewitem {
         return title;
     }
 
-    public String getDate() {
-        return date;
+    public String getId() {
+        return id;
     }
 
     public void setTitle(String title) {
@@ -32,7 +32,7 @@ public class CustomListviewitem {
     }
 
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setId(String id) {
+        this.id = id;
     }
 }
