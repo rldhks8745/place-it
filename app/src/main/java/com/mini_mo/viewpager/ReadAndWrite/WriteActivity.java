@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,9 +68,13 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     //GPS파트
 
-
+    int permissionCheck;
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
+    final int SELECT_VIDEO = 200;
+
+    private String selectedPath;
+    MediaController mc;
 
     //실험
     HashtagSpans hashtagSpans;
@@ -85,15 +90,19 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     Geocoder geocoder = null;
     Animation ani=null;
 
-    ImageButton send, back,img,research,load;
-    TextView location;
-    LinearLayout imglist;
-    String str= null;
-    Bitmap bmp = null;
-
-    ImageList imgarrlist;
-    ImageView tempimg;
+    ImageView usericon,getloction,history,video,img,send, back;
+    TextView location,userid;
     EditText content;
+
+    LinearLayout imglist;
+    ImageList imgarrlist;
+    Bitmap bmp = null;
+    String str= null;
+
+
+
+
+
     InputStream inputStream;
 
     ArrayList<String> imgurl;
@@ -101,7 +110,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rnw_activity_write);
+        setContentView(R.layout.activity_writeboard);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
@@ -117,14 +126,19 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         longitude = 0.0;
         //실험
 
-        send = (ImageButton)findViewById(R.id.send);
-        back = (ImageButton)findViewById(R.id.back);
-        research = (ImageButton)findViewById(R.id.research);
-        load = (ImageButton)findViewById(R.id.load);
+        mc = new MediaController(this);
+
+        send = (ImageView)findViewById(R.id.send);
+        back = (ImageView)findViewById(R.id.back);
+        usericon = (ImageView)findViewById(R.id.usericon);
+        getloction = (ImageView)findViewById(R.id.getloction);
+        history = (ImageView)findViewById(R.id.history);
 
         imglist = (LinearLayout)findViewById(R.id.linear);
-        img = (ImageButton)findViewById(R.id.img);
+        img = (ImageView)findViewById(R.id.img);
+        video = (ImageView)findViewById(R.id.video);
         location = (TextView)findViewById(R.id.location);
+        userid = (TextView)findViewById(R.id.userid);
         content = (EditText)findViewById(R.id.content);
 
         imgarrlist = new ImageList();
@@ -134,8 +148,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         send.setOnClickListener(this);
         back.setOnClickListener(this);
         img.setOnClickListener(this);
-        research.setOnClickListener(this);
-        load.setOnClickListener(this);
+        video.setOnClickListener(this);
+        getloction.setOnClickListener(this);
+        history.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -193,13 +208,14 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 loadingDialog.progressON( this, "보내는 중..." );*/
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                research.startAnimation(ani);
+                getloction.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
 
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
                 Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
+                Log.i("동영상", imgurl.get(0).toString());
 
                 try {
                     String str;
@@ -224,12 +240,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
 
-            case R.id.research:
+            case R.id.getloction:
                 LoadingDialog resuarchDialog = new LoadingDialog();
                 resuarchDialog.progressON( this, "위치 찾는 중..." );
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                research.startAnimation(ani);
+                getloction.startAnimation(ani);
 
 
                 if (!isPermission) {
@@ -262,7 +278,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
 
-            case R.id.load:
+            case R.id.history:
 
                 Store.content = content.getText().toString();
 
@@ -274,7 +290,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.img:
 
-                int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
                 if(permissionCheck== PackageManager.PERMISSION_DENIED){
 
@@ -311,6 +327,33 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
                 break;
+
+            case R.id.video:
+
+                permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                if(permissionCheck== PackageManager.PERMISSION_DENIED){
+
+                    if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                    }
+                }else{
+
+                    if(imgarrlist.getSize() < 10) {
+                        ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
+                        video.startAnimation(ani);
+                        //사진 추가하기
+                        Intent videointent = new Intent();
+                        videointent.setType("video/*");
+                        videointent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(videointent, "Select a Video "), SELECT_VIDEO);
+                    }else{
+                        Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
         }
 
     }
@@ -321,6 +364,25 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         if(resultCode == RESULT_OK){
             if(imglist.getChildCount()<=10) {
                 switch (requestCode){
+
+                    case SELECT_VIDEO:
+
+                        ArrayList videoRealPath = new ArrayList();
+
+                        System.out.println("SELECT_VIDEO");
+                        Uri selectedImageUri = data.getData();
+                        selectedPath = getPath(selectedImageUri);
+
+                        videoRealPath.add(selectedPath);
+
+                        imgurl.add(videoRealPath.get(0).toString());
+
+                        imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),selectedImageUri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                        imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                        imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
+                        break;
+
                     case IMAGE_CODE:
                         ArrayList realPath = new ArrayList();
 
@@ -427,6 +489,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 }).create().show();
     }
 
+    //이미지 절대경로
     private String getRealPathFromURI(Uri contentUri) {
         int column_index=0;
         String[] proj = {MediaStore.Images.Media.DATA};
@@ -436,6 +499,24 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return cursor.getString(column_index);
+    }
+
+    //비디오 절대경로
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        cursor.close();
+
+        return path;
     }
 
     @SuppressLint("LongLogTag")
@@ -548,6 +629,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             Store.latitude = 0.0;
             Store.longitude = 0.0;
         }
+
+        userid.setText(Store.userid.toString());
+        usericon.setImageDrawable(Store.myprofile_img);
     }
 
 }

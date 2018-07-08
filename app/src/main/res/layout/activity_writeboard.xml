@@ -21,7 +21,7 @@
             android:weightSum="100">
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="15"
@@ -37,7 +37,7 @@
                 android:textSize="18sp" />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/send"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="15"
@@ -97,12 +97,12 @@
                         android:layout_weight="15" />
 
                     <TextView
-                        android:id="@+id/add"
+                        android:id="@+id/location"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="55"
                         android:gravity="center"
-                        android:text="대구 북구 복현동" />
+                        android:hint="위치" />
 
                     <ImageView
                         android:id="@+id/getloction"
@@ -126,12 +126,13 @@
                     android:layout_weight="95"
                     android:background="@drawable/bottom_line">
 
-                    <TextView
-                        android:id="@+id/contents"
+                    <EditText
+                        android:id="@+id/content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@null"
                         android:padding="10dp"
-                        android:text="contents"
+                        android:hint="무슨 생각을 하고 계신가요?"
                         android:textSize="18sp" />
                 </TableRow>
 
@@ -151,13 +152,22 @@
                         android:layout_gravity="center">
 
                         <LinearLayout
-                            android:id="@+id/imglayout"
+                            android:id="@+id/linear"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:orientation="horizontal" >
 
                             <ImageView
-                                android:id="@+id/addimg2"
+                                android:id="@+id/img"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@drawable/add_image" />
+
+                            <ImageView
+                                android:id="@+id/video"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginRight="5dp"

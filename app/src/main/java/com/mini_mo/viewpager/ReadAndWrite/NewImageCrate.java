@@ -9,6 +9,8 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mini_mo.viewpager.R;
@@ -20,6 +22,19 @@ import com.mini_mo.viewpager.R;
 public class NewImageCrate {
 
     //새로운 이미지를 만들어주는 클래스 , Bitmap , DrawAble 등
+
+    public static VideoView newVideoCreate(Activity activity , MediaController mc , String path){
+
+        VideoView videoView = new VideoView(activity);
+
+        videoView.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
+        videoView.setMediaController(mc);
+        videoView.setVideoPath(path);
+
+        videoView.getLayoutParams().width = 200;
+
+        return  videoView;
+    }
 
     public static ImageButton newImageCreate(Activity activity){
         ImageButton imgv = new ImageButton(activity);

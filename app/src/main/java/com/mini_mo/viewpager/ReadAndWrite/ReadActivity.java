@@ -27,8 +27,10 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -66,7 +68,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     //실험용
 
-
+    MediaController mc;
+    VideoView vv;
 
     ImageList imgarrlist;
 
@@ -89,6 +92,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_readboard);
 
+        //vv = (VideoView)findViewById(R.id.videoView);
+
         TextView time = (TextView)findViewById(R.id.date);
         userid = (TextView)findViewById(R.id.userid);
         bar = (LinearLayout)findViewById(R.id.bar);
@@ -105,6 +110,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         content = (TextView)findViewById(R.id.title);
 
         //실험
+        mc = new MediaController(this);
+        //vv.setMediaController(mc);
+
+
+
         data = new Data();
 
         count = 0;
@@ -134,14 +144,38 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         userid.setText(rbi.user_id.toString());
         content.setText(rbi.content.toString());
 
+
+
         if(rbi.b_photos != null) {
 
             for (int i = 0; i < rbi.b_photos.size(); i++) {
                 //실험용
 
+                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
+
+                //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
+
+                ImageButton imgv = new ImageButton(activity);
+
+                imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
+                imgv.setImageResource(R.drawable.play);
+                imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                imgv.getLayoutParams().height=400;
+                imgv.getLayoutParams().width = 400;
+
+                ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(imgv.getLayoutParams());
+                margin.setMargins(40, 40, 0, 50);
+                imgv.setLayoutParams(new LinearLayout.LayoutParams(margin));
+
+                imgv.setId(20);
+                imgv.setOnClickListener(listener);
+
+                imglist.addView(imgv);
+
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+               /* Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -156,7 +190,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                                 Store.readboard_image.add(bitmap);
                                 imglist.addView(buttons.get(buttons.size() - 1));
                             }
-                        });
+                        });*/
 
 
             }
@@ -221,6 +255,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         switch (v.getId()) {
+            case 20:
+                Intent intent = new Intent(this, VideoActivity.class);
+                intent.putExtra("video",String.valueOf(Uri.parse(rbi.b_photos.get(0))));
+                startActivity(intent);
+                break;
 
             case R.id.profile:
                 Intent intent1 = new Intent(this, YourPageActivity.class);
