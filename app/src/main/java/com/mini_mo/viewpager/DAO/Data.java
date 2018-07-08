@@ -902,7 +902,15 @@ public class Data {
                 rbi.b_photos = new ArrayList<String>();
                 for(int i = 0; i < count;i++) //ja.getJSONObject(i)
                 {
-                    rbi.b_photos.add(ja.getJSONObject(i).getString("board_photo"));  //ja.getJSONObject(i)
+                    String[] imageString = ja.getJSONObject(i).getString("board_photo").split(".");
+                    String tmps = imageString[imageString.length-1];
+                    if(tmps.equals("mkv")||tmps.equals("mp4")||tmps.equals("avi")||tmps.equals("flv")||tmps.equals("wmv"))
+                    {
+                        rbi.b_move.add(ja.getJSONObject(i).getString("board_photo"));
+                    }
+                    else {
+                        rbi.b_photos.add(ja.getJSONObject(i).getString("board_photo"));  //ja.getJSONObject
+                    }
                 }
             }
         }

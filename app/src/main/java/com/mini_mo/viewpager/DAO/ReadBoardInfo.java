@@ -16,6 +16,7 @@ public class ReadBoardInfo {
     public int board_num;
     public String content;
     public ArrayList<String> b_photos;
+    public ArrayList<String> b_move;
     public double latitude; // EX: 대구광역시 북구 복현동
     public double longitude;
     public String date; //YYYY-MM-DD HH:MM
