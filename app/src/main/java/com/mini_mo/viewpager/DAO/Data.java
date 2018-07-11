@@ -660,7 +660,7 @@ public class Data {
     }
 
 
-    public ArrayList<Board_Location> read_board_location(double min_lat, double max_lat, double min_lon, double max_lon) throws JSONException
+    public ArrayList<Board_Location> read_board_location(double min_lat, double max_lat, double min_lon, double max_lon,int limit) throws JSONException
     {
         ArrayList<Board_Location> fl = new ArrayList<Board_Location>();
         int f_cnt = 0;
@@ -673,6 +673,7 @@ public class Data {
         u_n.put("max_lat", max_lat);
         u_n.put("min_lon", min_lon);
         u_n.put("max_lon", max_lon);
+        u_n.put("limit", limit);
 
         obj.put("read_board_location_data", u_n);
 
