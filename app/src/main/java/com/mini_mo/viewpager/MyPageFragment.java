@@ -85,12 +85,8 @@ public class MyPageFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
         recyclerListView = new RecyclerListView(getContext(), view, this);
 
-
-        /** 동적 로딩 설정 **/
-        recyclerListView.loadItems(nestedScrollView, getContext());
 
         /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
         FloatingActionButton writeButton = (FloatingActionButton) view.findViewById(R.id.write_fab);

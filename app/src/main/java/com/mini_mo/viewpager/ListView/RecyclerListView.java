@@ -42,6 +42,7 @@ public class RecyclerListView {
         adapter = new RecyclerViewAdapter(listViewItems, R.layout.listview_item1, fragment);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context.getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

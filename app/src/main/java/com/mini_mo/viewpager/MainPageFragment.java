@@ -119,14 +119,11 @@ public class MainPageFragment extends Fragment{
     public void btnClick()
     {
         // 현재 위치 받아오기
-        LoadingDialog resuarchDialog = new LoadingDialog();
-        resuarchDialog.progressON( instance.getActivity(), "위치 찾는 중..." );
 
         gps = new GpsInfo(getContext());
 
         // GPS 사용유무 가져오기
         if (gps.isGetLocation()) {
-            resuarchDialog.progressOFF();
 
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
@@ -134,7 +131,7 @@ public class MainPageFragment extends Fragment{
             location.setText( AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
         } else {
             // GPS 를 사용할수 없으므로
-            resuarchDialog.progressOFF();
+
             gps.showSettingsAlert();
         }
     }
