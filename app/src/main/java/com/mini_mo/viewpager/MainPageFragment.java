@@ -5,25 +5,31 @@ package com.mini_mo.viewpager;
  */
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
+import com.mini_mo.viewpager.ReadAndWrite.GpsInfo;
 
 
 public class MainPageFragment extends Fragment{
 
+    //GPS파트
+    private GpsInfo gps;
+    double latitude;
+    double longitude;
+
     private View rootView;
     public RecyclerListView recyclerListView;
-    private NestedScrollView nestedScrollView;
+    private ImageView btnlocation;
+    private TextView location; // 위치 표시 뷰
     private static MainPageFragment instance = null;
 
     public static MainPageFragment getInstance()
@@ -45,7 +51,8 @@ public class MainPageFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_mainpage, container, false);
-        nestedScrollView = (NestedScrollView) rootView.findViewById(R.id.include);
+        btnlocation = (ImageView) rootView.findViewById(R.id.btnlocation);
+        location = (TextView) rootView.findViewById(R.id.location);
 
         return rootView;
     }
@@ -54,6 +61,13 @@ public class MainPageFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //ItemListView listView = new ItemListView(rootView);
 
+        btnlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO 맵 액티비티로 전환
+
+            }
+        });
         if(Store.rlv == null)
             recyclerListView = new RecyclerListView(getContext(), view,this);
         else
@@ -90,9 +104,40 @@ public class MainPageFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        btnClick();
+    }
+
+    @Override
     public void onDestroy() {
         Store.rlv = recyclerListView;
 
         super.onDestroy();
     }
+
+    public void btnClick()
+    {
+        // 현재 위치 받아오기
+        LoadingDialog resuarchDialog = new LoadingDialog();
+        resuarchDialog.progressON( instance.getActivity(), "위치 찾는 중..." );
+
+        gps = new GpsInfo(getContext());
+
+        // GPS 사용유무 가져오기
+        if (gps.isGetLocation()) {
+            resuarchDialog.progressOFF();
+
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+
+            location.setText( AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
+        } else {
+            // GPS 를 사용할수 없으므로
+            resuarchDialog.progressOFF();
+            gps.showSettingsAlert();
+        }
+    }
+
+
 }

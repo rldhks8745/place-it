@@ -2,16 +2,12 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
@@ -27,7 +23,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -36,19 +31,13 @@ import android.widget.Toast;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
-import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-/**
- * Created by sasor on 2018-04-25.
- */
 
 public class WriteActivity extends AppCompatActivity implements View.OnClickListener , View.OnLongClickListener{
 
