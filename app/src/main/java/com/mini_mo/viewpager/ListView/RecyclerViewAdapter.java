@@ -98,13 +98,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 사진 넣기
 
         if(item.user_photo!=null) {
-            Glide.with(activity.getApplicationContext()).asBitmap().load(item.user_photo)
+            Glide.with(viewHolder.mView).asBitmap().load(item.user_photo)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.getResources(), bitmap);
+                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(instance.getResources(), bitmap);
                             roundedBitmapDrawable.setCircular(true);
 
                             viewHolder.userIcon.setImageDrawable(roundedBitmapDrawable);
