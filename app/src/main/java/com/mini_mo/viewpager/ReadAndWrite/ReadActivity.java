@@ -146,12 +146,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        if(rbi.b_photos != null) {
+        if(rbi.b_move != null) {
 
-            for (int i = 0; i < rbi.b_photos.size(); i++) {
+            for (int i = 0; i < rbi.b_move.size(); i++) {
                 //실험용
 
-                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
+                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 

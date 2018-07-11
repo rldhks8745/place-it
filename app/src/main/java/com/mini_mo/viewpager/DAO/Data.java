@@ -900,9 +900,10 @@ public class Data {
             {
                 JSONArray ja = new JSONArray(result.getString("b_photos"));
                 rbi.b_photos = new ArrayList<String>();
+                rbi.b_move = new ArrayList<String>();
                 for(int i = 0; i < count;i++) //ja.getJSONObject(i)
                 {
-                    String[] imageString = ja.getJSONObject(i).getString("board_photo").split(".");
+                    String[] imageString = ja.getJSONObject(i).getString("board_photo").split("\\.");
                     String tmps = imageString[imageString.length-1];
                     if(tmps.equals("mkv")||tmps.equals("mp4")||tmps.equals("avi")||tmps.equals("flv")||tmps.equals("wmv"))
                     {

@@ -5,12 +5,16 @@ package com.mini_mo.viewpager.FriendListView;
  */
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +24,27 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.FriendsList;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.ReadAndWrite.ImageResizing;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 public class FriendListView extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     public ArrayList<FriendsList> listViewItemList = new ArrayList<FriendsList>() ;
+    private Activity activity;
 
     // FriendListView의 생성자
     public FriendListView() {
 
+    }
+
+    public FriendListView(Activity activity) {
+        this.activity = activity;
     }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -56,7 +69,7 @@ public class FriendListView extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        ImageView iconImageView = (ImageView) convertView.findViewById(R.id.usericon) ;
+        final ImageView iconImageView = (ImageView) convertView.findViewById(R.id.usericon) ;
         TextView userId = (TextView)  convertView.findViewById(R.id.userid);
         TextView messgae = (TextView)  convertView.findViewById(R.id.message);
 
@@ -70,10 +83,28 @@ public class FriendListView extends BaseAdapter {
 
         // photo 비트맵으로 전환
         // 개꿀 글라이드
-        Glide.with( context )
-                .load( listViewItemList.get( position ).user_photo )
-                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.usericon ).error( R.drawable.usericon  ))
-                .into( iconImageView );
+
+        if(listViewItemList.get( position ).user_photo!=null) {
+            Glide.with(activity.getApplicationContext()).asBitmap().load(listViewItemList.get( position ).user_photo)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = ImageResizing.ReSizing(ImageResizing.bitmapToByteArray(resource));
+
+                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.getResources(), bitmap);
+                            roundedBitmapDrawable.setCircular(true);
+
+                            iconImageView.setImageDrawable(roundedBitmapDrawable);
+                        }
+                    });
+        }else {
+            Glide.with( context )
+                    .load( listViewItemList.get( position ).user_photo )
+                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.usericon ).error( R.drawable.usericon  ))
+                    .into( iconImageView );
+        }
+
+
 
         return convertView;
     }
@@ -99,6 +130,5 @@ public class FriendListView extends BaseAdapter {
             listViewItemList.add( items.get(i) );
         }
     }
-
 
 }

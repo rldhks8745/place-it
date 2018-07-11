@@ -4,9 +4,14 @@ package com.mini_mo.viewpager.ListView;
  * Created by 노현민 on 2018-04-29.
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +23,8 @@ import android.widget.TextView;;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
@@ -25,6 +32,7 @@ import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 
@@ -80,19 +88,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      * @param position
      */
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final ListViewItemData item = listViewItems.get(position);
 
         // 값 설정 ( set )
         viewHolder.userId.setText(item.user_id);
         viewHolder.contents.setText(item.content);
         viewHolder.date.setText(item.date_board);
-
         // 사진 넣기
-        Glide.with( viewHolder.mView )
-                .load( item.user_photo )
-                .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ))
-                .into( viewHolder.userIcon );
+
+        if(item.user_photo!=null) {
+            Glide.with(activity.getApplicationContext()).asBitmap().load(item.user_photo)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
+
+                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.getResources(), bitmap);
+                            roundedBitmapDrawable.setCircular(true);
+
+                            viewHolder.userIcon.setImageDrawable(roundedBitmapDrawable);
+                        }
+                    });
+        }else {
+            Glide.with(viewHolder.mView)
+                    .load(item.user_photo)
+                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .into(viewHolder.userIcon);
+        }
 
         /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
 
@@ -147,5 +170,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             date = (TextView) itemView.findViewById(R.id.date);
             contents = (TextView) itemView.findViewById(R.id.contents);
         }
+    }
+
+    static public Bitmap ReSizing(byte[] bytes){
+        Bitmap bitmap;
+
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opt.inSampleSize = 4;
+        opt.inDither = true;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inTempStorage = new byte[32 * 1024];
+        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
+
+        return bitmap;
+    }
+
+    static public byte[] bitmapToByteArray( Bitmap bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray ;
     }
 }

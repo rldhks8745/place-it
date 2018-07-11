@@ -49,7 +49,7 @@ public class ImageResizing {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 6;
+        opt.inSampleSize = 4;
         opt.inDither = true;
         opt.inPurgeable = true;
         opt.inInputShareable = true;

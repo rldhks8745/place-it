@@ -57,7 +57,7 @@ public class FriendListFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         /** listView 부분 **/
         listView = (ListView) rootView.findViewById(R.id.friendListView);
-        adapter = new FriendListView();
+        adapter = new FriendListView( this.getActivity());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
