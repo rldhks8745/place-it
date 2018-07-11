@@ -20,7 +20,7 @@ public class Store {
     public static boolean check = false;
     public static int board_num = 0;
     public static int testint = 0;
-    public static RoundedBitmapDrawable myprofile_img=null;
+    public static String myprofile_img=null;
 
     public static ArrayList<Bitmap> readboard_image = new ArrayList<>();
     public static ArrayList<ListViewItemData> sendboard = new ArrayList<>();

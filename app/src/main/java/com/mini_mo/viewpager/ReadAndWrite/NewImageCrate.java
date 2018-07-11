@@ -72,7 +72,7 @@ public class NewImageCrate {
         imgv.setImageBitmap(bitmap);
         imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-
+        imgv.getLayoutParams().height = 300;
         imgv.getLayoutParams().width = 200;
 
         newImageMargin(imgv,40,40,0,50);

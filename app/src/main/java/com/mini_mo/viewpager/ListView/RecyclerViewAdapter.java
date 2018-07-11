@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -34,6 +35,8 @@ import com.mini_mo.viewpager.Store;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 // RecyclerView 어댑터
@@ -98,18 +101,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 사진 넣기
 
         if(item.user_photo!=null) {
-            Glide.with(viewHolder.mView).asBitmap().load(item.user_photo)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(instance.getResources(), bitmap);
-                            roundedBitmapDrawable.setCircular(true);
+            Glide.with(viewHolder.mView).load(item.user_photo).apply(bitmapTransform(new CircleCrop())).into(viewHolder.userIcon);
 
-                            viewHolder.userIcon.setImageDrawable(roundedBitmapDrawable);
-                        }
-                    });
         }else {
             Glide.with(viewHolder.mView)
                     .load(item.user_photo)

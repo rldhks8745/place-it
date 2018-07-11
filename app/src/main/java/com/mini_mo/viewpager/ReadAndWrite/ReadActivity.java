@@ -33,6 +33,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -51,6 +52,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener{
@@ -161,7 +164,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 imgv.setImageResource(R.drawable.play);
                 imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-                imgv.getLayoutParams().height=400;
+                imgv.getLayoutParams().height = 400;
                 imgv.getLayoutParams().width = 400;
 
                 ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(imgv.getLayoutParams());
@@ -173,9 +176,19 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 imglist.addView(imgv);
 
+            }
+        }
+
+        if(rbi.b_photos != null) {
+
+            for (int i = 0; i < rbi.b_photos.size(); i++) {
+                //실험용
+
+                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
+
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-               /* Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -190,9 +203,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                                 Store.readboard_image.add(bitmap);
                                 imglist.addView(buttons.get(buttons.size() - 1));
                             }
-                        });*/
-
-
+                        });
             }
         }
 
@@ -220,18 +231,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(user_info.user_photo!=null) {
-            Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                            roundedBitmapDrawable.setCircular(true);
-
-                            profile.setImageDrawable(roundedBitmapDrawable);
-                        }
-                    });
+            Glide.with(getApplicationContext()).load(user_info.user_photo).apply(bitmapTransform(new CircleCrop())).into(profile);
         }
 
 
@@ -257,7 +257,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case 20:
                 Intent intent = new Intent(this, VideoActivity.class);
-                intent.putExtra("video",String.valueOf(Uri.parse(rbi.b_photos.get(0))));
+                intent.putExtra("video",String.valueOf(Uri.parse(rbi.b_move.get(0))));
                 startActivity(intent);
                 break;
 
@@ -353,7 +353,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 6;
+        opt.inSampleSize = 2;
         opt.inDither = true;
         opt.inPurgeable = true;
         opt.inInputShareable = true;

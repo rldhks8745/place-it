@@ -163,6 +163,8 @@ public class MyPageFragment extends Fragment {
                     .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
                     .into( usericon );
 
+            Store.myprofile_img = user_info.user_photo;
+
             message.setText(user_info.massage);
         } catch (JSONException e) {
             e.printStackTrace();
