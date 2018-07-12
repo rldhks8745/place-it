@@ -204,7 +204,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
                 Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
-                Log.i("동영상", imgurl.get(0).toString());
 
                 try {
                     String str;

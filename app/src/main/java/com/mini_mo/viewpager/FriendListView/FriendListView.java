@@ -100,7 +100,7 @@ public class FriendListView extends BaseAdapter {
         }else {
             Glide.with( context )
                     .load( listViewItemList.get( position ).user_photo )
-                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.usericon ).error( R.drawable.usericon  ))
+                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
                     .into( iconImageView );
         }
 
