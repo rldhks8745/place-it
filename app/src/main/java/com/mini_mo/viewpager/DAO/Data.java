@@ -750,9 +750,30 @@ public class Data {
             {
                 Board_Location t = new Board_Location();
                 JSONObject tjo = tmp.getJSONObject(i);
+                JSONArray tjrr = tjo.getJSONArray("board_data");
                 t.latitude = tjo.getDouble("board_latitude");
                 t.longitude = tjo.getDouble("board_longitude");
                 t.board_count = tjo.getInt("board_count");
+
+                for(int j = 0 ; j < t.board_count; j++)
+                {
+                    JSONObject tjob = tjrr.getJSONObject(j);
+                    Board_Location_List tbll= new Board_Location_List();
+
+                    tbll.board_num = tjob.getInt("board_num");
+                    tbll.content = tjob.getString("content");
+                    tbll.id = tjob.getString("id");
+                    tbll.user_photo = tjob.getString("user_photo");
+
+                    if(tjob.getInt("is_Photo") == 1)
+                    {
+                        tbll.photo_count = tjob.getInt("photo_count");
+                        tbll.board_photo = tjob.getString("board_photo");
+                    }
+
+                    t.bll.add(tbll);
+
+                }
 
                 fl.add(t);
             }
