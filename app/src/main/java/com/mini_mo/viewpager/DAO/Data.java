@@ -770,6 +770,11 @@ public class Data {
                         tbll.photo_count = tjob.getInt("photo_count");
                         tbll.board_photo = tjob.getString("board_photo");
                     }
+                    else
+                    {
+                        tbll.photo_count = 0;
+                        tbll.board_photo = "사진없음";
+                    }
 
                     t.bll.add(tbll);
 

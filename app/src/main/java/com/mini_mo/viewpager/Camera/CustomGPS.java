@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 import com.mini_mo.viewpager.DAO.Board_Location;
+import com.mini_mo.viewpager.DAO.Board_Location_List;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.SearchActivity;
@@ -142,7 +143,8 @@ public class CustomGPS extends Service implements LocationListener,
         {
             if( !SearchListViewAdapter.getInstance().isShowing )
             {
-                mReadComments = new Data().read_board_location(mCurrentPosition.latitude - 0.0005,
+                mReadComments = new Data().read_board_location(
+                        mCurrentPosition.latitude - 0.0005,
                         mCurrentPosition.latitude + 0.0005,
                         mCurrentPosition.longitude - 0.0005,
                         mCurrentPosition.longitude + 0.0005);
@@ -185,6 +187,7 @@ public class CustomGPS extends Service implements LocationListener,
             double lon = mReadComments.get(i).longitude; // x좌표, 경도
             double lat = mReadComments.get(i).latitude; // y좌표, 위도
             int count = mReadComments.get(i).board_count;
+            ArrayList<Board_Location_List> comment_list = mReadComments.get(i).bll;
 
             // 코멘트와 현재위치 거리
             double distance = SphericalUtil.computeDistanceBetween( mCurrentPosition, new LatLng( lat, lon ) );
@@ -197,7 +200,7 @@ public class CustomGPS extends Service implements LocationListener,
             double relY = commentVector2.y - mCurrentPosition.latitude;
 
             // 코멘트 벡터 추가
-            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance, count ) );
+            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance, count, comment_list ) );
             comments.get(i).mvecRelativePosition.normalize(); // 노멀화
 
             comments.get(i).show();

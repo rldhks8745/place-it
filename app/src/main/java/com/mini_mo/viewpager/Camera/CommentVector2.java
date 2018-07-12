@@ -4,10 +4,19 @@ package com.mini_mo.viewpager.Camera;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.mini_mo.viewpager.DAO.Board_Location_List;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+
+import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 public class CommentVector2 implements Comparable<CommentVector2>{
@@ -32,7 +41,9 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public float textContextSize = 12.0f;
     public float textImgCountSIze = 20.0f;
 
-    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count )
+    ArrayList<Board_Location_List> contents;
+
+    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count, ArrayList<Board_Location_List> content_list )
     {
         mvecScreenPos = new Vector2();
         // 코멘트 벡터 생성
@@ -40,20 +51,37 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         mvecRelativePosition = relPos;
         mDistance = ( distance > 1.0 ) ? distance : 1.0; // 1m 이하 코멘트들은 최소 1m로 맞춰주기
         mCount = count;
+        contents = content_list;
 
         LayoutInflater inflater = (LayoutInflater) MainActivity.getInstance().getSystemService( MainActivity.getInstance().LAYOUT_INFLATER_SERVICE );
         layoutView = (ViewGroup)inflater.inflate(R.layout.camera_custom_item, null );
 
         double percentageSize = ( distance / 10 ) + 1; // 1 ~ 1/5 배율로 거리 표시
 
-        TextView custom_id = (TextView)layoutView.findViewById(R.id.camera_custom_id);
+        TextView custom_id = (TextView)layoutView.findViewById(R.id.camera_custom_id); // 게시글 작성자 id
         custom_id.setTextSize( textIdSIze / (float)percentageSize );
+        custom_id.setText(contents.get(0).id);
 
-        TextView custom_context = (TextView)layoutView.findViewById(R.id.camera_custom_context);
+        TextView custom_context = (TextView)layoutView.findViewById(R.id.camera_custom_context); // 게시글 내용
         custom_context.setTextSize( textContextSize / (float)percentageSize );
+        custom_context.setText(contents.get(0).content);
 
-        TextView custom_imgcount = (TextView)layoutView.findViewById(R.id.camera_custom_imgcount);
+        TextView custom_imgcount = (TextView)layoutView.findViewById(R.id.camera_custom_imgcount); // 게시글 이미지 갯수
         custom_imgcount.setTextSize( textImgCountSIze / (float)percentageSize );
+        custom_imgcount.setText(contents.get(0).photo_count);
+
+        ImageView custom_userimg = (ImageView)layoutView.findViewById(R.id.camera_custom_userimage); // 게시글 작성자 icon
+        if( contents.get(0).user_photo != null )
+            Glide.with( layoutView ).load( contents.get(0).user_photo ).apply(bitmapTransform(new CircleCrop())).into( custom_userimg );
+        else
+            Glide.with( layoutView )
+                    .load( R.drawable.user )
+                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .into( custom_userimg );
+
+        ImageView custom_firstimg = (ImageView)layoutView.findViewById(R.id.camera_custom_firstimg); // 게시글 첫번째 이미지
+        if( contents.get(0).photo_count != 0 )
+            Glide.with( layoutView ).load( contents.get(0).board_photo ).apply(bitmapTransform(new CircleCrop())).into( custom_firstimg );
 
         int w = (int)( layoutWIdth / percentageSize );
         int h =  (int)( layoutHeight / percentageSize );
