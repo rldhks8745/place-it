@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -71,7 +72,8 @@ public class CameraActivity extends AppCompatActivity {
     public  CustomMapView mCustomMapView; // 오른쪽 위 작은 맵뷰
     public  CommentView mCommentView; // 화면 전체 코멘트 표시할 뷰
 
-    public ArrayList<Board_Location> mReadComments;
+    // 카메라 코멘트 Layout을 띄울 상위 레이아웃
+    public ConstraintLayout constraintLayout;
 
     public static CameraActivity getInstance(){ return instance; }
 
@@ -135,21 +137,8 @@ public class CameraActivity extends AppCompatActivity {
         });
 
         /************************************
-         *          구글, 현재위치 버튼 누를 시
+         *        현재위치 버튼 누를 시
          ************************************/
-        ImageView imgVGoogleMap = (ImageView)findViewById( R.id.googleMap );
-        imgVGoogleMap.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                // 지도메뉴 누르면 구글지도 띄우기
-                Intent intent = new Intent( CameraActivity.getInstance(), CustomGoogleMap.class );
-                intent.putExtra("lat", ( m_customGPS.mCurrentPosition != null) ? m_customGPS.mCurrentPosition.latitude : 37.56 ); // 위도값 전달
-                intent.putExtra("lon",  ( m_customGPS.mCurrentPosition != null) ? m_customGPS.mCurrentPosition.longitude : 126.97 ); // 경도값 전달
-                startActivityForResult(intent, GOOGLE_MAP_RESULT);
-            }
-        });
 
         ImageView imgVcurLocation = (ImageView)findViewById( R.id.curLocation );
         imgVcurLocation.setOnClickListener(new View.OnClickListener() {
@@ -206,11 +195,8 @@ public class CameraActivity extends AppCompatActivity {
 
             }
         };
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        constraintLayout = (ConstraintLayout)findViewById(R.id.conslayout);
 
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
         {
@@ -223,6 +209,12 @@ public class CameraActivity extends AppCompatActivity {
                 m_customGPS.showDialogForLocationServiceSetting();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override
@@ -294,42 +286,6 @@ public class CameraActivity extends AppCompatActivity {
                 }
                 break;
         }
-    }
-
-    /*********************
-     *  맵뷰에서 사용할 코멘트 위치, 거리
-     **********************/
-    public void calculateComentsPosition()
-    {
-        // 코멘트 벡터 생성
-        ArrayList<CommentVector2> comments = new ArrayList<>();
-
-        for( int i=0; i < mReadComments.size(); i++)
-        {
-            double lon = mReadComments.get(i).longitude; // x좌표, 경도
-            double lat = mReadComments.get(i).latitude; // y좌표, 위도
-            int count = mReadComments.get(i).board_count;
-
-
-            // 코멘트와 현재위치 거리
-            double distance = SphericalUtil.computeDistanceBetween( m_customGPS.mCurrentPosition, new LatLng( lat, lon ) );
-
-            // 코멘트 위치 구하기. ( 벡터를 만들때는 lon(경도) = x, lat(위도) = y )
-            Vector2 commentVector2 = new Vector2( lon , lat );
-
-            // 코멘트, 현재위치를 기준으로 상대위치 구하기
-            double relX = commentVector2.x - m_customGPS.mCurrentPosition.longitude;
-            double relY = commentVector2.y - m_customGPS.mCurrentPosition.latitude;
-
-            // 코멘트 벡터 추가
-            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance, count ) );
-            comments.get(i).mvecRelativePosition.normalize(); // 노멀화
-        }
-
-        // 맵뷰에서 사용할 수 있도록 넘기기
-        Collections.sort( comments ); // 내림차순 정렬 ( 가까운 순으로 )
-        mCustomMapView.mComments = comments;
-
     }
 
     @Override

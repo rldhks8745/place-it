@@ -14,9 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
+import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.GpsInfo;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 
 public class MainPageFragment extends Fragment{
@@ -26,11 +32,15 @@ public class MainPageFragment extends Fragment{
     double latitude;
     double longitude;
 
+    int count = 0;
+
     private View rootView;
     public RecyclerListView recyclerListView;
     private ImageView btnlocation;
     private TextView location; // 위치 표시 뷰
     private static MainPageFragment instance = null;
+
+    ArrayList<ListViewItemData> near;
 
     public static MainPageFragment getInstance()
     {
@@ -68,6 +78,7 @@ public class MainPageFragment extends Fragment{
 
             }
         });
+
         if(Store.rlv == null)
             recyclerListView = new RecyclerListView(getContext(), view,this);
         else
@@ -103,6 +114,24 @@ public class MainPageFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public void nearSearch(){
+        double max_lat, max_lng, min_lat, min_lng;
+        max_lat = latitude+ 0.0005;
+        max_lng = longitude + 0.0005;
+        min_lat = latitude - 0.0005;
+        min_lng = longitude -0.0005;
+
+        Data data = new Data();
+
+        try{
+            near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
+            Store.sendboard = near;
+            count += 10;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -134,6 +163,7 @@ public class MainPageFragment extends Fragment{
 
             gps.showSettingsAlert();
         }
+        nearSearch();
     }
 
 

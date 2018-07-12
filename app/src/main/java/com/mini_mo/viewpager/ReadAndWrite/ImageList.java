@@ -40,7 +40,10 @@ public class ImageList{
         imglist.add(o);
     }
     public void removeImage(int i){
-        imglist.remove(i);
+        if(i == imglist.size()){
+            imglist.remove(i-1);
+        }else
+            imglist.remove(i);
     }
 
 

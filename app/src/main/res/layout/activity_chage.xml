@@ -86,42 +86,6 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:weightSum="100"
-                    android:background="@drawable/bottom_line">
-
-                    <Switch
-                        android:id="@+id/select"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="15" />
-
-                    <TextView
-                        android:id="@+id/location"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="55"
-                        android:gravity="center"
-                        android:hint="위치" />
-
-                    <ImageView
-                        android:id="@+id/getloction"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="15"
-                        app:srcCompat="@drawable/location" />
-
-                    <ImageView
-                        android:id="@+id/history"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="15"
-                        app:srcCompat="@drawable/history" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="95"
                     android:background="@drawable/bottom_line">
@@ -132,7 +96,7 @@
                         android:layout_height="match_parent"
                         android:background="@null"
                         android:gravity="left"
-                        android:hint="무슨 생각을 하고 계신가요?"
+                        android:hint="어떻게 다시 쓸까..."
                         android:padding="10dp"
                         android:textSize="18sp" />
                 </TableRow>

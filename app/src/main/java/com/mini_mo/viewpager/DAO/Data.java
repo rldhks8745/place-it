@@ -615,11 +615,65 @@ public class Data {
         JSONObject obj = new JSONObject();
         JSONObject u_n = new JSONObject();
 
+        obj.put("flag", "read_board_list2");
+        u_n.put("min_lat", min_lat);
+        u_n.put("max_lat", max_lat);
+        u_n.put("min_lon", min_lng);
+        u_n.put("max_lon", max_lng);
+
+
+        obj.put("read_board_list_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        f_cnt = result.getInt("read_board_list_count");
+
+        if (f_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_board_list_data");
+            for (int i = 0; i < f_cnt; i++)
+            {
+                ListViewItemData t = new ListViewItemData();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num");
+                t.content = tjo.getString("content");
+                t.date_board = tjo.getString("date_board");
+                t.good = tjo.getInt("good");
+                t.latitude = tjo.getDouble("board_latitude");
+                t.longitude = tjo.getDouble("board_longitude");
+                t.user_id = tjo.getString("user_id");
+                t.user_photo = tjo.getString("user_photo");
+
+                fl.add(t);
+            }
+        }
+
+        return fl;
+
+    }
+
+    public ArrayList<ListViewItemData> read_board_list (double min_lat, double min_lng, double max_lat, double max_lng,int limit) throws JSONException
+    {
+        ArrayList<ListViewItemData> fl = new ArrayList<ListViewItemData>();
+        int f_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
         obj.put("flag", "read_board_list");
         u_n.put("min_lat", min_lat);
         u_n.put("max_lat", max_lat);
         u_n.put("min_lon", min_lng);
         u_n.put("max_lon", max_lng);
+        u_n.put("limit", limit);
 
         obj.put("read_board_list_data", u_n);
 
@@ -674,6 +728,7 @@ public class Data {
         u_n.put("min_lon", min_lon);
         u_n.put("max_lon", max_lon);
 
+
         obj.put("read_board_location_data", u_n);
 
         try {
@@ -695,9 +750,30 @@ public class Data {
             {
                 Board_Location t = new Board_Location();
                 JSONObject tjo = tmp.getJSONObject(i);
+                JSONArray tjrr = tjo.getJSONArray("board_data");
                 t.latitude = tjo.getDouble("board_latitude");
                 t.longitude = tjo.getDouble("board_longitude");
                 t.board_count = tjo.getInt("board_count");
+
+                for(int j = 0 ; j < t.board_count; j++)
+                {
+                    JSONObject tjob = tjrr.getJSONObject(j);
+                    Board_Location_List tbll= new Board_Location_List();
+
+                    tbll.board_num = tjob.getInt("board_num");
+                    tbll.content = tjob.getString("content");
+                    tbll.id = tjob.getString("id");
+                    tbll.user_photo = tjob.getString("user_photo");
+
+                    if(tjob.getInt("is_Photo") == 1)
+                    {
+                        tbll.photo_count = tjob.getInt("photo_count");
+                        tbll.board_photo = tjob.getString("board_photo");
+                    }
+
+                    t.bll.add(tbll);
+
+                }
 
                 fl.add(t);
             }

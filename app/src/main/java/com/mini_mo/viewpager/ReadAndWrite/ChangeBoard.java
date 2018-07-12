@@ -23,11 +23,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -41,6 +43,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 /**
  * Created by Administrator on 2018-05-16.
@@ -72,19 +76,19 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     InputStream inputStream;
 
-    ImageButton send,back,img;
+    ImageView usericon,send,back,img;
 
     LinearLayout imglayout;
 
     EditText content;
 
-    TextView imgcount;
+    TextView userid;
 
     ReadBoardInfo rbi;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rnw_activity_board_change);
+        setContentView(R.layout.activity_chage);
 
         //서버연결 부분
 
@@ -99,9 +103,12 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         origin_url = new ArrayList<>();
         imgurl = new ArrayList<>();
 
-        send = (ImageButton)findViewById(R.id.send);
-        back = (ImageButton)findViewById(R.id.back);
-        img = (ImageButton)findViewById(R.id.img);
+        send = (ImageView)findViewById(R.id.send);
+        back = (ImageView)findViewById(R.id.back);
+        img = (ImageView)findViewById(R.id.img);
+        usericon=(ImageView)findViewById(R.id.usericon);
+
+        userid = (TextView)findViewById(R.id.userid);
 
         imglayout = (LinearLayout)findViewById(R.id.linear);
 
@@ -115,6 +122,11 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        if(rbi.user_photo != null){
+            Glide.with(this).load(rbi.user_photo).apply(bitmapTransform(new CircleCrop())).into(usericon);
+        }else
+            Glide.with(this).load(R.drawable.user).apply(bitmapTransform(new CircleCrop())).into(usericon);
 
         if(rbi.b_photos != null) {
             //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
@@ -145,16 +157,10 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
 
             }
-
-            imgcount = (TextView)findViewById(R.id.imgcount);
-            imgcount.setText(String.valueOf(rbi.b_photos.size()));
-        }else{
-            imgcount = (TextView)findViewById(R.id.imgcount);
-            imgcount.setText("0");
         }
         //서버연결 부분
 
-
+        userid.setText(rbi.user_id);
 
         content = (EditText)findViewById(R.id.content);
         content.setText(rbi.content);
@@ -185,8 +191,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                     imgbuttonlist.get(i).setId(imgbuttonlist.get(i).getId()-1);
                 }
             }
-
-            imgcount.setText(String.valueOf(imgbuttonlist.size()));
             Toast.makeText(getApplicationContext(),"사진 삭제 완료",Toast.LENGTH_SHORT).show();
 
             return true;
@@ -312,7 +316,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
-                                    imgcount.setText(String.valueOf(imgbuttonlist.size())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
                                 }
                             }else if(clipData.getItemCount() > 10){
                                 Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
@@ -337,7 +340,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
-                                    imgcount.setText(String.valueOf(imgbuttonlist.size())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
                                 }
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
@@ -359,7 +361,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                         imglayout.addView(imgbuttonlist.get(imgbuttonlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
-                                        imgcount.setText(String.valueOf(imgbuttonlist.size())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
                                     }
                                 }
 

@@ -29,6 +29,8 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
@@ -38,6 +40,8 @@ import org.json.JSONException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class WriteActivity extends AppCompatActivity implements View.OnClickListener , View.OnLongClickListener{
 
@@ -67,8 +71,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     //실험
     HashtagSpans hashtagSpans;
-
-    TextView imgcount;
 
     double latitude;
     double longitude;
@@ -109,7 +111,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         imgurl = new ArrayList<>();
 
         //실험
-        imgcount = (TextView)findViewById(R.id.imgcount);
 
         latitude = 0.0;
         longitude = 0.0;
@@ -152,7 +153,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
             imgurl.remove(v.getId());
             imgarrlist.removeImage(v.getId());
-            imglist.removeViewAt(v.getId()+1);
+            imglist.removeViewAt(v.getId()+2);
 
             for(int i=0;i<imgarrlist.getSize();i++){
                 if(imgarrlist.getImage(i).getId() > v.getId()){
@@ -160,7 +161,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
 
-            imgcount.setText(String.valueOf(imgarrlist.getSize()));
             Toast.makeText(getApplicationContext(),"사진 삭제 완료",Toast.LENGTH_SHORT).show();
 
             return true;
@@ -394,7 +394,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
-                                imgcount.setText(String.valueOf(imgarrlist.getSize())); //사진이 몇장 선택되있는 지 카운터로 나타내준다.
+
 
                             }else if(clipData.getItemCount() > 10){
                                 Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
@@ -416,10 +416,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
 
-                                imgcount.setText(String.valueOf(imgarrlist.getSize()));
-
-
-
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
                                     realPath.add( getRealPathFromURI(clipData.getItemAt(i).getUri()));
@@ -436,9 +432,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
 
                                     imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
-
-                                    imgcount.setText(String.valueOf(imgarrlist.getSize()));
-
                                 }
 
                             }
@@ -620,7 +613,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         }
 
         userid.setText(Store.userid.toString());
-        usericon.setImageDrawable(Store.myprofile_img);
+
+        if(Store.myprofile_img != null) {
+            Glide.with(this).load(Store.myprofile_img).apply(bitmapTransform(new CircleCrop())).into(usericon);
+        }else{
+            Glide.with(this).load(R.drawable.user).apply(bitmapTransform(new CircleCrop())).into(usericon);
+        }
     }
 
 }
