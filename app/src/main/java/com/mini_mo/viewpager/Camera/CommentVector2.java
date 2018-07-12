@@ -4,6 +4,7 @@ package com.mini_mo.viewpager.Camera;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
@@ -22,8 +23,14 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public Vector2 mvecRelativePosition = null; // 현재위치에서부터 현재 코멘트까지의 상대거리
     public double mDistance = 0.0; // 현재 위치와 코멘트 간의 거리
     public boolean mIsinCamera = false; // 카메라 각도 안에 들어왔나?
-    public boolean mAddView = false;
     public double mScreenWIdthRatio = 0.0; // 화면가로 어디에 코멘트를 띄워야할지 비율
+
+    public boolean mAddView = false;
+    public int layoutWIdth = 300; // 증강현실 코멘트 width
+    public int layoutHeight = 500;
+    public float textIdSIze = 15.0f;
+    public float textContextSize = 12.0f;
+    public float textImgCountSIze = 20.0f;
 
     public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count )
     {
@@ -31,13 +38,26 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         // 코멘트 벡터 생성
         mvecAbsolutePosition = absPos;
         mvecRelativePosition = relPos;
-        mDistance = distance;
-        mCount = 0;
+        mDistance = ( distance > 1.0 ) ? distance : 1.0; // 1m 이하 코멘트들은 최소 1m로 맞춰주기
         mCount = count;
 
         LayoutInflater inflater = (LayoutInflater) MainActivity.getInstance().getSystemService( MainActivity.getInstance().LAYOUT_INFLATER_SERVICE );
         layoutView = (ViewGroup)inflater.inflate(R.layout.camera_custom_item, null );
-        setRect( 300, 200 );
+
+        double percentageSize = ( distance / 10 ) + 1; // 1 ~ 1/5 배율로 거리 표시
+
+        TextView custom_id = (TextView)layoutView.findViewById(R.id.camera_custom_id);
+        custom_id.setTextSize( textIdSIze / (float)percentageSize );
+
+        TextView custom_context = (TextView)layoutView.findViewById(R.id.camera_custom_context);
+        custom_context.setTextSize( textContextSize / (float)percentageSize );
+
+        TextView custom_imgcount = (TextView)layoutView.findViewById(R.id.camera_custom_imgcount);
+        custom_imgcount.setTextSize( textImgCountSIze / (float)percentageSize );
+
+        int w = (int)( layoutWIdth / percentageSize );
+        int h =  (int)( layoutHeight / percentageSize );
+        setRect( (int)( layoutWIdth / percentageSize ), (int)( layoutHeight / percentageSize ) );
     }
 
     public void setmNumber( int num ) { mCount = num; }

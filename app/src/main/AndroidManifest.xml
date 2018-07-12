@@ -45,7 +45,6 @@
 
         <!-- Camera Activity ( 김기완 ) -->
         <activity android:name=".Camera.CameraActivity" />
-        <activity android:name=".Camera.CustomGoogleMap" />
         <activity android:name=".Camera.CameraCommentsList" />
 
         <!-- Write & Read Comment Activity ( 황의원 ) -->
