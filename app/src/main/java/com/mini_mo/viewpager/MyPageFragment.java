@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -161,10 +162,11 @@ public class MyPageFragment extends Fragment {
 
             userId.setText(user_info.user_id);
 
+            //Bitmap bit = BItmap.getBitmap
             // photo 넣는곳
             Glide.with( this.getContext() )
                     .load( user_info.user_photo )
-                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
+                    .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
                     .into( usericon );
 
             Store.myprofile_img = user_info.user_photo;

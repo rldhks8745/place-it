@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,7 +43,7 @@ public class SearchActivity extends AppCompatActivity{
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
     ListViewItemData listViewItemData;
 
-    ImageButton searchbutton;
+    ImageView searchbutton;
     ImageButton cameraButton;
 
     Intent intent;
@@ -63,7 +64,7 @@ public class SearchActivity extends AppCompatActivity{
         SearchListViewAdapter.isShowing = true;
 
         intent = getIntent();
-        searchbutton = (ImageButton)findViewById(R.id.searchbutton);
+        searchbutton = (ImageView)findViewById(R.id.searchbutton);
         searchline = (TextView)findViewById(R.id.searchline);
 
         listView = (ListView)findViewById(R.id.listview);
