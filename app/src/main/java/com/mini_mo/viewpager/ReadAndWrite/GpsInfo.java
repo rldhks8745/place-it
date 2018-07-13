@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -14,123 +15,75 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+
+import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.MainPageFragment;
 
 
 public class GpsInfo extends Service implements LocationListener {
 
+    public static final int MAINPAGE = 1;
+    public static final int WRITE = 2;
+    public static final int SAVE = 3;
 
-
+    public static int flag = -1;
     private final Context mContext;
 
-
-
     // 현재 GPS 사용유무
-
     boolean isGPSEnabled = false;
 
-
-
     // 네트워크 사용유무
-
     boolean isNetworkEnabled = false;
 
-
-
     // GPS 상태값
-
     boolean isGetLocation = false;
 
-
-
     Location location;
-
     double lat; // 위도
-
     double lon; // 경도
 
-
-
     // 최소 GPS 정보 업데이트 거리 10미터
-
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
-
-
     // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1분
-
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
-
-
 
     protected LocationManager locationManager;
 
-
-
-    public GpsInfo(Context context) {
+    public GpsInfo(Context context ) {
 
         this.mContext = context;
 
-        getLocation();
-
     }
-
-
 
     @TargetApi(23)
 
-    public Location getLocation() {
+    public void setupLocation( int f ) {
+        flag = f;
 
-        if ( Build.VERSION.SDK_INT >= 23 &&
-
-                ContextCompat.checkSelfPermission(
-
-                        mContext, android.Manifest.permission.ACCESS_FINE_LOCATION )
-
-                        != PackageManager.PERMISSION_GRANTED &&
-
-                ContextCompat.checkSelfPermission(
-
-                        mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-
-                        != PackageManager.PERMISSION_GRANTED) {
-
-
-
-            return null;
-
+        if ( ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
+        {
+            return;
         }
 
-
-
         try {
-
             locationManager = (LocationManager) mContext
-
                     .getSystemService(LOCATION_SERVICE);
 
-
-
             // GPS 정보 가져오기
-
             isGPSEnabled = locationManager
-
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-
-
             // 현재 네트워크 상태 값 알아오기
-
             isNetworkEnabled = locationManager
-
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 
-
             if (!isGPSEnabled && !isNetworkEnabled) {
-
                 // GPS 와 네트워크사용이 가능하지 않을때 소스 구현
-
             } else {
 
                 this.isGetLocation = true;
@@ -139,66 +92,36 @@ public class GpsInfo extends Service implements LocationListener {
 
                 if (isNetworkEnabled) {
 
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1, 1, this);
 
                     if (locationManager != null) {
-
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                         if (location != null) {
-
                             // 위도 경도 저장
-
                             lat = location.getLatitude();
-
                             lon = location.getLongitude();
-
                         }
-
                     }
-
                 }
-
-
-
                 if (isGPSEnabled) {
-
                     if (location == null) {
-
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, this);
 
                         if (locationManager != null) {
-
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                             if (location != null) {
-
                                 lat = location.getLatitude();
-
                                 lon = location.getLongitude();
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
-
-
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
-
-        return location;
-
     }
 
 
@@ -210,13 +133,11 @@ public class GpsInfo extends Service implements LocationListener {
      * */
 
     public void stopUsingGPS(){
-
         if(locationManager != null){
 
             locationManager.removeUpdates(GpsInfo.this);
-
+            this.isGetLocation = false;
         }
-
     }
 
 
@@ -286,49 +207,28 @@ public class GpsInfo extends Service implements LocationListener {
     public void showSettingsAlert(){
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-
-
         alertDialog.setTitle("GPS 사용유무셋팅");
-
         alertDialog.setMessage("GPS 셋팅이 되지 않았을수도 있습니다. \n 설정창으로 가시겠습니까?");
 
-
-
         // OK 를 누르게 되면 설정창으로 이동합니다.
-
         alertDialog.setPositiveButton("Settings",
-
                 new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog,int which) {
-
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-
                         mContext.startActivity(intent);
-
                     }
-
                 });
 
         // Cancle 하면 종료 합니다.
 
         alertDialog.setNegativeButton("Cancel",
-
                 new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int which) {
-
                         dialog.cancel();
-
                     }
-
                 });
 
-
-
         alertDialog.show();
-
     }
 
 
@@ -344,11 +244,23 @@ public class GpsInfo extends Service implements LocationListener {
 
 
     public void onLocationChanged(Location location) {
+        this.location = location;
 
-        // TODO Auto-generated method stub
+        switch( flag )
+        {
+            case MAINPAGE:
+                MainPageFragment.getInstance().setTextLocation( location );
+                break;
+            case WRITE:
+                WriteActivity.getInstance().setTextLocation( location );
+                break;
+            case SAVE:
 
+                break;
 
+        }
 
+        this.stopUsingGPS();
     }
 
 

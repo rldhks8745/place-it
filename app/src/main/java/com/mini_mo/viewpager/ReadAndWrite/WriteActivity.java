@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,8 +32,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
@@ -91,16 +94,22 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     String str= null;
 
 
-
-
-
     InputStream inputStream;
 
     ArrayList<String> imgurl;
 
+    LoadingDialog loading = new LoadingDialog();
+
+    public static WriteActivity instance;
+
+    public static WriteActivity getInstance()
+    {
+        return instance;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_writeboard);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -229,40 +238,15 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.getloction:
-                LoadingDialog resuarchDialog = new LoadingDialog();
-                resuarchDialog.progressON( this, "위치 찾는 중..." );
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 getloction.startAnimation(ani);
 
+                location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
+                MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
 
-                if (!isPermission) {
-                    callPermission();
-                    return;
-                }
-
-
-                gps = new GpsInfo(WriteActivity.this);
-
-                // GPS 사용유무 가져오기
-                if (gps.isGetLocation()) {
-                    resuarchDialog.progressOFF();
-
-                    latitude = gps.getLatitude();
-                    longitude = gps.getLongitude();
-
-                    location.setText( AddressTransformation.getAddress(this,latitude,longitude));
-
-
-
-                } else {
-                    // GPS 를 사용할수 없으므로
-                    resuarchDialog.progressOFF();
-                    gps.showSettingsAlert();
-
-                }
-
-
+                if( MainPageFragment.getInstance().latitude == 0.0 )
+                    loading.progressON( this, "위치 수신 준비중");
 
                 break;
 
@@ -344,6 +328,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
 
+    }
+
+    public void setTextLocation( Location lo )
+    {
+        location.setText(AddressTransformation.getAddress(this, lo.getLatitude(), lo.getLongitude()));
+        loading.progressOFF();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){

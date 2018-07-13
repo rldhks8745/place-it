@@ -4,15 +4,23 @@ package com.mini_mo.viewpager;
  * Created by 노현민 on 2018-04-19.
  */
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
@@ -29,8 +37,8 @@ public class MainPageFragment extends Fragment{
 
     //GPS파트
     private GpsInfo gps;
-    double latitude;
-    double longitude;
+    public double latitude = 0.0;
+    public double longitude = 0.0;
 
     int count = 0;
 
@@ -41,6 +49,8 @@ public class MainPageFragment extends Fragment{
     private static MainPageFragment instance = null;
 
     ArrayList<ListViewItemData> near;
+
+    LoadingDialog loading;
 
     public static MainPageFragment getInstance()
     {
@@ -64,6 +74,9 @@ public class MainPageFragment extends Fragment{
         btnlocation = (ImageView) rootView.findViewById(R.id.btnlocation);
         location = (TextView) rootView.findViewById(R.id.location);
 
+        loading = new LoadingDialog();
+        gps = new GpsInfo( getContext() );
+
         return rootView;
     }
 
@@ -74,7 +87,6 @@ public class MainPageFragment extends Fragment{
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO 맵 액티비티로 전환
 
             }
         });
@@ -116,7 +128,7 @@ public class MainPageFragment extends Fragment{
 
     public void nearSearch(){
         double max_lat, max_lng, min_lat, min_lng;
-        max_lat = latitude+ 0.0005;
+        max_lat = latitude + 0.0005;
         max_lng = longitude + 0.0005;
         min_lat = latitude - 0.0005;
         min_lng = longitude -0.0005;
@@ -127,6 +139,7 @@ public class MainPageFragment extends Fragment{
             near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
             Store.sendboard = near;
             count += 10;
+
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -135,7 +148,21 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        btnClick();
+        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
+        getLocation( GpsInfo.MAINPAGE );
+
+        if( latitude == 0.0 )
+            loading.progressON( this.getActivity(), "위치 수신 준비중");
+    }
+
+    public void setTextLocation( Location lo )
+    {
+        latitude = lo.getLatitude();
+        longitude = lo.getLongitude();
+        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
+        loading.progressOFF();
+
+        nearSearch();
     }
 
     @Override
@@ -145,26 +172,34 @@ public class MainPageFragment extends Fragment{
         super.onDestroy();
     }
 
-    public void btnClick()
+    public void getLocation( int flag )
     {
-        // 현재 위치 받아오기
+        gps.setupLocation( flag );
 
-        gps = new GpsInfo(getContext());
-
-        // GPS 사용유무 가져오기
-        if (gps.isGetLocation()) {
-
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-
-            location.setText( AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
-        } else {
-            // GPS 를 사용할수 없으므로
-
-            gps.showSettingsAlert();
+        if( ContextCompat.checkSelfPermission( this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission( this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
+        {
+            ActivityCompat.requestPermissions( MainActivity.getInstance(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions( MainActivity.getInstance(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-        nearSearch();
+        else
+        {
+            // GPS 사용유무 가져오기
+            if ( !gps.isGetLocation() ) {
+                // GPS 를 사용할수 없으므로
+                loading.progressOFF();
+                gps.showSettingsAlert();
+            }
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
