@@ -204,6 +204,7 @@ public class ClusterMap extends AppCompatActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
                 Store.point = latLng;
+                setResult(300);
                 finish();
             }
         });

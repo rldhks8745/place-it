@@ -47,6 +47,7 @@ public class NewImageCrate {
         FrameLayout frameLayout = new FrameLayout(activity);
 
         frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        frameLayout.setBackgroundColor(Color.rgb(30,30,30));
         frameLayout.getLayoutParams().height=400;
         frameLayout.getLayoutParams().width=400;
 
@@ -56,18 +57,24 @@ public class NewImageCrate {
         play.setImageResource(R.drawable.playbutton);
         play.setBackgroundColor(Color.alpha(255));
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)play.getLayoutParams();
-        lp.gravity = Gravity.CENTER;
-        play.setLayoutParams(lp);
+        FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)play.getLayoutParams();
+        lp1.gravity = Gravity.CENTER;
+        play.setLayoutParams(lp1);
+        play.getLayoutParams().width=170;
+        play.getLayoutParams().height=170;
 
-
-        videov.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.MATCH_PARENT));
+        videov.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams)videov.getLayoutParams();
+        lp2.gravity = Gravity.CENTER;
+        videov.setLayoutParams(lp2);
         videov.setVideoPath(path);
         videov.getLayoutParams().height = 400;
-        frameLayout.getLayoutParams().width=400;
+        videov.getLayoutParams().width=400;
+
         newVideoMargin(videov,40,40,0,50);
 
         frameLayout.addView(videov);
+        frameLayout.addView(play);
 
         return frameLayout;
     }
@@ -80,7 +87,7 @@ public class NewImageCrate {
         imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         imgv.getLayoutParams().height = 300;
-        imgv.getLayoutParams().width = 200;
+        imgv.getLayoutParams().width = 300;
 
         newImageMargin(imgv,40,40,0,50);
 
@@ -93,8 +100,9 @@ public class NewImageCrate {
         FrameLayout frameLayout = new FrameLayout(activity);
 
         frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        frameLayout.setBackgroundColor(Color.rgb(30,30,30));
         frameLayout.getLayoutParams().height=300;
-        frameLayout.getLayoutParams().width=200;
+        frameLayout.getLayoutParams().width=300;
 
 
 
@@ -102,18 +110,24 @@ public class NewImageCrate {
         play.setImageResource(R.drawable.playbutton);
         play.setBackgroundColor(Color.alpha(255));
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)play.getLayoutParams();
-        lp.gravity = Gravity.CENTER;
-        play.setLayoutParams(lp);
+        FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)play.getLayoutParams();
+        lp1.gravity = Gravity.CENTER;
+        play.setLayoutParams(lp1);
+        play.getLayoutParams().width=150;
+        play.getLayoutParams().height=150;
 
-
-        videov.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.MATCH_PARENT));
+        videov.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams)videov.getLayoutParams();
+        lp2.gravity = Gravity.CENTER;
+        videov.setLayoutParams(lp2);
         videov.setVideoPath(path);
         videov.getLayoutParams().height = 300;
-        frameLayout.getLayoutParams().width=200;
+        videov.getLayoutParams().width=300;
+
         newVideoMargin(videov,40,40,0,50);
 
         frameLayout.addView(videov);
+        frameLayout.addView(play);
 
         return frameLayout;
     }

@@ -32,7 +32,7 @@ public class Store {
     public static double latitude=0.0 , longitude=0.0;
     public static String content = "";
     public static ArrayList<Uri> arr_uri = new ArrayList<>();
-    public static LatLng point;
+    public static LatLng point =null;
 
     public static RecyclerListView rlv=null;
     public static NestedScrollView nsv=null;

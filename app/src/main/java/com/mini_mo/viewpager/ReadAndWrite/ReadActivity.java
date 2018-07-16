@@ -162,8 +162,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 
+                video_list.add(rbi.b_move.get(i));
+
                 viewarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
-                viewarr.get(viewarr.size()-1).setId((20+viewarr.size()-1));
+                viewarr.get(viewarr.size()-1).setId((20+(viewarr.size()-1)));
                 viewarr.get(viewarr.size()-1).setOnClickListener(listener);
 
                 imglist.addView(viewarr.get(viewarr.size() - 1));

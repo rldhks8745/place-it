@@ -140,7 +140,7 @@
                                 android:layout_marginRight="5dp"
                                 android:layout_weight="1"
                                 android:scaleType="fitCenter"
-                                app:srcCompat="@drawable/add_image" />
+                                app:srcCompat="@drawable/add_video" />
                         </LinearLayout>
                     </HorizontalScrollView>
 

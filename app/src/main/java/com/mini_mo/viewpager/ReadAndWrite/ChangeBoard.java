@@ -54,6 +54,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
+    final int SELECT_VIDEO = 200;
+
+    private String selectedPath;
 
     HashtagSpans hashtagSpans;
 
@@ -65,7 +68,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     ArrayList<String> imgurl;
     ArrayList<Bitmap> bitmaplist;
-    ArrayList<ImageButton> imgbuttonlist;
+    ArrayList<View> viewarr;
     ArrayList<String> origin_url;
     String[] split_url;
 
@@ -76,7 +79,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     InputStream inputStream;
 
-    ImageView usericon,send,back,img;
+    ImageView usericon,send,back,img,video;
 
     LinearLayout imglayout;
 
@@ -98,7 +101,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         data = new Data();
 
         bitmaplist = new ArrayList<>();
-        imgbuttonlist = new ArrayList<>();
+        viewarr = new ArrayList<>();
         arr_delete_url = new ArrayList<>();
         origin_url = new ArrayList<>();
         imgurl = new ArrayList<>();
@@ -106,6 +109,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         send = (ImageView)findViewById(R.id.send);
         back = (ImageView)findViewById(R.id.back);
         img = (ImageView)findViewById(R.id.img);
+        video = (ImageView)findViewById(R.id.video);
         usericon=(ImageView)findViewById(R.id.usericon);
 
         userid = (TextView)findViewById(R.id.userid);
@@ -128,6 +132,24 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         }else
             Glide.with(this).load(R.drawable.user).apply(bitmapTransform(new CircleCrop())).into(usericon);
 
+        if(rbi.b_move != null) {
+
+            for (int i = 0; i < rbi.b_move.size(); i++) {
+                //실험용
+                origin_url.add(rbi.b_move.get(i));
+                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
+
+                //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
+
+                viewarr.add(NewImageCrate.WritenewVideoCreate(this,rbi.b_move.get(i)));
+                viewarr.get(viewarr.size()-1).setId((viewarr.size()-1));
+                viewarr.get(viewarr.size()-1).setOnLongClickListener(longlistener);
+
+                imglayout.addView(viewarr.get(viewarr.size() - 1));
+
+            }
+        }
+
         if(rbi.b_photos != null) {
             //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
             for (int i = 0; i < rbi.b_photos.size(); i++) {
@@ -141,17 +163,17 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
-                                Log.i("이미지 URL",rbi.b_photos.get(imgbuttonlist.size())+"");
+                                Log.i("이미지 URL",rbi.b_photos.get(viewarr.size())+"");
 
                                 Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
-                                imgbuttonlist.add(NewImageCrate.WritenewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                                viewarr.add(NewImageCrate.WritenewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
 
-                                Log.i("buttons 크기 : ", imgbuttonlist.size()+"");
-                                imgbuttonlist.get(imgbuttonlist.size()-1).setId(imgbuttonlist.size()-1);
-                                imgbuttonlist.get(imgbuttonlist.size()-1).setOnLongClickListener(longlistener);
+                                Log.i("buttons 크기 : ", viewarr.size()+"");
+                                viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
+                                viewarr.get(viewarr.size()-1).setOnLongClickListener(longlistener);
                                 Store.readboard_image.add(bitmap);
-                                imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1));
+                                imglayout.addView(viewarr.get(viewarr.size() - 1));
                             }
                         });
 
@@ -169,6 +191,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         send.setOnClickListener(this);
         back.setOnClickListener(this);
         img.setOnClickListener(this);
+        video.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -183,12 +206,12 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
             arr_delete_url.add(split_url[split_url.length-1]);
 
-            imgbuttonlist.remove(v.getId());
-            imglayout.removeViewAt(v.getId()+1);
+            viewarr.remove(v.getId());
+            imglayout.removeViewAt(v.getId()+2);
 
-            for(int i=0;i<imgbuttonlist.size();i++){
-                if(imgbuttonlist.get(i).getId() > v.getId()){
-                    imgbuttonlist.get(i).setId(imgbuttonlist.get(i).getId()-1);
+            for(int i=0;i<viewarr.size();i++){
+                if(viewarr.get(i).getId() > v.getId()){
+                    viewarr.get(i).setId(viewarr.get(i).getId()-1);
                 }
             }
             Toast.makeText(getApplicationContext(),"사진 삭제 완료",Toast.LENGTH_SHORT).show();
@@ -270,7 +293,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                     }
                 }else{
 
-                    if(imgbuttonlist.size() <= 10) {
+                    if(viewarr.size() <= 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         img.startAnimation(ani);
                         //사진 추가하기
@@ -280,6 +303,33 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                         startActivityForResult(Intent.createChooser(imgadd, "Select Picture"), IMAGE_CODE);
                     }else{
                         Toast.makeText(this,"사진은 10장까지만 추가 가능합니다.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+
+            case R.id.video:
+
+                permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                if(permissionCheck== PackageManager.PERMISSION_DENIED){
+
+                    if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                    }
+                }else{
+
+                    if(viewarr.size() < 10) {
+                        ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
+                        video.startAnimation(ani);
+                        //사진 추가하기
+                        Intent videointent = new Intent();
+                        videointent.setType("video/*");
+                        videointent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(videointent, "Select a Video "), SELECT_VIDEO);
+                    }else{
+                        Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -293,13 +343,32 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         if(resultCode == RESULT_OK){
             if(imglayout.getChildCount()<=10) {
                 switch (requestCode){
+                    case SELECT_VIDEO:
+
+                        ArrayList videoRealPath = new ArrayList();
+
+                        System.out.println("SELECT_VIDEO");
+                        Uri selectedImageUri = data.getData();
+                        selectedPath = getPath(selectedImageUri);
+
+                        videoRealPath.add(selectedPath);
+
+                        imgurl.add(videoRealPath.get(0).toString());
+
+                        viewarr.add(NewImageCrate.WritenewVideoCreate(this,selectedPath)); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                        viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                        viewarr.get(viewarr.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
+                        imglayout.addView(viewarr.get(viewarr.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+                        break;
+
                     case IMAGE_CODE:
                         ArrayList realPath = new ArrayList();
 
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             ClipData clipData = data.getClipData();
                             if(data.getClipData() == null){
-                                if((imgbuttonlist.size()+1) > 10){
+                                if((viewarr.size()+1) > 10){
                                     Toast.makeText(this,"사진은 10장까지만 추가 가능합니다.",Toast.LENGTH_SHORT).show();
                                     return;
                                 }else {
@@ -309,12 +378,12 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                    imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    viewarr.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                    viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                    viewarr.get(viewarr.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                    imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+                                    imglayout.addView(viewarr.get(viewarr.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                                 }
                             }else if(clipData.getItemCount() > 10){
@@ -322,7 +391,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                                 return;
                             }else if(clipData.getItemCount() == 1){
 
-                                if((imgbuttonlist.size()+clipData.getItemCount()) > 10){
+                                if((viewarr.size()+clipData.getItemCount()) > 10){
                                     Toast.makeText(this,"사진은 10장까지만 추가 가능합니다.",Toast.LENGTH_SHORT).show();
                                     return;
                                 }else {
@@ -333,18 +402,18 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                     Uri uri = clipData.getItemAt(0).getUri();
 
-                                    imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                    imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    viewarr.add(NewImageCrate.WritenewImageCreate(this, ImageResizing.ReSizing(this.getContentResolver(), uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                    viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                    viewarr.get(viewarr.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                    imglayout.addView(imgbuttonlist.get(imgbuttonlist.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+                                    imglayout.addView(viewarr.get(viewarr.size() - 1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                                 }
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
 
-                                    if((imgbuttonlist.size()+clipData.getItemCount()) > 10){
+                                    if((viewarr.size()+clipData.getItemCount()) > 10){
                                         Toast.makeText(this,"사진은 10장까지만 추가 가능합니다.",Toast.LENGTH_SHORT).show();
                                         return;
                                     }else {
@@ -354,12 +423,12 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                         Uri uri = clipData.getItemAt(i).getUri();
 
-                                        imgbuttonlist.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                        imgbuttonlist.get(imgbuttonlist.size() - 1).setId(imgbuttonlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                        imgbuttonlist.get(imgbuttonlist.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                        viewarr.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                        viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                        viewarr.get(viewarr.size() - 1).setOnLongClickListener(longlistener); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                        imglayout.addView(imgbuttonlist.get(imgbuttonlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+                                        imglayout.addView(viewarr.get(viewarr.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                                     }
                                 }
@@ -431,6 +500,24 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
         byte[] byteArray = stream.toByteArray() ;
         return byteArray ;
+    }
+
+    //비디오 절대경로
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        cursor.close();
+
+        return path;
     }
 
 }
