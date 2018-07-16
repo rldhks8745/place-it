@@ -63,7 +63,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     Activity activity;
     InputStream inputStream;
-    ArrayList<ImageButton> buttons;
+    ArrayList<View> viewarr;
     View.OnClickListener listener;
     Data data;
     User_Info user_info;
@@ -75,6 +75,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     VideoView vv;
 
     ImageList imgarrlist;
+
+    ArrayList<String> video_list;
 
     LinearLayout imglist,bar;
 
@@ -110,6 +112,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         imgarrlist = new ImageList();
         imglist = (LinearLayout)findViewById(R.id.ll);
 
+        video_list = new ArrayList<>();
+
         content = (TextView)findViewById(R.id.title);
 
         //실험
@@ -123,7 +127,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         count = 0;
 
         listener = this;
-        buttons = new ArrayList<>();
+        viewarr = new ArrayList<>();
 
         change = (ImageButton)findViewById(R.id.change);
         delete = (ImageButton)findViewById(R.id.delete);
@@ -158,23 +162,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 
-                ImageButton imgv = new ImageButton(activity);
+                viewarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
+                viewarr.get(viewarr.size()-1).setId((20+viewarr.size()-1));
+                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
 
-                imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-                imgv.setImageResource(R.drawable.play);
-                imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-                imgv.getLayoutParams().height = 400;
-                imgv.getLayoutParams().width = 400;
-
-                ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(imgv.getLayoutParams());
-                margin.setMargins(40, 40, 0, 50);
-                imgv.setLayoutParams(new LinearLayout.LayoutParams(margin));
-
-                imgv.setId(20);
-                imgv.setOnClickListener(listener);
-
-                imglist.addView(imgv);
+                imglist.addView(viewarr.get(viewarr.size() - 1));
 
             }
         }
@@ -194,14 +186,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 Bitmap bitmap = ReSizing( bitmapToByteArray( resource ) );
 
-                                buttons.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
+                                viewarr.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
 
-                                Log.i("buttons 크기 : ", buttons.size()+"");
-                                buttons.get(buttons.size()-1).setId(buttons.size()-1);
-                                buttons.get(buttons.size()-1).setOnClickListener(listener);
+                                Log.i("buttons 크기 : ", viewarr.size()+"");
+                                viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
+                                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
 
                                 Store.readboard_image.add(bitmap);
-                                imglist.addView(buttons.get(buttons.size() - 1));
+                                imglist.addView(viewarr.get(viewarr.size() - 1));
                             }
                         });
             }
@@ -254,13 +246,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
 
-        switch (v.getId()) {
-            case 20:
-                Intent intent = new Intent(this, VideoActivity.class);
-                intent.putExtra("video",String.valueOf(Uri.parse(rbi.b_move.get(0))));
-                startActivity(intent);
-                break;
+        if (20 <= v.getId() && v.getId() <= 29) { //0 ~ 9 번 째 클릭시
+            Log.i("Click", "클릭 하셨습니다.");
 
+            Intent intent = new Intent(this, VideoActivity.class);
+            intent.putExtra("video",String.valueOf(Uri.parse(video_list.get((v.getId()-20)))));
+            startActivity(intent);
+        }
+
+        switch (v.getId()) {
             case R.id.profile:
                 Intent intent1 = new Intent(this, YourPageActivity.class);
                 intent1.putExtra("id",rbi.user_id);
@@ -324,18 +318,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                /*if (count_state == 0) {
-                    count_state = 1;
-                    Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
-                    total_count += 1;
-                    like_count.setText(String.valueOf(total_count));
-                } else if (count_state == 1) {
-                    count_state = 0;
-                    Toast.makeText(getApplicationContext(), "좋아요 취소!", Toast.LENGTH_SHORT).show();
-                    total_count -= 1;
-                    like_count.setText(String.valueOf(total_count));
-                }*/
                 break;
         }
     }

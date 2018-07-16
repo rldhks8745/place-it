@@ -86,7 +86,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     EditText content;
 
     LinearLayout imglist;
-    ImageList imgarrlist;
+    ArrayList<View> viewarrlist;
     Bitmap bmp = null;
     String str= null;
 
@@ -131,7 +131,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         userid = (TextView)findViewById(R.id.userid);
         content = (EditText)findViewById(R.id.content);
 
-        imgarrlist = new ImageList();
+        viewarrlist = new ArrayList<View>();
 
         Setting();
 
@@ -152,12 +152,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
 
             imgurl.remove(v.getId());
-            imgarrlist.removeImage(v.getId());
+            viewarrlist.remove(v.getId());
             imglist.removeViewAt(v.getId()+2);
 
-            for(int i=0;i<imgarrlist.getSize();i++){
-                if(imgarrlist.getImage(i).getId() > v.getId()){
-                    imgarrlist.getImage(i).setId(imgarrlist.getImage(i).getId()-1);
+            for(int i=0;i<viewarrlist.size();i++){
+                if(viewarrlist.get(i).getId() > v.getId()){
+                    viewarrlist.get(i).setId(viewarrlist.get(i).getId()-1);
                 }
             }
 
@@ -204,7 +204,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                //hashtagSpans.getHashtags()  추출한 태그 String형
 
                 Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
-                Log.i("동영상", imgurl.get(0).toString());
+
 
                 try {
                     String str;
@@ -230,8 +230,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.getloction:
-                LoadingDialog resuarchDialog = new LoadingDialog();
-                resuarchDialog.progressON( this, "위치 찾는 중..." );
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 getloction.startAnimation(ani);
@@ -246,8 +244,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 gps = new GpsInfo(WriteActivity.this);
 
                 // GPS 사용유무 가져오기
+
+                Log.i("사용유무", gps.isGetLocation()+"");
+
                 if (gps.isGetLocation()) {
-                    resuarchDialog.progressOFF();
 
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
@@ -258,7 +258,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                 } else {
                     // GPS 를 사용할수 없으므로
-                    resuarchDialog.progressOFF();
                     gps.showSettingsAlert();
 
                 }
@@ -303,7 +302,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }else{
 
-                    if(imgarrlist.getSize() < 10) {
+                    if(viewarrlist.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         img.startAnimation(ani);
                         //사진 추가하기
@@ -312,7 +311,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                         imgadd.setType("image/*");
                         startActivityForResult(Intent.createChooser(imgadd, "Select Picture"), IMAGE_CODE);
                     }else{
-                        Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"사진과 동영상은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -330,7 +329,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }else{
 
-                    if(imgarrlist.getSize() < 10) {
+                    if(viewarrlist.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         video.startAnimation(ani);
                         //사진 추가하기
@@ -339,7 +338,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                         videointent.setAction(Intent.ACTION_GET_CONTENT);
                         startActivityForResult(Intent.createChooser(videointent, "Select a Video "), SELECT_VIDEO);
                     }else{
-                        Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"사진과 동영상은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -366,9 +365,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                         imgurl.add(videoRealPath.get(0).toString());
 
-                        imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),selectedImageUri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                        imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                        imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                        viewarrlist.add(NewImageCrate.WritenewVideoCreate(this, selectedPath)); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                        viewarrlist.get(viewarrlist.size() - 1).setId(viewarrlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                        viewarrlist.get(viewarrlist.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+
+                        imglist.addView(viewarrlist.get(viewarrlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
+
 
                         break;
 
@@ -387,14 +389,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Store.arr_uri.add(uri);
 
-                                imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                viewarrlist.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                viewarrlist.get(viewarrlist.size() - 1).setId(viewarrlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                viewarrlist.get(viewarrlist.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
-
-
+                                imglist.addView(viewarrlist.get(viewarrlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                             }else if(clipData.getItemCount() > 10){
                                 Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
@@ -409,12 +409,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                 Store.arr_uri.add(uri);
 
-                                imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                viewarrlist.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                viewarrlist.get(viewarrlist.size() - 1).setId(viewarrlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                viewarrlist.get(viewarrlist.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
+                                imglist.addView(viewarrlist.get(viewarrlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
 
                             }else{
                                 for(int i=0;i<clipData.getItemCount();i++){
@@ -426,12 +426,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                                     Store.arr_uri.add(uri);
 
-                                    imgarrlist.addImage(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setId(imgarrlist.getSize() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                    imgarrlist.getImage(imgarrlist.getSize() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
+                                    viewarrlist.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                                    viewarrlist.get(viewarrlist.size() - 1).setId(viewarrlist.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                                    viewarrlist.get(viewarrlist.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
 
-                                    imglist.addView(imgarrlist.getImage(imgarrlist.getSize()-1));
+                                    imglist.addView(viewarrlist.get(viewarrlist.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
                                 }
 
                             }

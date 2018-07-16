@@ -4,9 +4,11 @@ package com.mini_mo.viewpager;
  * Created by 노현민 on 2018-04-19.
  */
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,7 @@ public class MainPageFragment extends Fragment{
     {
         instance = this;
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,6 +153,8 @@ public class MainPageFragment extends Fragment{
         // 현재 위치 받아오기
 
         gps = new GpsInfo(getContext());
+
+        Log.i("사용유무", gps.isGetLocation()+"");
 
         // GPS 사용유무 가져오기
         if (gps.isGetLocation()) {
