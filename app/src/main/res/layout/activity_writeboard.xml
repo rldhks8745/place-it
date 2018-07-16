@@ -95,7 +95,7 @@
                         android:id="@+id/location"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="70"
+                        android:layout_weight="63"
                         android:gravity="center"
                         android:hint="위치" />
 
@@ -103,15 +103,23 @@
                         android:id="@+id/getloction"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="15"
+                        android:layout_weight="13"
                         app:srcCompat="@drawable/location" />
 
                     <ImageView
                         android:id="@+id/history"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="15"
+                        android:layout_weight="13"
                         app:srcCompat="@drawable/history" />
+
+                    <ImageView
+                        android:id = "@+id/tapmap"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="10"
+                        app:srcCompat="@drawable/tapmap"
+                        />
 
                 </TableRow>
 

@@ -175,6 +175,12 @@ public class ClusterMap extends AppCompatActivity
     }
 
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -193,6 +199,14 @@ public class ClusterMap extends AppCompatActivity
                 return true;
             }
         } );
+
+        mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Store.point = latLng;
+                finish();
+            }
+        });
 
 
         mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 10 ) );

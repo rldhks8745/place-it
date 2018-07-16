@@ -2,6 +2,7 @@ package com.mini_mo.viewpager.ReadAndWrite;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.admin.DeviceAdminReceiver;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
+import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
@@ -183,6 +185,14 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.tapmap:
+                Intent cintent = new Intent(this, ClusterMap.class);
+                startActivity(cintent);
+                if(Store.point!=null)
+                location.setText(AddressTransformation.getAddress(this,Store.point.latitude,Store.point.longitude));
+
+                break;
+
             case R.id.back:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog  .setTitle("종료 알림")
