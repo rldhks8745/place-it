@@ -27,7 +27,7 @@
                 android:weightSum="100">
 
                 <ImageButton
-                    android:id="@+id/camera"
+                    android:id="@+id/main_camera"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"

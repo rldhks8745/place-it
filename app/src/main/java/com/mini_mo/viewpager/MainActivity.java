@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity{
     SharedPreferences auto;
     public String loginId;
 
+    public ImageButton arCameraButton;
+
     public static MainActivity getInstance(){ return instance; }
 
     public MainActivity()
@@ -137,6 +139,15 @@ public class MainActivity extends AppCompatActivity{
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        arCameraButton = findViewById( R.id.main_camera );
+        arCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( MainActivity.this , CameraActivity.class );
+                startActivity( intent );
+            }
+        });
     }
 
     /** ViewPage Adapter ( 횡 스크롤 화면 전환 )**/
@@ -183,4 +194,6 @@ public class MainActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+
 }
