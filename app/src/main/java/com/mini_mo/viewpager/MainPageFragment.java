@@ -91,6 +91,7 @@ public class MainPageFragment extends Fragment{
             }
         });
 
+        view.findViewById(R.id.recyclerView);
         if(Store.rlv == null)
             recyclerListView = new RecyclerListView(getContext(), view,this);
         else

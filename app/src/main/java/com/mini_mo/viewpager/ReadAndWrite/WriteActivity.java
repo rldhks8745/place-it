@@ -193,6 +193,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tapmap:
                 Intent cintent = new Intent(this, ClusterMap.class);
                 startActivityForResult(cintent,TAPMAP);
+
                 break;
 
             case R.id.back:
@@ -362,6 +363,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 if(Store.point!=null) {
                     Log.i("위치 저장 값", Store.point.latitude + ", " + Store.point.longitude);
                     location.setText(AddressTransformation.getAddress(this, Store.point.latitude, Store.point.longitude));
+
+                    latitude = Store.point.latitude;
+                    longitude = Store.point.longitude;
                 }else
                     Log.i("위치 저장 값", "널 포인트");
         }else if(resultCode == RESULT_OK){
