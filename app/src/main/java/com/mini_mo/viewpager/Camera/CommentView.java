@@ -62,18 +62,22 @@ public class CommentView extends View
         // 코멘트 위치 표시
         if( customMapView != null && customMapView.mComments != null )
         {
-            Paint myPaint;
-            myPaint = new Paint();
+            //Paint myPaint;
+            //myPaint = new Paint();
 
-            myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            myPaint.setStrokeWidth( 1.0f );
+            //myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            //myPaint.setStrokeWidth( 1.0f );
 
             for( int i=0; i < customMapView.mComments.size(); i++ )
             {
-                myPaint.setColor(Color.RED);
+                //myPaint.setColor(Color.RED);
                 CommentVector2 comment = customMapView.mComments.get(i);
                 if( comment.mIsinCamera && ( comment.mDistance <= CustomMapView.COMENT_DISTANCE ) )
                 {
+                    if ( !comment.mAddView )
+                    {
+                        comment.show();
+                    }
                     float widthRatio = (float) customMapView.mComments.get(i).mScreenWIdthRatio;
                     float radius = (float) ( ( 1 / customMapView.mComments.get(i).mDistance ) );
                     radius = (float)( ( radius >= 1.0 ) ? 1.0 : radius );
@@ -84,18 +88,33 @@ public class CommentView extends View
                             ( ( (float) -( mCameraActivity.sensorY + 45 ) / 90 ) * mScreenHeight ) + ( float )( customMapView.mComments.get(i).mDistance * 2 ) :
                             -100;
 
-                    canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ), myPaint ); // 색상 표시
+                    if( x < -99 || y < -99 )
+                    {
+                        if ( comment.mAddView )
+                        {
+                            comment.hide();
+                        }
+                    }
+                    //canvas.drawCircle( x, y, ( mCommentSize * radius + 50 ), myPaint ); // 색상 표시
 
-                    myPaint.setColor(Color.WHITE);
-                    myPaint.setTextSize( 50 );
-                    myPaint.setTextAlign( Paint.Align.CENTER );
-                    canvas.drawText("" + comment.mCount, x, y, myPaint );
+                    //myPaint.setColor(Color.WHITE);
+                   // myPaint.setTextSize( 50 );
+                    //myPaint.setTextAlign( Paint.Align.CENTER );
+                    //canvas.drawText("" + comment.mCount, x, y, myPaint );
+
+                    comment.setXY( x - 150, y - 100 );
 
                     /** 코멘트 위치 수정 **/
                     comment.mvecScreenPos.x = x;
                     comment.mvecScreenPos.y = y;
                     comment.radius = mCommentSize * radius + 50;
-
+                }
+                else
+                {
+                    if ( comment.mAddView )
+                    {
+                        comment.hide();
+                    }
                 }
             }
         }

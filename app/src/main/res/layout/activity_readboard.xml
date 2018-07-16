@@ -44,7 +44,6 @@
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="10dp"
                 android:layout_weight="10"
                 android:background="@drawable/contract"
                 android:clickable="true"
@@ -55,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="10"
                 android:background="@drawable/delete"
                 android:clickable="true"
@@ -88,7 +87,7 @@
                         android:layout_height="64dp"
                         android:layout_weight="2"
                         android:padding="10dp"
-                        app:srcCompat="@drawable/usericon" />
+                        app:srcCompat="@drawable/user" />
 
                     <LinearLayout
                         android:layout_width="0dp"

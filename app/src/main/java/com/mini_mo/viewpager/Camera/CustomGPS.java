@@ -23,7 +23,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 import com.mini_mo.viewpager.DAO.Board_Location;
+import com.mini_mo.viewpager.DAO.Board_Location_List;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.SearchActivity;
@@ -33,6 +35,7 @@ import com.mini_mo.viewpager.SearchListViewItem;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by userForGame on 2018-04-03.
@@ -66,6 +69,9 @@ public class CustomGPS extends Service implements LocationListener,
     public GoogleApiClient mGoogleApiClient;
 
     public LoadingDialog loadingDialog; // 로딩중 다이얼로그
+
+    // 서버에서 받아온 코멘트 데이터들
+    public ArrayList<Board_Location> mReadComments;
 
     /***** 생성자 ****/
     public CustomGPS( CameraActivity cameraActivity ) {
@@ -137,25 +143,26 @@ public class CustomGPS extends Service implements LocationListener,
         {
             if( !SearchListViewAdapter.getInstance().isShowing )
             {
-                CameraActivity.getInstance().mReadComments = new Data().read_board_location(mCurrentPosition.latitude - 0.0005,
+                mReadComments = new Data().read_board_location(
+                        mCurrentPosition.latitude - 0.0005,
                         mCurrentPosition.latitude + 0.0005,
                         mCurrentPosition.longitude - 0.0005,
                         mCurrentPosition.longitude + 0.0005);
             }
             else
             {
-                CameraActivity.getInstance().mReadComments = new ArrayList<Board_Location>();
+                mReadComments = new ArrayList<Board_Location>();
                 ArrayList<SearchListViewItem> items = SearchListViewAdapter.getInstance().searchListViewItems;
                 for( int i=0; i<items.size(); i++)
                 {
-                    CameraActivity.getInstance().mReadComments.add( new Board_Location( items.get(i).latitude, items.get(i).longitude, 1 ));
+                    mReadComments.add( new Board_Location( items.get(i).latitude, items.get(i).longitude, 1 ));
                 }
             }
 
             // 현재위치 갱신했으니 코멘트들의 위치도 갱신하자.
             if (  mCurrentPosition != null )
             {
-                CameraActivity.getInstance().calculateComentsPosition(); // 현재위치를 기반으로 코멘트들의 거리를 계속 계산해줘야한다.
+                calculateComentsPosition(); // 현재위치를 기반으로 코멘트들의 거리를 계산해줘야한다.
             }
             // 좌표값 받아왔으니 로딩화면 중지
             stopLocationUpdates();
@@ -165,6 +172,44 @@ public class CustomGPS extends Service implements LocationListener,
             e.printStackTrace();
         }
         loadingDialog.progressOFF();
+    }
+
+    /*********************
+     *  맵뷰에서 사용할 코멘트 위치, 거리
+     **********************/
+    public void calculateComentsPosition()
+    {
+        // 코멘트 벡터 생성
+        ArrayList<CommentVector2> comments = new ArrayList<>();
+
+        for( int i=0; i < mReadComments.size(); i++)
+        {
+            double lon = mReadComments.get(i).longitude; // x좌표, 경도
+            double lat = mReadComments.get(i).latitude; // y좌표, 위도
+            int count = mReadComments.get(i).board_count;
+            ArrayList<Board_Location_List> comment_list = mReadComments.get(i).bll;
+
+            // 코멘트와 현재위치 거리
+            double distance = SphericalUtil.computeDistanceBetween( mCurrentPosition, new LatLng( lat, lon ) );
+
+            // 코멘트 위치 구하기. ( 벡터를 만들때는 lon(경도) = x, lat(위도) = y )
+            Vector2 commentVector2 = new Vector2( lon , lat );
+
+            // 코멘트, 현재위치를 기준으로 상대위치 구하기
+            double relX = commentVector2.x - mCurrentPosition.longitude;
+            double relY = commentVector2.y - mCurrentPosition.latitude;
+
+            // 코멘트 벡터 추가
+            comments.add( new CommentVector2( new Vector2( lon, lat ), new Vector2( relX, relY ), distance, count, comment_list ) );
+            comments.get(i).mvecRelativePosition.normalize(); // 노멀화
+
+            comments.get(i).show();
+        }
+
+        // 맵뷰에서 사용할 수 있도록 넘기기
+        Collections.sort( comments ); // 내림차순 정렬 ( 가까운 순으로 )
+        CameraActivity.getInstance().mCustomMapView.mComments = comments;
+
     }
 
     public void isInCamera()
@@ -345,7 +390,6 @@ public class CustomGPS extends Service implements LocationListener,
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-        Log.d( CustomGoogleMap.TAG, "onConnectionFailed");
     }
 
 

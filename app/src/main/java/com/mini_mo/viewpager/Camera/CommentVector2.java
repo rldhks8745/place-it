@@ -2,9 +2,27 @@ package com.mini_mo.viewpager.Camera;
 
 
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.mini_mo.viewpager.DAO.Board_Location_List;
+import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.R;
+
+import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 public class CommentVector2 implements Comparable<CommentVector2>{
+
+    public ViewGroup layoutView; // 화면에 보여질 코멘트 레이아웃
+
     public int mCount; // 디비 게시글 수
     public Vector2 mvecAbsolutePosition = null; // 현재 코멘트 위치 절대좌표 ( 경도(x), 위도(y) )
 
@@ -16,32 +34,58 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public boolean mIsinCamera = false; // 카메라 각도 안에 들어왔나?
     public double mScreenWIdthRatio = 0.0; // 화면가로 어디에 코멘트를 띄워야할지 비율
 
-    public CommentVector2( int count, Vector2 pos )
-    {
-        mvecScreenPos = new Vector2();
-        mCount = 0;
-        mCount = count;
-        mvecAbsolutePosition = pos;
-    }
-    public CommentVector2(Vector2 absPos, Vector2 relPos )
-    {
-        mvecScreenPos = new Vector2();
-        // 코멘트 벡터 생성
-        mvecAbsolutePosition = absPos;
-        mvecRelativePosition = relPos;
-        mDistance = 0.0;
-        mCount = 0;
-    }
+    public boolean mAddView = false;
+    public int layoutWIdth = 300; // 증강현실 코멘트 width
+    public int layoutHeight = 500;
+    public float textIdSIze = 15.0f;
+    public float textContextSize = 12.0f;
+    public float textImgCountSIze = 20.0f;
 
-    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count )
+    ArrayList<Board_Location_List> contents;
+
+    public CommentVector2(Vector2 absPos, Vector2 relPos, double distance, int count, ArrayList<Board_Location_List> content_list )
     {
         mvecScreenPos = new Vector2();
         // 코멘트 벡터 생성
         mvecAbsolutePosition = absPos;
         mvecRelativePosition = relPos;
-        mDistance = distance;
-        mCount = 0;
+        mDistance = ( distance > 1.0 ) ? distance : 1.0; // 1m 이하 코멘트들은 최소 1m로 맞춰주기
         mCount = count;
+        contents = content_list;
+
+        LayoutInflater inflater = (LayoutInflater) MainActivity.getInstance().getSystemService( MainActivity.getInstance().LAYOUT_INFLATER_SERVICE );
+        layoutView = (ViewGroup)inflater.inflate(R.layout.camera_custom_item, null );
+
+        double percentageSize = ( distance / 10 ) + 1; // 1 ~ 1/5 배율로 거리 표시
+
+        TextView custom_id = (TextView)layoutView.findViewById(R.id.camera_custom_id); // 게시글 작성자 id
+        custom_id.setTextSize( textIdSIze / (float)percentageSize );
+        custom_id.setText(contents.get(0).id);
+
+        TextView custom_context = (TextView)layoutView.findViewById(R.id.camera_custom_context); // 게시글 내용
+        custom_context.setTextSize( textContextSize / (float)percentageSize );
+        custom_context.setText(contents.get(0).content);
+
+        TextView custom_imgcount = (TextView)layoutView.findViewById(R.id.camera_custom_imgcount); // 게시글 이미지 갯수
+        custom_imgcount.setTextSize( textImgCountSIze / (float)percentageSize );
+        custom_imgcount.setText(contents.get(0).photo_count);
+
+        ImageView custom_userimg = (ImageView)layoutView.findViewById(R.id.camera_custom_userimage); // 게시글 작성자 icon
+        if( contents.get(0).user_photo != null )
+            Glide.with( layoutView ).load( contents.get(0).user_photo ).apply(bitmapTransform(new CircleCrop())).into( custom_userimg );
+        else
+            Glide.with( layoutView )
+                    .load( R.drawable.user )
+                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .into( custom_userimg );
+
+        ImageView custom_firstimg = (ImageView)layoutView.findViewById(R.id.camera_custom_firstimg); // 게시글 첫번째 이미지
+        if( contents.get(0).photo_count != 0 )
+            Glide.with( layoutView ).load( contents.get(0).board_photo ).apply(bitmapTransform(new CircleCrop())).into( custom_firstimg );
+
+        int w = (int)( layoutWIdth / percentageSize );
+        int h =  (int)( layoutHeight / percentageSize );
+        setRect( (int)( layoutWIdth / percentageSize ), (int)( layoutHeight / percentageSize ) );
     }
 
     public void setmNumber( int num ) { mCount = num; }
@@ -53,6 +97,9 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         mScreenWIdthRatio = ratio;
     }
 
+    public void setMvecAbsolutePosition( Vector2 abs ){ mvecAbsolutePosition = abs; }
+    public void setMvecRelativePosition( Vector2 rel ){ mvecRelativePosition = rel; }
+
 
     @Override
     public int compareTo(@NonNull CommentVector2 commentVector2) { //  내림차순으로 compare , 가까운 순서대로 먼저 뿌려야 하므로
@@ -62,5 +109,28 @@ public class CommentVector2 implements Comparable<CommentVector2>{
             return 1;
 
         return 0;
+    }
+
+    public void setRect( int w, int h )
+    {
+        ViewGroup.LayoutParams p = new ViewGroup.LayoutParams( w, h );
+        layoutView.setLayoutParams(p);
+    }
+
+    public void show()
+    {
+        CameraActivity.getInstance().constraintLayout.addView( layoutView );
+        mAddView = true;
+    }
+    public void hide()
+    {
+        CameraActivity.getInstance().constraintLayout.removeView( layoutView );
+        mAddView = false;
+    }
+
+    public void setXY( float x, float y )
+    {
+        layoutView.setX(x);
+        layoutView.setY(y);
     }
 }

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#efefef"
-    tools:context="com.mini_mo.newplit.MyPage">
+    android:background="#efefef">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -170,8 +169,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="#42619d"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/write" />
 
 </android.support.design.widget.CoordinatorLayout>

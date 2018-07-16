@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -74,6 +75,7 @@ public class MyPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_mypage, container, false);
 
+        nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
         followers = (TextView) view.findViewById(R.id.follwers);
         following = (TextView) view.findViewById(R.id.following);
         userId = (TextView) view.findViewById(R.id.userid);
@@ -145,22 +147,26 @@ public class MyPageFragment extends Fragment {
         super.onResume();
 
         try {
+            /* 사용자 정보 */
             user_info = new Data().read_myPage(loginId);
             mylistItem = new Data().read_myBoard(loginId, 0);
             String friends = new Data().count_friends(loginId);
-
             following.setText( friends.substring( 0, friends.indexOf(',') ) );
             followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
+
+            /* 보드 정보 */
             recyclerListView.loginId = loginId;
             recyclerListView.listViewItems.clear();
             recyclerListView.add(mylistItem);
+            recyclerListView.loadItems(nestedScrollView, getContext());
 
             userId.setText(user_info.user_id);
 
+            //Bitmap bit = BItmap.getBitmap
             // photo 넣는곳
             Glide.with( this.getContext() )
                     .load( user_info.user_photo )
-                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
+                    .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
                     .into( usericon );
 
             Store.myprofile_img = user_info.user_photo;
