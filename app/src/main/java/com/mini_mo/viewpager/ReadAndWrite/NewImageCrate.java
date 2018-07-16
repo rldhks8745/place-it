@@ -25,6 +25,23 @@ public class NewImageCrate {
 
     //새로운 이미지를 만들어주는 클래스 , Bitmap , DrawAble 등
 
+    public static ImageButton ReadnewViewCreate(Activity activity){
+        ImageButton imgv = new ImageButton(activity);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+        imgv.setBackgroundColor(Color.rgb(255,255,255));
+        imgv.setLayoutParams(layoutParams);
+        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        imgv.getLayoutParams().height = 300;
+        imgv.getLayoutParams().width = 300;
+
+        newImageMargin(imgv,40,40,0,50);
+
+        return imgv;
+    }
+
     public static ImageButton ReadnewImageCreate(Activity activity, Bitmap bitmap){
         ImageButton imgv = new ImageButton(activity);
 
