@@ -34,6 +34,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -176,13 +177,28 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         if(rbi.b_photos != null) {
 
             for (int i = 0; i < rbi.b_photos.size(); i++) {
+
+                ImageButton button = NewImageCrate.ReadnewViewCreate(this); //여러개라서 리스트에 넣기
+                button.setId(i);
+                button.setOnClickListener(this);
+
+                imglist.addView(button);
+
+                Glide.with(this)
+                        .load( rbi.b_photos.get(i))
+                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                        .into( button );
+
+
+
+
                 //실험용
 
-                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
+                Log.i("photo uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+               /* Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -197,7 +213,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                                 Store.readboard_image.add(bitmap);
                                 imglist.addView(viewarr.get(viewarr.size() - 1));
                             }
-                        });
+                        });*/
             }
         }
 
@@ -248,7 +264,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
 
-        if (20 <= v.getId() && v.getId() <= 29) { //0 ~ 9 번 째 클릭시
+        if (20 <= v.getId() && v.getId() <= 29) { // 번 째 클릭시
             Log.i("Click", "클릭 하셨습니다.");
 
             Intent intent = new Intent(this, VideoActivity.class);
