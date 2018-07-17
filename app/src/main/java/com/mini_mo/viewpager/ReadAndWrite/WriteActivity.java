@@ -193,6 +193,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tapmap:
                 Intent cintent = new Intent(this, ClusterMap.class);
                 startActivityForResult(cintent,TAPMAP);
+
                 break;
 
             case R.id.back:
@@ -301,7 +302,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }else{
 
-                    if(imgurl.size() < 10) {
+                    if(viewarr.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         img.startAnimation(ani);
                         //사진 추가하기
@@ -328,7 +329,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }else{
 
-                    if(imgurl.size() < 10) {
+                    if(viewarr.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         video.startAnimation(ani);
                         //사진 추가하기
@@ -365,11 +366,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                     latitude = Store.point.latitude;
                     longitude = Store.point.longitude;
-
                 }else
                     Log.i("위치 저장 값", "널 포인트");
         }else if(resultCode == RESULT_OK){
-            if(imgurl.size()<=10) {
+            if(imglist.getChildCount()<=10) {
                 switch (requestCode){
 
                     case SELECT_VIDEO:

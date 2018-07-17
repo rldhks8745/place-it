@@ -72,6 +72,7 @@ public class RecyclerListView {
         {
             listViewItems.add(items.get(i));
         }
+        adapter.notifyDataSetChanged();
     }
 
     /** 동적 로딩을 위한 NestedScrollView의 아래 부분을 인식 **/

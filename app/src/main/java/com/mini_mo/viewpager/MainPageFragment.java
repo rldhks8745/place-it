@@ -18,9 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
@@ -49,6 +49,7 @@ public class MainPageFragment extends Fragment{
     private static MainPageFragment instance = null;
 
     ArrayList<ListViewItemData> near;
+    LinearLayout linearLayout;
 
     LoadingDialog loading;
 
@@ -77,6 +78,12 @@ public class MainPageFragment extends Fragment{
         loading = new LoadingDialog();
         gps = new GpsInfo( getContext() );
 
+        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
+        getLocation( GpsInfo.MAINPAGE );
+
+        if( latitude == 0.0 )
+            loading.progressON( this.getActivity(), "위치 수신 준비중");
+
         return rootView;
     }
 
@@ -91,6 +98,7 @@ public class MainPageFragment extends Fragment{
             }
         });
 
+        view.findViewById(R.id.recyclerView);
         if(Store.rlv == null)
             recyclerListView = new RecyclerListView(getContext(), view,this);
         else
@@ -138,7 +146,7 @@ public class MainPageFragment extends Fragment{
         try{
             near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
             Store.sendboard = near;
-            count += 10;
+            recyclerListView.add(near);
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -148,11 +156,7 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
-        getLocation( GpsInfo.MAINPAGE );
 
-        if( latitude == 0.0 )
-            loading.progressON( this.getActivity(), "위치 수신 준비중");
     }
 
     public void setTextLocation( Location lo )

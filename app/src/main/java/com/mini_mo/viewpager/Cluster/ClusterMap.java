@@ -210,11 +210,11 @@ public class ClusterMap extends AppCompatActivity
         });
 
 
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 10 ) );
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ));
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomBy(16));
         mClusterManager = new ClusterManager<>( this, mGoogleMap );
         mGoogleMap.setOnCameraIdleListener( mClusterManager );
         mGoogleMap.setOnMarkerClickListener( mClusterManager );
-        getVisibleRegion();
 
     }
 
