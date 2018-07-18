@@ -29,11 +29,11 @@ public class CustomMapView extends View
     public static CustomMapView instance = null;
 
     public static final float COMENT_DISTANCE = 50;
-    public static final float DIR_DISTANCE = 100;
-    public static final float CENTER_X = 100.0f;
-    public static final float CENTER_Y = 100.0f;
-    public static final float CANVAS_WIDTH = 200;
-    public static final float CANVAS_HEIGHT = 200;
+    public static final float CANVAS_WIDTH = 150;
+    public static final float CANVAS_HEIGHT = 150;
+    public static final float CENTER_X = CANVAS_WIDTH/2;
+    public static final float CENTER_Y = CANVAS_HEIGHT/2;
+    public static final float DIR_DISTANCE = CENTER_X;
 
     public ArrayList<CommentVector2> mComments = null; // 화면에 보일 코멘트 위치정보
     public Vector2 mvecLeftAngle = null; // 왼쪽각도 벡터
@@ -43,8 +43,8 @@ public class CustomMapView extends View
     public Vector2 mvecDirection = null; // 현재위치에서 바라보는 방향 벡터
 
     // 맵뷰 화면 px 과 나타낼 거리 간의 비율
-    // 중앙 에서 맵뷰 끝까지의 px = 100px
-    // 100 / 50 = 2, 1m 당 2px 의 비율
+    // 중앙 에서 맵뷰 끝까지의 px = 75px
+    // 75 / 50 = 2, 1m 당 2px 의 비율
     public  float ratio = ( CANVAS_WIDTH / 2 ) / COMENT_DISTANCE;;
 
     public static CustomMapView getInstance(){ return instance; }
@@ -74,13 +74,13 @@ public class CustomMapView extends View
         myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         myPaint.setColor(Color.YELLOW);
         // 현재 위치에서 50m 바운더리
-        canvas.drawCircle( CENTER_X, CENTER_Y,100.0f, myPaint );
+        canvas.drawCircle( CENTER_X, CENTER_Y,CANVAS_WIDTH/2, myPaint );
 
         // 현재 위치
         myPaint.setStrokeWidth( 5.0f );
         myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         myPaint.setColor(Color.RED);
-        canvas.drawCircle( CENTER_X, CENTER_Y,10.0f, myPaint );
+        canvas.drawCircle( CENTER_X, CENTER_Y,5.0f, myPaint );
 
         /*********** 코멘트 위치 표시 ************/
         myPaint.setColor(Color.BLUE);

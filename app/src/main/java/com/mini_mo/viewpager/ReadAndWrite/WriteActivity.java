@@ -130,7 +130,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         mc = new MediaController(this);
 
-        category = (Spinner)findViewById(R.id.spinner);
+        //category = (Spinner)findViewById(R.id.spinner);
 
         send = (ImageView)findViewById(R.id.send);
         back = (ImageView)findViewById(R.id.back);

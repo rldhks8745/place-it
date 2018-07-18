@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +88,30 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_activity_camera); // 메인 에티비티 붙이기.
+
+        /** 줌인,아웃 바 **/
+        SeekBar zoomBar = (SeekBar)findViewById(R.id.camera_zoombar);
+        zoomBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+
+                ArrayList<CommentVector2> comments = CustomMapView.getInstance().mComments;
+                for( int i=0; i<comments.size(); i++ )
+                {
+                    comments.get(i).reSizeLayout( progress ); // 줌인,아웃 으로 거리값 증가,감소
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         /** 코멘트 표시할 맵 **/
         mCustomMapView = (CustomMapView)findViewById(R.id.mapView);
