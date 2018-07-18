@@ -94,7 +94,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     Spinner category;
 
-    ImageView usericon,getloction,history,video,img,send, back,tapmap;
+    ImageView usericon,getlocation,history,video,img,send, back,tapmap;
     TextView location,userid;
     EditText content;
 
@@ -130,12 +130,12 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         mc = new MediaController(this);
 
-        category = (Spinner)findViewById(R.id.spinner);
+        //category = (Spinner)findViewById(R.id.spinner);
 
         send = (ImageView)findViewById(R.id.send);
         back = (ImageView)findViewById(R.id.back);
         usericon = (ImageView)findViewById(R.id.usericon);
-        getloction = (ImageView)findViewById(R.id.getloction);
+        getlocation = (ImageView)findViewById(R.id.getlocation);
         history = (ImageView)findViewById(R.id.history);
         img = (ImageView)findViewById(R.id.img);
         video = (ImageView)findViewById(R.id.video);
@@ -155,11 +155,11 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         back.setOnClickListener(this);
         img.setOnClickListener(this);
         video.setOnClickListener(this);
-        getloction.setOnClickListener(this);
+        getlocation.setOnClickListener(this);
         history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
 
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 category_number = position;
@@ -169,7 +169,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
     }
 
     @SuppressLint("ResourceType")
@@ -204,6 +204,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.tapmap:
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                tapmap.startAnimation(ani);
+
+
                 Intent cintent = new Intent(this, ClusterMap.class);
                 startActivityForResult(cintent,TAPMAP);
 
@@ -232,7 +236,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 loadingDialog.progressON( this, "보내는 중..." );*/
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                getloction.startAnimation(ani);
+                send.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
 
@@ -263,10 +267,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
 
-            case R.id.getloction:
+            case R.id.getlocation:
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                getloction.startAnimation(ani);
+                getlocation.startAnimation(ani);
 
                 location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
                 MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
@@ -284,6 +288,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Store.content = content.getText().toString();
 
                 Intent intent = new Intent(this,LoadLocateActivity.class);
+                intent.putExtra("check",2);
                 startActivity(intent);
                 finish();
 

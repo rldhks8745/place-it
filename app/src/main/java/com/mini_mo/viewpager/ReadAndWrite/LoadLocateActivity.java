@@ -22,13 +22,16 @@ import java.util.ArrayList;
 
 public class LoadLocateActivity extends AppCompatActivity{
 
-    Data data;
-    ArrayList<Save_List> save_lists;
+    Data data = null;
+    ArrayList<Save_List> save_lists = null;
+    ArrayList<String> arr = null;
 
-    LocateListviewAdapter locateadapter;
-    ListView locatelist;
+    int check = 0;
 
-    Activity activity;
+    LocateListviewAdapter locateadapter = null;
+    ListView locatelist = null;
+
+    Activity activity = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class LoadLocateActivity extends AppCompatActivity{
         data = new Data();
 
         activity = this;
+
+        check = getIntent().getIntExtra("check", 0);
 
         try {
             save_lists =  data.load_locate(Store.userid);
@@ -74,8 +79,20 @@ public class LoadLocateActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(activity,WriteActivity.class);
-        startActivity(intent);
-        finish();
+
+        if(check == 1){
+            Intent intent = new Intent(activity,ChangeBoard.class);
+            intent.putStringArrayListExtra("video&img",arr);
+            startActivity(intent);
+            finish();
+        }else if(check == 2){
+            Intent intent = new Intent(activity,WriteActivity.class);
+            intent.putStringArrayListExtra("video&img",arr);
+            startActivity(intent);
+            finish();
+        }else{
+            Log.i("오류", "CHECK에 값이 들어가있지 않습니다.");
+        }
+
     }
 }
