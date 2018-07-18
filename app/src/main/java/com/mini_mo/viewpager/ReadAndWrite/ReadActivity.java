@@ -64,7 +64,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     Activity activity;
     InputStream inputStream;
-    ArrayList<View> viewarr;
+    ArrayList<View> videoarr;
+    ArrayList<ImageView> imagearr;
     View.OnClickListener listener;
     Data data;
     User_Info user_info;
@@ -128,7 +129,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         count = 0;
 
         listener = this;
-        viewarr = new ArrayList<>();
+        videoarr = new ArrayList<>();
+        imagearr = new ArrayList<>();
 
         change = (ImageButton)findViewById(R.id.change);
         delete = (ImageButton)findViewById(R.id.delete);
@@ -165,11 +167,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 video_list.add(rbi.b_move.get(i));
 
-                viewarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
-                viewarr.get(viewarr.size()-1).setId((20+(viewarr.size()-1)));
-                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
+                videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
+                videoarr.get(videoarr.size()-1).setId((20+(videoarr.size()-1)));
+                videoarr.get(videoarr.size()-1).setOnClickListener(listener);
 
-                imglist.addView(viewarr.get(viewarr.size() - 1));
+                imglist.addView(videoarr.get(videoarr.size() - 1));
 
             }
         }
@@ -178,16 +180,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < rbi.b_photos.size(); i++) {
 
-                ImageButton button = NewImageCrate.ReadnewViewCreate(this); //여러개라서 리스트에 넣기
-                button.setId(i);
-                button.setOnClickListener(this);
+                imagearr.add(NewImageCrate.ReadnewViewCreate(this)); //여러개라서 리스트에 넣기
+                imagearr.get(imagearr.size()-1).setId(imagearr.size()-1);
+                imagearr.get(imagearr.size()-1).setOnClickListener(this);
 
-                imglist.addView(button);
+                imglist.addView(imagearr.get(imagearr.size()-1));
 
                 Glide.with(this)
                         .load( rbi.b_photos.get(i))
                         .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
-                        .into( button );
+                        .into(imagearr.get(imagearr.size()-1));
 
 
 
@@ -198,22 +200,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-               /* Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+               Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 Bitmap bitmap = ReSizing( bitmapToByteArray( resource ) );
-
-                                viewarr.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
-
-                                Log.i("buttons 크기 : ", viewarr.size()+"");
-                                viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
-                                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
-
                                 Store.readboard_image.add(bitmap);
-                                imglist.addView(viewarr.get(viewarr.size() - 1));
                             }
-                        });*/
+                        });
             }
         }
 
@@ -347,7 +341,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
     static public Bitmap ReSizing(byte[] bytes){
         Bitmap bitmap;
 

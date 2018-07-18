@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.widget.NestedScrollView;
+import android.widget.ImageView;
 
 
 import com.google.android.gms.maps.model.LatLng;

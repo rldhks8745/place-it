@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -127,6 +128,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             e.printStackTrace();
         }
 
+        Log.i("동영상 길이", rbi.b_move.size()+"");
+        Log.i("사진 길이", rbi.b_photos.size()+"");
+
         if(rbi.user_photo != null){
             Glide.with(this).load(rbi.user_photo).apply(bitmapTransform(new CircleCrop())).into(usericon);
         }else
@@ -135,8 +139,10 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         if(rbi.b_move != null) {
 
             for (int i = 0; i < rbi.b_move.size(); i++) {
-                //실험용
                 origin_url.add(rbi.b_move.get(i));
+
+                //실험용
+
                 Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
@@ -151,10 +157,13 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         }
 
         if(rbi.b_photos != null) {
-            //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+
             for (int i = 0; i < rbi.b_photos.size(); i++) {
+
                 //실험용
                 origin_url.add(rbi.b_photos.get(i));
+
+                Log.i("이미지 URL",rbi.b_photos.get(i)+"");
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
@@ -163,7 +172,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
-                                Log.i("이미지 URL",rbi.b_photos.get(viewarr.size())+"");
+
 
                                 Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
@@ -172,7 +181,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                                 Log.i("buttons 크기 : ", viewarr.size()+"");
                                 viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
                                 viewarr.get(viewarr.size()-1).setOnLongClickListener(longlistener);
-                                Store.readboard_image.add(bitmap);
+
                                 imglayout.addView(viewarr.get(viewarr.size() - 1));
                             }
                         });

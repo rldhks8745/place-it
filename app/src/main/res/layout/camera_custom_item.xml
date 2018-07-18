@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/camera_custom_layout"
-    android:layout_width="300dp"
+    android:layout_width="500dp"
     android:layout_height="550dp"
     android:orientation="vertical"
     android:weightSum="10">
@@ -36,10 +36,9 @@
     <TextView
         android:id="@+id/camera_custom_context"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_height="wrap_content"
         android:background="#ffffff"
-        android:gravity="center"
+        android:padding="10dp"
         android:text="글쓰기 글쓰기 글쓰기 글쓰기 "
         android:textSize="12sp" />
 
@@ -50,6 +49,7 @@
         android:layout_weight="3">
 
         <LinearLayout
+            android:id="@+id/camera_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -85,7 +85,7 @@
 
         <ImageView
             android:id="@+id/camera_left_page"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="2.5"
@@ -97,11 +97,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="1/5"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/camera_right_page"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="2.5"
