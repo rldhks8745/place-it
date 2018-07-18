@@ -69,9 +69,17 @@ public class LoadLocateActivity extends AppCompatActivity{
                 Store.latitude = arr[0];
                 Store.longitude = arr[1];
 
-                Intent intent = new Intent(activity,WriteActivity.class);
-                startActivity(intent);
-                finish();
+                if(check == 1){
+                    Intent intent = new Intent(activity,ChangeBoard.class);
+                    startActivity(intent);
+                    finish();
+                }else if(check == 2){
+                    Intent intent = new Intent(activity,WriteActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Log.i("오류", "CHECK에 값이 들어가있지 않습니다.");
+                }
             }
         });
 
@@ -81,13 +89,11 @@ public class LoadLocateActivity extends AppCompatActivity{
     public void onBackPressed() {
 
         if(check == 1){
-            Intent intent = new Intent(activity,ChangeBoard.class);
-            intent.putStringArrayListExtra("video&img",arr);
+            Intent intent = new Intent(this,ChangeBoard.class);
             startActivity(intent);
             finish();
         }else if(check == 2){
-            Intent intent = new Intent(activity,WriteActivity.class);
-            intent.putStringArrayListExtra("video&img",arr);
+            Intent intent = new Intent(this,WriteActivity.class);
             startActivity(intent);
             finish();
         }else{

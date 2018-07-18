@@ -209,6 +209,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
 
                 Intent cintent = new Intent(this, ClusterMap.class);
+                cintent.putExtra("check",1);
                 startActivityForResult(cintent,TAPMAP);
 
                 break;

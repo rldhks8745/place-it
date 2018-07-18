@@ -96,6 +96,8 @@ public class ClusterMap extends AppCompatActivity
 
     ArrayList<ListViewItemData> clustericon;
 
+    private int check;
+
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -110,6 +112,8 @@ public class ClusterMap extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.cluster_map);
+
+        check = getIntent().getIntExtra("check", 0);
 
         ok = (ImageView) findViewById(R.id.ok);
         nowlocation = (ImageView) findViewById(R.id.nowlocation);

@@ -326,6 +326,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 tapmap.startAnimation(ani);
 
                 Intent cintent = new Intent(this, ClusterMap.class);
+                cintent.putExtra("check",1);
                 startActivityForResult(cintent,TAPMAP);
 
                 break;
