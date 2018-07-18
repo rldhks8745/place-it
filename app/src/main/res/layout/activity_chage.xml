@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed">
+    android:background="@drawable/background">
 
 
     <LinearLayout
@@ -16,137 +16,129 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="100"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp">
+            android:weightSum="100">
 
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="15"
+                android:layout_weight="10"
+                android:padding="10dp"
+                android:scaleType="centerInside"
                 app:srcCompat="@drawable/back" />
 
             <TextView
-                android:id="@+id/textView2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="70"
+                android:layout_weight="10"
                 android:gravity="center"
-                android:text="Plit"
-                android:textSize="18sp" />
+                android:text="back"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="60" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:text="send"
+                android:textColor="#FFFFFF" />
 
             <ImageView
                 android:id="@+id/send"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="15"
-                app:srcCompat="@drawable/submit" />
+                android:layout_weight="10"
+                android:padding="9dp"
+                app:srcCompat="@drawable/send" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9"
-            android:background="@drawable/round_rec"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="15dp">
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="10">
 
-            <TableLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/usericon"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:weightSum="100">
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/user" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:weightSum="10"
-                    android:background="@drawable/bottom_line">
+            <TextView
+                android:id="@+id/userid"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center_vertical"
+                android:text="user id"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:orientation="vertical"
+            android:background="@drawable/round_rec"
+            android:layout_margin="10dp"
+            android:weightSum="10">
+
+            <EditText
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="게시글 수정..."
+                android:padding="10dp"
+                android:textSize="18sp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="left"
+                android:layout_marginRight="5dp"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:id="@+id/linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/usericon"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="2"
-                        android:padding="10dp"
-                        app:srcCompat="@drawable/user" />
-
-                    <TextView
-                        android:id="@+id/userid"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_weight="8"
-                        android:gravity="center_vertical"
-                        android:text="user id"
-                        android:textSize="18sp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="95"
-                    android:background="@drawable/bottom_line">
-
-                    <EditText
-                        android:id="@+id/content"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:gravity="left"
-                        android:hint="게시글 수정..."
-                        android:padding="10dp"
-                        android:textSize="18sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:layout_marginTop="10dp">
-
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:id="@+id/img"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
-                        android:layout_gravity="center">
+                        android:layout_weight="1"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/add_image" />
 
-                        <LinearLayout
-                            android:id="@+id/linear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal" >
+                    <ImageView
+                        android:id="@+id/video"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/add_video" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/img"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:scaleType="fitCenter"
-                                app:srcCompat="@drawable/add_image" />
-
-                            <ImageView
-                                android:id="@+id/video"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:scaleType="fitCenter"
-                                app:srcCompat="@drawable/add_video" />
-                        </LinearLayout>
-                    </HorizontalScrollView>
-
-                </TableRow>
-
-            </TableLayout>
-        </RelativeLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

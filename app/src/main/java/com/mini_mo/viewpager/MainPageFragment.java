@@ -78,7 +78,7 @@ public class MainPageFragment extends Fragment{
         loading = new LoadingDialog();
         gps = new GpsInfo( getContext() );
 
-        location.setText( AddressTransformation.getAddress( instance.getActivity(), latitude, longitude ) );
+        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
         getLocation( GpsInfo.MAINPAGE );
 
         if( latitude == 0.0 )
