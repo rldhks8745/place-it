@@ -2,12 +2,7 @@ package com.mini_mo.viewpager.Camera;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -15,9 +10,6 @@ import android.view.Display;
 import android.view.View;
 
 import com.mini_mo.viewpager.MainActivity;
-import com.mini_mo.viewpager.R;
-
-import java.util.Collections;
 
 
 /**
@@ -72,7 +64,7 @@ public class CommentView extends View
             {
                 //myPaint.setColor(Color.RED);
                 CommentVector2 comment = customMapView.mComments.get(i);
-                if( comment.mIsinCamera && ( comment.mDistance <= CustomMapView.COMENT_DISTANCE ) )
+                if( comment.mIsinCamera && ( comment.mDistance <= CustomMapView.COMENT_DISTANCE ) && ( comment.changedDistance >= 0 ) )
                 {
                     if ( !comment.mAddView )
                     {

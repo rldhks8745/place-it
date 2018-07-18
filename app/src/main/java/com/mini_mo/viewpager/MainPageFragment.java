@@ -17,11 +17,13 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mini_mo.viewpager.Camera.LoadingDialog;
+import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
@@ -39,6 +41,7 @@ public class MainPageFragment extends Fragment{
     private GpsInfo gps;
     public double latitude = 0.0;
     public double longitude = 0.0;
+    private ClusterMap clusterMap;
 
     int count = 0;
 
@@ -88,20 +91,20 @@ public class MainPageFragment extends Fragment{
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         //ItemListView listView = new ItemListView(rootView);
 
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent mapintent = new Intent(getContext(),ClusterMap.class);
+                startActivity(mapintent);
             }
         });
 
         view.findViewById(R.id.recyclerView);
         if(Store.rlv == null)
-            recyclerListView = new RecyclerListView(getContext(), view,this);
-
+            recyclerListView = new RecyclerListView( getContext(), view,this );
         else
             recyclerListView = Store.rlv;
 
@@ -157,7 +160,6 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     public void setTextLocation( Location lo )
@@ -207,4 +209,5 @@ public class MainPageFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

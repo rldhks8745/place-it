@@ -1,4 +1,5 @@
-package com.mini_mo.viewpager.Cluster;
+/*package com.mini_mo.viewpager.Cluster;
+
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,22 +40,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
-import com.mini_mo.viewpager.MainActivity;
-import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
-import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +55,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class ClusterMap extends AppCompatActivity
+public class Selectlocationmap extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -87,15 +80,6 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    RecyclerListView recyclerListView;
-
-    LatLng centerlocation;
-
-    ImageView ok, nowlocation, cancel, mapmenu;
-    TextView textView;
-
-    ArrayList<ListViewItemData> clustericon;
-
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -110,21 +94,6 @@ public class ClusterMap extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.cluster_map);
-
-        ok = (ImageView) findViewById(R.id.ok);
-        nowlocation = (ImageView) findViewById(R.id.nowlocation);
-        cancel = (ImageView) findViewById(R.id.cancel);
-        mapmenu = (ImageView) findViewById(R.id.mapmenu);
-
-        textView = (TextView) findViewById(R.id.textView);
-
-
-        ok.setOnClickListener(this);
-        nowlocation.setOnClickListener(this);
-        cancel.setOnClickListener(this);
-        mapmenu.setOnClickListener(this);
-
-
         Log.d(TAG, "onCreate");
         mActivity = this;
 
@@ -212,73 +181,21 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
 
+        mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public boolean onMyLocationButtonClick() {
-
-                Log.d(TAG, "onMyLocationButtonClick ㅡ");
-                mClusterManager.clearItems();
-                getVisibleRegion();
-                clustericon.clear();
-                mMoveMapByAPI = true;
-                return true;
-            }
-        });
-
-        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
-                startActivity(intent);
+            public void onMapLongClick(LatLng latLng) {
+                Store.point = latLng;
+                setResult(300);
                 finish();
-
-                return false;
             }
         });
-
-        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                centerlocation = cameraPosition.target;
-            }
-        });
-
 
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
 
-    }
-
-    //디바이스에 출력되는 지도 범위
-    public void getVisibleRegion() {
-
-        if(clustericon != null) {
-            clustericon.clear();
-        }
-        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
-        Log.d("TEST", bounds.toString());
-        double max_lat, max_lng, min_lat, min_lng;
-        max_lat = bounds.northeast.latitude;
-        max_lng = bounds.northeast.longitude;
-        min_lat = bounds.southwest.latitude;
-        min_lng = bounds.southwest.longitude;
-
-        Data data = new Data();
-        try {
-            clustericon = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < clustericon.size(); i++) {
-            double lat = clustericon.get(i).latitude;
-            double lng = clustericon.get(i).longitude;
-            MyItem offsetItem2 = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem2);
-        }
     }
 
 
@@ -297,7 +214,6 @@ public class ClusterMap extends AppCompatActivity
 
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);
-        getVisibleRegion();
 
         mCurrentLocatiion = location;
 
@@ -558,7 +474,7 @@ public class ClusterMap extends AppCompatActivity
     @TargetApi(Build.VERSION_CODES.M)
     private void showDialogForPermission(String msg) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ClusterMap.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Selectlocationmap.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
         builder.setCancelable(false);
@@ -580,7 +496,7 @@ public class ClusterMap extends AppCompatActivity
 
     private void showDialogForPermissionSetting(String msg) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ClusterMap.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Selectlocationmap.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
         builder.setCancelable(true);
@@ -608,7 +524,7 @@ public class ClusterMap extends AppCompatActivity
     //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ClusterMap.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Selectlocationmap.this);
         builder.setTitle("위치 서비스 비활성화");
         builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
                 + "위치 설정을 수정하세요");
@@ -658,34 +574,5 @@ public class ClusterMap extends AppCompatActivity
                 break;
         }
     }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ok:
-                getVisibleRegion();
-                if(clustericon!=null){
-                    recyclerListView.add(clustericon);
-                }
-                Intent intent = new Intent(this,MainPageFragment.class);
-                startActivity(intent);
-
-                break;
-            case R.id.cancel:
-                finish();
-                break;
-
-            case R.id.nowlocation:
-                textView.setText(AddressTransformation.getAddress(this, centerlocation.latitude, centerlocation.longitude));
-                getVisibleRegion();
-                break;
-
-            case R.id.mapmenu:
-
-                break;
-
-
-        }
-    }
 }
+*/

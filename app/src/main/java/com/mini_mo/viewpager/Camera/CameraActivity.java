@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,60 +82,40 @@ public class CameraActivity extends AppCompatActivity {
         instance = this;
     }
 
+    public int speed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_activity_camera); // 메인 에티비티 붙이기.
 
+        /** 줌인,아웃 바 **/
+        SeekBar zoomBar = (SeekBar)findViewById(R.id.camera_zoombar);
+        zoomBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+
+                ArrayList<CommentVector2> comments = CustomMapView.getInstance().mComments;
+                for( int i=0; i<comments.size(); i++ )
+                {
+                    comments.get(i).reSizeLayout( progress ); // 줌인,아웃 으로 거리값 증가,감소
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         /** 코멘트 표시할 맵 **/
         mCustomMapView = (CustomMapView)findViewById(R.id.mapView);
         mCommentView = (CommentView)findViewById(R.id.comentView);
-        // 해당 코멘트를 클릭하면?
-        mCommentView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                CustomMapView customMapView = CustomMapView.getInstance();
-
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN :
-                        if( customMapView.mComments != null ) {
-
-                            for (int i = 0; i < customMapView.mComments.size(); i++) {
-                                CommentVector2 comment = customMapView.mComments.get(i);
-
-                                // 카메라 안에 있는 녀석들만 검사
-                                if( comment.mIsinCamera ) {
-                                    // 코멘트를 클릭했으면
-                                    if ((comment.mvecScreenPos.x - comment.radius <= event.getX()) && (comment.mvecScreenPos.x + comment.radius >= event.getX()) &&
-                                            (comment.mvecScreenPos.y - comment.radius <= event.getY()) && (comment.mvecScreenPos.y + comment.radius >= event.getY())) {
-
-                                        Intent intent = new Intent( CameraActivity.getInstance(), CameraCommentsList.class );
-                                        intent.putExtra("lat", comment.mvecAbsolutePosition.y);
-                                        intent.putExtra("lon", comment.mvecAbsolutePosition.x);
-                                        startActivity(intent);
-                                        /*
-
-                                        여기다가1
-                                        comment.mvecAbsolutePosition.y (위도), comment.mvecAbsolutePosition.x (경도)인 모든 코멘트 찾아서
-
-                                         */
-                                        Toast.makeText(CameraActivity.getInstance(), "클릭한 코멘트 개수 : " + comment.mCount, Toast.LENGTH_SHORT).show();
-
-                                        return true;
-                                    }
-                                }
-
-                            }
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE :
-                        break;
-                    case MotionEvent.ACTION_UP   :
-                        break;
-                }
-                return true;
-            }
-        });
 
         /************************************
          *        현재위치 버튼 누를 시
@@ -157,11 +138,11 @@ public class CameraActivity extends AppCompatActivity {
         // 카메라 퍼미션 허용 안돼있으면
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED )
         {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE); // 카메라 퍼미션 요청
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE ); // 카메라 퍼미션 요청
         }
         else if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )
         {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CustomGPS.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION); // GPS 퍼미션 요청
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CustomGPS.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION ); // GPS 퍼미션 요청
         }
 
         /**************************************
@@ -230,7 +211,7 @@ public class CameraActivity extends AppCompatActivity {
                  카메라 센서
                  ************/
                 if( sensorManager != null )
-                    sensorManager.registerListener( sensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+                    sensorManager.registerListener( sensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL );
 
             }
         }
