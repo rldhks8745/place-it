@@ -78,7 +78,7 @@ public class MainPageFragment extends Fragment{
         loading = new LoadingDialog();
         gps = new GpsInfo( getContext() );
 
-        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
+        location.setText( AddressTransformation.getAddress( instance.getActivity(), latitude, longitude ) );
         getLocation( GpsInfo.MAINPAGE );
 
         if( latitude == 0.0 )
@@ -100,7 +100,7 @@ public class MainPageFragment extends Fragment{
 
         view.findViewById(R.id.recyclerView);
         if(Store.rlv == null)
-            recyclerListView = new RecyclerListView(getContext(), view,this);
+            recyclerListView = new RecyclerListView( getContext(), view,this );
         else
             recyclerListView = Store.rlv;
 
