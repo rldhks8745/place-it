@@ -76,12 +76,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         // 상태바 제거
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
        // View mainview = (View) this.getLayoutInflater().inflate(R.layout.activity_main, null);
-
-
 
         activity = this;
 
@@ -102,7 +101,6 @@ public class MainActivity extends AppCompatActivity{
 
         //실험
         searchView = (SearchView) findViewById(R.id.searchView);
-
 
         // SearchView 검색어 입력/검색 이벤트 처리
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
