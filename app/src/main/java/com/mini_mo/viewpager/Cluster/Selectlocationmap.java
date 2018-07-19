@@ -1,9 +1,10 @@
-/*package com.mini_mo.viewpager.Cluster;
+package com.mini_mo.viewpager.Cluster;
 
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,8 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,28 +37,23 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
-import com.mini_mo.viewpager.DAO.ListViewItemData;
-import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.R;
-import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
-public class Selectlocationmap extends AppCompatActivity
+public  class Selectlocationmap extends Activity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, View.OnClickListener {
+        LocationListener {
 
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
@@ -71,7 +65,7 @@ public class Selectlocationmap extends AppCompatActivity
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-    private AppCompatActivity mActivity;
+    private Selectlocationmap mActivity;
     private ClusterManager<MyItem> mClusterManager = null;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
@@ -93,7 +87,7 @@ public class Selectlocationmap extends AppCompatActivity
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.cluster_map);
+        setContentView(R.layout.selectmap);
         Log.d(TAG, "onCreate");
         mActivity = this;
 
@@ -575,4 +569,3 @@ public class Selectlocationmap extends AppCompatActivity
         }
     }
 }
-*/
