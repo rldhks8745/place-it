@@ -28,8 +28,8 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class CommentVector2 implements Comparable<CommentVector2>{
 
-    public static int LAYOUT_WIDTH = 500;
-    public static int LAYOUT_HEIGHT = 550;
+    public static int LAYOUT_WIDTH = 600;
+    public static int LAYOUT_HEIGHT = 1100;
 
     public ViewGroup layoutView; // 화면에 보여질 코멘트 레이아웃
 
@@ -37,7 +37,6 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public Vector2 mvecAbsolutePosition = null; // 현재 코멘트 위치 절대좌표 ( 경도(x), 위도(y) )
 
     public Vector2 mvecScreenPos = null; // 핸드폰 화면 좌표
-    public float radius; // 코멘트 반지름 길이
 
     public Vector2 mvecRelativePosition = null; // 현재위치에서부터 현재 코멘트까지의 상대거리
     public double mDistance = 0.0; // 현재 위치와 코멘트 간의 거리
@@ -45,17 +44,17 @@ public class CommentVector2 implements Comparable<CommentVector2>{
     public double mScreenWIdthRatio = 0.0; // 화면가로 어디에 코멘트를 띄워야할지 비율
 
     public boolean mAddView = false;
-    public int layoutWidth = 300; // 증강현실 코멘트 width
-    public int layoutHeight = 550;
-    public float textIdSIze = 15.0f;
-    public float textContextSize = 12.0f;
-    public float textImgCountSIze = 20.0f;
-    public float pageTextSize = 15.0f;
+    public int layoutWidth; // 증강현실 코멘트 width
+    public int layoutHeight;
+    public float textIdSIze = 30.0f;
+    public float textContextSize = 24.0f;
+    public float textImgCountSIze = 40.0f;
+    public float pageTextSize = 30.0f;
     public int page = 0;
 
     ArrayList<Board_Location_List> contents;
     LinearLayout wrapLayout;
-    ConstraintLayout.LayoutParams wrapLayoutParams;
+    FrameLayout.LayoutParams wrapLayoutParams;
     TextView custom_id;
     TextView custom_context;
     ImageView custom_userimg;
@@ -81,7 +80,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         layoutView = ( ViewGroup ) inflater.inflate( R.layout.camera_custom_item, null );
 
         wrapLayout = (LinearLayout)layoutView.findViewById(R.id.camera_custom_layout);
-        wrapLayoutParams = new ConstraintLayout.LayoutParams( 0, 0 );
+        wrapLayoutParams = new FrameLayout.LayoutParams( 0, 0 );
 
         double percentageSize = ( mDistance / 10 ) + 1; // 1 ~ 1/5 배율로 거리 표시
 
@@ -229,6 +228,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         layoutHeight =  (int)( LAYOUT_HEIGHT / percentageSize );
 
         setRect( layoutWidth, layoutHeight );
+        CustomCamera.getInstnce().setCameraZoom( zoom );
     }
     @Override
     public int compareTo(@NonNull CommentVector2 commentVector2) { //  내림차순으로 compare , 가까운 순서대로 먼저 뿌려야 하므로
@@ -249,12 +249,12 @@ public class CommentVector2 implements Comparable<CommentVector2>{
 
     public void show()
     {
-        CameraActivity.getInstance().constraintLayout.addView( layoutView );
+        CameraActivity.getInstance().frameLayout.addView( layoutView );
         mAddView = true;
     }
     public void hide()
     {
-        CameraActivity.getInstance().constraintLayout.removeView( layoutView );
+        CameraActivity.getInstance().frameLayout.removeView( layoutView );
         mAddView = false;
     }
 

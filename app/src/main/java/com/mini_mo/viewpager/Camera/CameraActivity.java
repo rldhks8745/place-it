@@ -10,32 +10,17 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
-import com.mini_mo.viewpager.DAO.Board_Location;
-import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Vector;
 
 import static com.mini_mo.viewpager.Camera.CustomCamera.CAMERA_PERMISSION_REQUEST_CODE;
 
@@ -74,7 +59,7 @@ public class CameraActivity extends AppCompatActivity {
     public  CommentView mCommentView; // 화면 전체 코멘트 표시할 뷰
 
     // 카메라 코멘트 Layout을 띄울 상위 레이아웃
-    public ConstraintLayout constraintLayout;
+    public FrameLayout frameLayout;
 
     public static CameraActivity getInstance(){ return instance; }
 
@@ -177,7 +162,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         };
 
-        constraintLayout = (ConstraintLayout)findViewById(R.id.conslayout);
+        frameLayout = (FrameLayout)findViewById(R.id.camera_main_frame);
 
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
         {

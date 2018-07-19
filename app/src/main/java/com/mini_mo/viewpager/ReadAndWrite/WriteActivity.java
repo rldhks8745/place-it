@@ -131,7 +131,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         mc = new MediaController(this);
 
-        //category = (Spinner)findViewById(R.id.spinner);
+        category = (Spinner)findViewById(R.id.spinner);
 
         send = (ImageView)findViewById(R.id.send);
         back = (ImageView)findViewById(R.id.back);
@@ -160,7 +160,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
 
-        /*category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 category_number = position;
@@ -170,7 +170,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });*/
+        });
     }
 
     @SuppressLint("ResourceType")
@@ -289,7 +289,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Store.content = content.getText().toString();
 
                 Intent intent = new Intent(this,LoadLocateActivity.class);
-                intent.putExtra("check",2);
                 startActivity(intent);
                 finish();
 
