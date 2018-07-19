@@ -159,6 +159,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
 
+        /*
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -170,6 +171,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+        */
     }
 
     @SuppressLint("ResourceType")

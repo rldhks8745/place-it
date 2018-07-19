@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/camera_custom_layout"
-    android:layout_width="500dp"
-    android:layout_height="550dp"
+    android:layout_width="600dp"
+    android:layout_height="1100dp"
     android:orientation="vertical"
     android:weightSum="10">
 
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="TextView"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <TextView
@@ -40,7 +40,7 @@
         android:background="#ffffff"
         android:padding="10dp"
         android:text="글쓰기 글쓰기 글쓰기 글쓰기 "
-        android:textSize="12sp" />
+        android:textSize="24sp" />
 
     <FrameLayout
         android:id="@+id/camera_frameLayout"
@@ -72,7 +72,7 @@
             android:background="#88000000"
             android:gravity="center"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="40sp" />
 
     </FrameLayout>
 
@@ -99,7 +99,7 @@
             android:layout_weight="5"
             android:gravity="center"
             android:text="1/5"
-            android:textSize="15sp" />
+            android:textSize="30sp" />
 
         <ImageView
             android:id="@+id/camera_right_page"

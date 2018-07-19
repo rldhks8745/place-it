@@ -139,7 +139,7 @@ public class YourPageActivity extends AppCompatActivity {
 
             Glide.with( this )
                     .load( user_info.user_photo )
-                    .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user ))
+                    //.apply( new RequestOptions().placeholder( R.drawable.user ).error( R.drawable.user ))
                     .into( usericon );
 
             userId.setText(user_info.user_id);

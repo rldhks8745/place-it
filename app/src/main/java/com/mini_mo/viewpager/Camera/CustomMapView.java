@@ -28,7 +28,7 @@ public class CustomMapView extends View
     // CustomView 멤버변수
     public static CustomMapView instance = null;
 
-    public static final float COMENT_DISTANCE = 50;
+    public static final float COMMENT_DISTANCE = 50;
     public static final float CANVAS_WIDTH = 150;
     public static final float CANVAS_HEIGHT = 150;
     public static final float CENTER_X = CANVAS_WIDTH/2;
@@ -45,7 +45,7 @@ public class CustomMapView extends View
     // 맵뷰 화면 px 과 나타낼 거리 간의 비율
     // 중앙 에서 맵뷰 끝까지의 px = 75px
     // 75 / 50 = 2, 1m 당 2px 의 비율
-    public  float ratio = ( CANVAS_WIDTH / 2 ) / COMENT_DISTANCE;;
+    public  float ratio = ( CANVAS_WIDTH / 2 ) / COMMENT_DISTANCE;;
 
     public static CustomMapView getInstance(){ return instance; }
 
@@ -74,13 +74,12 @@ public class CustomMapView extends View
         myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         myPaint.setColor(Color.YELLOW);
         // 현재 위치에서 50m 바운더리
-        canvas.drawCircle( CENTER_X, CENTER_Y,CANVAS_WIDTH/2, myPaint );
+        canvas.drawCircle( CENTER_X, CENTER_Y,CANVAS_WIDTH / 2, myPaint );
 
         // 현재 위치
-        myPaint.setStrokeWidth( 5.0f );
         myPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         myPaint.setColor(Color.RED);
-        canvas.drawCircle( CENTER_X, CENTER_Y,5.0f, myPaint );
+        canvas.drawCircle( CENTER_X, CENTER_Y,3.0f, myPaint );
 
         /*********** 코멘트 위치 표시 ************/
         myPaint.setColor(Color.BLUE);
@@ -89,10 +88,10 @@ public class CustomMapView extends View
             for( int i=0; i < mComments.size(); i++ )
             {
                 // 코멘트 위치 뿌리기  ( 현재는 COMENT_DISTANCE( 50m ) 안에 있을 경우 && 카메라안에 있을 경우에만 뜬다 )
-                if( mComments.get(i).mDistance <= COMENT_DISTANCE ) {
+                if( mComments.get(i).mDistance <= COMMENT_DISTANCE ) {
                     canvas.drawCircle( (float)( CENTER_X + ( mComments.get(i).mvecRelativePosition.x * mComments.get(i).mDistance * ratio ) ),
                             (float)( CENTER_Y + -1 * ( mComments.get(i).mvecRelativePosition.y * mComments.get(i).mDistance * ratio ) ),
-                            5.0f,
+                            3.0f,
                             myPaint);
                 }
             }
