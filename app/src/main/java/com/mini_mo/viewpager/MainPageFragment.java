@@ -160,6 +160,8 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        if(Store.sendboard!=null)
+            recyclerListView.add(Store.sendboard);
     }
 
     public void setTextLocation( Location lo )

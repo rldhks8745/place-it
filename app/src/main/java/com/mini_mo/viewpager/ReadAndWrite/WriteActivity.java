@@ -41,6 +41,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
+import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
@@ -208,7 +209,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 tapmap.startAnimation(ani);
 
 
-                Intent cintent = new Intent(this, ClusterMap.class);
+                Intent cintent = new Intent(this, Selectlocationmap.class);
                 startActivityForResult(cintent,TAPMAP);
 
                 break;

@@ -68,6 +68,7 @@
 
         <!-- Map Activity ( 주재현 ) -->
         <activity android:name=".Cluster.ClusterMap" />
+        <activity android:name=".Cluster.Selectlocationmap"/>
 
         <!-- Map Activity ( 이용훈 ) -->
         <activity android:name=".Login.LoginActivity"/>

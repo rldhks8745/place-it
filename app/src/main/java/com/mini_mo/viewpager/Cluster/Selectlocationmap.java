@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public  class Selectlocationmap extends Activity
+public  class Selectlocationmap extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -100,7 +100,7 @@ public  class Selectlocationmap extends Activity
 
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map1);
+                .findFragmentById(R.id.selectmap);
         mapFragment.getMapAsync(this);
     }
 

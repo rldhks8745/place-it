@@ -87,7 +87,6 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    RecyclerListView recyclerListView;
 
     LatLng centerlocation;
 
@@ -255,9 +254,6 @@ public class ClusterMap extends AppCompatActivity
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
 
-        if(clustericon != null) {
-            clustericon.clear();
-        }
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d("TEST", bounds.toString());
         double max_lat, max_lng, min_lat, min_lng;
@@ -278,7 +274,9 @@ public class ClusterMap extends AppCompatActivity
             double lng = clustericon.get(i).longitude;
             MyItem offsetItem2 = new MyItem(lat, lng);
             mClusterManager.addItem(offsetItem2);
+
         }
+        mClusterManager.clearItems();
     }
 
 
@@ -666,10 +664,11 @@ public class ClusterMap extends AppCompatActivity
             case R.id.ok:
                 getVisibleRegion();
                 if(clustericon!=null){
-                    recyclerListView.add(clustericon);
+                    Store.sendboard = clustericon;
+                    clustericon.clear();
                 }
-                Intent intent = new Intent(this,MainPageFragment.class);
-                startActivity(intent);
+
+                finish();
 
                 break;
             case R.id.cancel:
