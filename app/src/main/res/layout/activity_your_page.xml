@@ -39,8 +39,8 @@
 
                     <ImageView
                         android:id="@+id/usericon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="200dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:scaleType="centerCrop" />
 
                     <LinearLayout
@@ -168,9 +168,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#42619d"
+        android:scaleType="centerCrop"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@drawable/write" />
+        app:srcCompat="@drawable/like" />
 
 </android.support.design.widget.CoordinatorLayout>

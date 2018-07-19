@@ -288,7 +288,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Store.content = content.getText().toString();
 
                 Intent intent = new Intent(this,LoadLocateActivity.class);
-                intent.putExtra("check",2);
                 startActivity(intent);
                 finish();
 
