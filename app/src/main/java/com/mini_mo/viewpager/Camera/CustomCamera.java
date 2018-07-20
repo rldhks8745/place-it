@@ -30,7 +30,6 @@ public class CustomCamera implements SurfaceHolder.Callback
     public android.hardware.Camera m_Camera; // 핸드폰 카메라 instance
     public Camera.Parameters parameters;
     int maxZoom;
-    int nowZoom = 0;
     float zoomUnit;
 
 
@@ -65,22 +64,14 @@ public class CustomCamera implements SurfaceHolder.Callback
         }
 
         // SurfaceView에 카메라 미리보기 화면( Preview ) 띄우기
-        try
-        {
+        try {
             if (m_Camera != null)
             {
                 m_Camera.setPreviewDisplay(m_CameraHolder); // 표시할 holder 정보를 넘겨주교 startPreview()를 함께 해야 바로 화면에 나온다. 중요!!!
                 m_Camera.startPreview();
                 parameters = m_Camera.getParameters();
                 maxZoom =  parameters.getMaxZoom();
-                zoomUnit = (float)CustomMapView.COMMENT_DISTANCE / maxZoom;
-
-                int zoomValue = (int)(zoomUnit * nowZoom);
-                if( zoomValue <= maxZoom )
-                {
-                    parameters.setZoom(zoomValue);
-                    m_Camera.setParameters(parameters);
-                }
+                zoomUnit = (float) maxZoom / CustomMapView.COMENT_DISTANCE;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -186,7 +177,6 @@ public class CustomCamera implements SurfaceHolder.Callback
 
     public void setCameraZoom( int zoom )
     {
-        nowZoom = zoom;
         int zoomValue = (int)(zoomUnit * zoom);
 
         if( zoomValue <= maxZoom )

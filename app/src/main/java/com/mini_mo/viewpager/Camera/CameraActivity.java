@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,10 +13,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.mini_mo.viewpager.R;
@@ -55,11 +58,15 @@ public class CameraActivity extends AppCompatActivity {
     /*******************************
      *      코멘트 표시할 맵
      ****************************/
-    public  CustomMapView mCustomMapView; // 오른쪽 위 작은 맵뷰
-    public  CommentView mCommentView; // 화면 전체 코멘트 표시할 뷰
 
     // 카메라 코멘트 Layout을 띄울 상위 레이아웃
-    public FrameLayout frameLayout;
+    public RelativeLayout camera_rel;
+    public int mScreenWIdth, mScreenHeight; // 핸드폰 화면 사이즈
+
+    /******************
+     * 카메라 줌 값
+     ******************/
+    public int zoomDIstance = 0;
 
     public static CameraActivity getInstance(){ return instance; }
 
@@ -73,35 +80,6 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_activity_camera); // 메인 에티비티 붙이기.
-
-        /** 줌인,아웃 바 **/
-        SeekBar zoomBar = (SeekBar)findViewById(R.id.camera_zoombar);
-        zoomBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-
-                ArrayList<CommentVector2> comments = CustomMapView.getInstance().mComments;
-                for( int i=0; i<comments.size(); i++ )
-                {
-                    comments.get(i).reSizeLayout( progress ); // 줌인,아웃 으로 거리값 증가,감소
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        /** 코멘트 표시할 맵 **/
-        mCustomMapView = (CustomMapView)findViewById(R.id.mapView);
-        mCommentView = (CommentView)findViewById(R.id.comentView);
-
         /************************************
          *        현재위치 버튼 누를 시
          ************************************/
@@ -147,13 +125,13 @@ public class CameraActivity extends AppCompatActivity {
                 sensorX = (int) sensorEvent.values[0];
                 sensorY = (int) sensorEvent.values[1]; // picth ( 무조건 수직 )
                 sensorZ = (int) sensorEvent.values[2]; // 카메라 기울기
-
-                m_customGPS.getDirection(mCustomMapView); // 방향 생성
+                m_customGPS.getDirection(); // 방향 생성
                 m_customGPS.isInCamera(); // 생성된 방향으로 코멘트들이 카메라에 있는가? ( 현재는 0번째 인덱스만 검사 중 )
+                calcCommentPos();
 
                 // 커스텀 뷰들 재 그리기
-                CustomMapView.getInstance().invalidate();
-                mCommentView.invalidate();
+                if( CustomMapView.getInstance() != null )
+                    CustomMapView.getInstance().invalidate();
             }
 
             @Override
@@ -161,8 +139,6 @@ public class CameraActivity extends AppCompatActivity {
 
             }
         };
-
-        frameLayout = (FrameLayout)findViewById(R.id.camera_main_frame);
 
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
         {
@@ -175,6 +151,46 @@ public class CameraActivity extends AppCompatActivity {
                 m_customGPS.showDialogForLocationServiceSetting();
             }
         }
+
+        /** 줌인,아웃 바 **/
+        SeekBar zoomBar = (SeekBar)findViewById(R.id.camera_zoombar);
+        zoomBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) // progress 가 xml에서 지정한 min ~ max 값
+            {
+                zoomDIstance = progress;
+
+                if( CustomMapView.getInstance() == null )
+                    return;
+
+                ArrayList<CommentVector2> comments = CustomMapView.getInstance().mComments;
+
+                for( int i=0; i<comments.size(); i++ )
+                {
+                    comments.get(i).reSizeLayout( progress ); // 줌인,아웃 으로 거리값 증가,감소
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        camera_rel = (RelativeLayout)findViewById(R.id.camera_rel); // 코멘트들이 add될 레이아웃
+
+        Display display = CameraActivity.getInstance().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize( size );
+        mScreenWIdth = size.x; // 코멘트 표시될때 화면 넘어서까지 부드럽게 이동하기 위해서
+        mScreenHeight = size.y;
+        int a = camera_rel.getHeight();
     }
 
     @Override
@@ -297,7 +313,57 @@ public class CameraActivity extends AppCompatActivity {
                 }
                 break;
         }
-
     }
 
+    public void calcCommentPos()
+    {
+
+        CustomMapView customMapView = CustomMapView.getInstance();
+        if( customMapView == null )
+            return;
+
+        // 코멘트 위치 표시
+        if( customMapView != null && customMapView.mComments != null )
+        {
+            for( int i=0; i < customMapView.mComments.size(); i++ )
+            {
+                CommentVector2 comment = customMapView.mComments.get(i);
+                if( comment.mIsinCamera && ( comment.mDistance <= CustomMapView.COMENT_DISTANCE ) && ( comment.changedDistance >= 0 ) )
+                {
+                    if ( !comment.mAddView )
+                    {
+                        comment.show();
+                    }
+                    float widthRatio = (float) customMapView.mComments.get(i).mScreenWIdthRatio;
+                    float x = (widthRatio != 0.0) ? (float) (mScreenWIdth * customMapView.mComments.get(i).mScreenWIdthRatio) : -100.0f;
+
+                    // 삼중연산자
+                    float y = ( sensorY <= -( 90 - 45 ) && sensorY >= -( 90 + 45 ) ) ?
+                            ( ( (float) -( sensorY + 45 ) / 90 ) * mScreenHeight ) + ( float )( customMapView.mComments.get(i).mDistance * 2 ) :
+                            -100;
+
+                    if( x < -99 || y < -99 )
+                    {
+                        if ( comment.mAddView )
+                        {
+                            comment.hide();
+                        }
+                    }
+
+                    comment.setXY( x - 150, y - 100 );
+
+                    /** 코멘트 위치 수정 **/
+                    comment.mvecScreenPos.x = x;
+                    comment.mvecScreenPos.y = y;
+                }
+                else
+                {
+                    if ( comment.mAddView )
+                    {
+                        comment.hide();
+                    }
+                }
+            }
+        }
+    }
 }

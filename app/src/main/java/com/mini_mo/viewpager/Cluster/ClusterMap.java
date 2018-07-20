@@ -254,6 +254,8 @@ public class ClusterMap extends AppCompatActivity
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
 
+        mClusterManager.clearItems();
+
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
         Log.d("TEST", bounds.toString());
         double max_lat, max_lng, min_lat, min_lng;
@@ -276,7 +278,6 @@ public class ClusterMap extends AppCompatActivity
             mClusterManager.addItem(offsetItem2);
 
         }
-        mClusterManager.clearItems();
     }
 
 
@@ -662,10 +663,11 @@ public class ClusterMap extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ok:
+
+                clustericon.clear();
                 getVisibleRegion();
                 if(clustericon!=null){
                     Store.sendboard = clustericon;
-                    clustericon.clear();
                 }
 
                 finish();
