@@ -16,6 +16,29 @@ public class Data {
 
     }
 
+    public String deleteComment(int board_num , int comment_num) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "delete_comment");
+        c_d.put("comment_num",comment_num);
+        c_d.put("board_num",board_num);
+        obj.put("delete_comment_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
 
     public ArrayList<ListViewItemData> search_board(String tag) throws JSONException //매개변수 = 검색할 태그 (태그 하나만 검색가능.)(#부분 필요 x)
     {
