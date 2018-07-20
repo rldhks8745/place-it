@@ -10,4 +10,6 @@ public class ListViewItemData
     public double longitude;
     public String user_id;
     public String user_photo;
+    public int category;
+    public int comment_cnt;
 }

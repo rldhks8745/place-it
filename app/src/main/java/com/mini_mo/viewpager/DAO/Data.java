@@ -704,6 +704,8 @@ public class Data {
                 t.longitude = tjo.getDouble("board_longitude");
                 t.user_id = tjo.getString("user_id");
                 t.user_photo = tjo.getString("user_photo");
+                t.category = tjo.getInt("category");
+                t.comment_cnt = tjo.getInt("comment_cnt");
 
                 fl.add(t);
             }
@@ -1003,7 +1005,7 @@ public class Data {
 
 
 
-    public String writeBorard(String Content, String user_name, String tag, double latitude , double longitute, ArrayList<String> urls) throws JSONException {
+    public String writeBorard(String Content, String user_name, String tag, double latitude , double longitute,ArrayList<String> urls,int category) throws JSONException {
         String r = "-3";
         String board_number = "-30";
 
@@ -1016,6 +1018,7 @@ public class Data {
         b_d.put("tag",tag);
         b_d.put("latitude",latitude);
         b_d.put("longitude",longitute);
+        b_d.put("category",category);
         obj.put("Board_data", b_d);
 
         try {
