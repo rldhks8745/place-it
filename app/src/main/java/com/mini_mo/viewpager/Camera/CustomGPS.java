@@ -208,8 +208,8 @@ public class CustomGPS extends Service implements LocationListener,
 
         // 맵뷰에서 사용할 수 있도록 넘기기
         Collections.sort( comments ); // 내림차순 정렬 ( 가까운 순으로 )
-        CameraActivity.getInstance().mCustomMapView.mComments = comments;
-
+        CustomMapView.getInstance().mComments = comments;
+        Log.d("1","1");
     }
 
     public void isInCamera()
@@ -274,8 +274,12 @@ public class CustomGPS extends Service implements LocationListener,
     /***********************************
      *      카메라 방향, 좌각도, 우각도, 좌각도노말벡터, 우각도노말벡터 구하기
      **********************************/
-    public void getDirection(CustomMapView customMapView)
+    public void getDirection()
     {
+        CustomMapView customMapView = CustomMapView.getInstance();
+        if( customMapView == null )
+            return;
+
         int phoneAngle = CameraActivity.getInstance().sensorX;
         double toRadian = Math.PI / 180;
 
