@@ -100,7 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.userId.setText(item.user_id);
         viewHolder.contents.setText(item.content);
         viewHolder.date.setText(item.date_board);
-        viewHolder.like.setText("5");
+        viewHolder.like.setText(String.valueOf(item.good));
         viewHolder.comment.setText("5");
         // 사진 넣기
 

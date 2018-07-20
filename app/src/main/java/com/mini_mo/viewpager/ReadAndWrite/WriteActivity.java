@@ -164,7 +164,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 category_number = position;
-            }
+                Log.i("카테고리 넘버", position+"");            }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
