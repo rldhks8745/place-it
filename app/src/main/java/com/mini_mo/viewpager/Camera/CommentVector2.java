@@ -99,7 +99,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
                 //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
                 CameraActivity.getInstance().startActivity(intent);
                 //Store.board_num = Store.sendboard.get(position).board_num;
-                Store.board_num = contents.get(0).board_num;
+                Store.board_num = contents.get( pageIndex ).board_num;
                 CameraActivity.getInstance().overridePendingTransition(R.anim.goup, R.anim.godown);
             }
         });
@@ -114,10 +114,9 @@ public class CommentVector2 implements Comparable<CommentVector2>{
 
                 Intent intent = new Intent( CameraActivity.getInstance(), ReadActivity.class);
 
-                //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
+                //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨
                 CameraActivity.getInstance().startActivity(intent);
-                //Store.board_num = Store.sendboard.get(position).board_num;
-                Store.board_num = contents.get(0).board_num;
+                Store.board_num = contents.get( pageIndex ).board_num;
                 CameraActivity.getInstance().overridePendingTransition(R.anim.goup, R.anim.godown);
             }
         });
@@ -128,7 +127,7 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         if( contents.get( pageIndex ).photo_count == 1 )
             custom_imgcount.setText("") ;
         else
-            custom_imgcount.setText( String.valueOf( contents.get( pageIndex ).photo_count ) );
+            custom_imgcount.setText( String.valueOf( "+" + contents.get( pageIndex ).photo_count ) );
 
         // 게시글 작성자 icon
         custom_userimg = (ImageView)layoutView.findViewById(R.id.camera_custom_userimage);
@@ -137,36 +136,27 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         else
             Glide.with( CameraActivity.getInstance() )
                     .load( R.drawable.user )
-                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .apply(new RequestOptions().override(200, 200).placeholder(R.drawable.user))
                     .into( custom_userimg );
 
         // 게시글 첫번째 이미지
         custom_firstimg = (ImageView)layoutView.findViewById(R.id.camera_custom_firstimg);
+        FrameLayout frame = (FrameLayout)layoutView.findViewById(R.id.camera_frameLayout);
+        LinearLayout.LayoutParams layoutParams;
         if( contents.get( pageIndex ).photo_count != 0 )
         {
+            layoutParams = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 0 );
+            layoutParams.weight = 3;
+
             Glide.with(CameraActivity.getInstance())
                     .load(contents.get( pageIndex ).board_photo)
                     .into(custom_firstimg);
         }
         else
         {
-            FrameLayout frame = (FrameLayout)layoutView.findViewById(R.id.camera_frameLayout);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( 0,0 );
-            frame.setLayoutParams( layoutParams );
+            layoutParams = new LinearLayout.LayoutParams( 0,0 );
         }
-        custom_context.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent( CameraActivity.getInstance(), ReadActivity.class);
-
-                //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
-                CameraActivity.getInstance().startActivity(intent);
-                //Store.board_num = Store.sendboard.get(position).board_num;
-                Store.board_num = contents.get(0).board_num;
-                CameraActivity.getInstance().overridePendingTransition(R.anim.goup, R.anim.godown);
-            }
-        });
+        frame.setLayoutParams( layoutParams );
 
         // 게시글 페이지 표시
         textViewPage = (TextView)layoutView.findViewById( R.id.camera_page );
@@ -250,31 +240,35 @@ public class CommentVector2 implements Comparable<CommentVector2>{
         else
             Glide.with( CameraActivity.getInstance() )
                     .load( R.drawable.user )
-                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .apply(new RequestOptions().override(200, 200).placeholder(R.drawable.user))
                     .into( custom_userimg );
 
         // 게시글 내용 변경
         custom_context.setText( contents.get( pageIndex ).content );
 
-        // 게시글 첫번째 이미지 카운트 변경
+        // 게시글 이미지 카운트 변경
         if( contents.get( pageIndex ).photo_count == 1 )
             custom_imgcount.setText("") ;
         else
-            custom_imgcount.setText( String.valueOf( contents.get( pageIndex ).photo_count ) );
+            custom_imgcount.setText( String.valueOf( "+" + contents.get( pageIndex ).photo_count ) );
 
         // 게시글 첫번째 이미지 변경
+        FrameLayout frame = (FrameLayout)layoutView.findViewById(R.id.camera_frameLayout);
+        LinearLayout.LayoutParams layoutParams;
         if( contents.get( pageIndex ).photo_count != 0 )
         {
+            layoutParams = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 0 );
+            layoutParams.weight = 3;
+
             Glide.with(CameraActivity.getInstance())
                     .load(contents.get( pageIndex ).board_photo)
                     .into(custom_firstimg);
         }
         else
         {
-            FrameLayout frame = (FrameLayout)layoutView.findViewById(R.id.camera_frameLayout);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( 0,0 );
-            frame.setLayoutParams( layoutParams );
+            layoutParams = new LinearLayout.LayoutParams( 0,0 );
         }
+        frame.setLayoutParams( layoutParams );
 
         // 게시글 페이지 변경
         textViewPage.setText( (pageIndex+1) + " / " + contents.size() );
