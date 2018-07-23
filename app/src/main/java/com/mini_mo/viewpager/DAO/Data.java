@@ -191,7 +191,7 @@ public class Data {
         return r;
     }
 
-    public String plus_good(int board_num) throws JSONException
+    public String plus_good(int board_num,String user_name) throws JSONException
     {
         JSONObject jobj = new JSONObject();
         JSONObject result = null;
@@ -200,6 +200,7 @@ public class Data {
         JSONObject login_data = new JSONObject();
 
         login_data.put("board_num",board_num+"");
+        login_data.put("user_name",user_name);
 
         jobj.put("flag","plus_good");
         jobj.put("plus_good_data", login_data);
@@ -954,7 +955,7 @@ public class Data {
     }
 
 
-    public ReadBoardInfo readBoardInfo(String board_num) throws JSONException
+    public ReadBoardInfo readBoardInfo(String board_num,String user_name) throws JSONException
     {
         ReadBoardInfo rbi = new ReadBoardInfo();
 
@@ -963,6 +964,7 @@ public class Data {
         JSONObject b_n = new JSONObject();
         obj.put("flag","ReadBoardInfo");
         b_n.put("Board_num",board_num);
+        b_n.put("user_name",user_name);
         obj.put("Board_Info_data",b_n);
 
         try
@@ -1001,6 +1003,7 @@ public class Data {
             rbi.longitude = result.getDouble("longitude");
             rbi.user_id = result.getString("user_id");
             rbi.user_photo = result.getString("user_photo");
+            rbi.is_good = result.getInt("is_good");
 
             int count = result.getInt("img_count");
 
