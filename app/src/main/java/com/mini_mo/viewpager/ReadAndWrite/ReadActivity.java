@@ -18,11 +18,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -58,14 +60,14 @@ import java.util.Date;
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
-public class ReadActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReadActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
 
     Activity activity;
     InputStream inputStream;
-    ArrayList<View> videoarr;
+    ArrayList<FrameLayout> videoarr;
     ArrayList<ImageView> imagearr;
     View.OnClickListener listener;
     Data data;
@@ -165,7 +167,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i),imglist.getHeight()));
                 videoarr.get(videoarr.size()-1).setId((20+(videoarr.size()-1)));
-                videoarr.get(videoarr.size()-1).setOnClickListener(listener);
+                videoarr.get(videoarr.size()-1).setOnTouchListener(this);
 
                 imglist.addView(videoarr.get(videoarr.size() - 1));
             }
@@ -362,5 +364,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
         byte[] byteArray = stream.toByteArray() ;
         return byteArray ;
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onTouch(View v, MotionEvent motionEvent) {
+
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("video",String.valueOf(Uri.parse(video_list.get((v.getId()-20)))));
+        startActivity(intent);
+
+        return false;
     }
 }

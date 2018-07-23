@@ -64,7 +64,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         comment_list = (ListView)findViewById(R.id.listview);
         title = (EditText)findViewById(R.id.comment);
-        myadapter = new CustomAdapter(this);
+        myadapter = new CustomAdapter(this, this);
 
         comment_list.setAdapter(myadapter);
 
