@@ -42,13 +42,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
-import com.mini_mo.viewpager.ListView.RecyclerListView;
-import com.mini_mo.viewpager.MainActivity;
-import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
@@ -244,7 +240,7 @@ public class ClusterMap extends AppCompatActivity
         });
 
 
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -286,16 +282,15 @@ public class ClusterMap extends AppCompatActivity
 
         currentPosition
                 = new LatLng(location.getLatitude(), location.getLongitude());
-
-
-        Log.d(TAG, "onLocationChanged : ");
-
         String markerTitle = getCurrentAddress(currentPosition);
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
 
         //현재 위치에 마커 생성하고 이동
-        setCurrentLocation(location, markerTitle, markerSnippet);
+        setCurrentLocation(location,markerTitle,markerSnippet);
+
+
+        Log.d(TAG, "onLocationChanged : ");
         getVisibleRegion();
 
         mCurrentLocatiion = location;
@@ -666,6 +661,8 @@ public class ClusterMap extends AppCompatActivity
 
                 clustericon.clear();
                 getVisibleRegion();
+                if(Store.sendboard!=null)
+                    Store.sendboard.clear();
                 if(clustericon!=null){
                     Store.sendboard = clustericon;
                 }
