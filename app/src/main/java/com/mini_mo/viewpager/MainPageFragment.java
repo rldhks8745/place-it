@@ -160,6 +160,8 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        if(recyclerListView.listViewItems!=null)
+            recyclerListView.listViewItems.clear();
         if(Store.sendboard!=null)
             recyclerListView.add(Store.sendboard);
     }

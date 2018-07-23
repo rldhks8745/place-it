@@ -186,9 +186,6 @@ public  class Selectlocationmap extends AppCompatActivity
         });
 
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-        mClusterManager = new ClusterManager<>(this, mGoogleMap);
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
-        mGoogleMap.setOnMarkerClickListener(mClusterManager);
 
     }
 
@@ -201,14 +198,6 @@ public  class Selectlocationmap extends AppCompatActivity
 
 
         Log.d(TAG, "onLocationChanged : ");
-
-        String markerTitle = getCurrentAddress(currentPosition);
-        String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
-                + " 경도:" + String.valueOf(location.getLongitude());
-
-        //현재 위치에 마커 생성하고 이동
-        setCurrentLocation(location, markerTitle, markerSnippet);
-
         mCurrentLocatiion = location;
 
         stopLocationUpdates();
