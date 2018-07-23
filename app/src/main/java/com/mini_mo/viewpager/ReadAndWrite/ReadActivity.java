@@ -24,6 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -151,28 +152,22 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             bar.removeView(change);
         }
 
-        userid.setText(rbi.user_id.toString());
-        content.setText(rbi.content.toString());
-
-
-
         if(rbi.b_move != null) {
 
             for (int i = 0; i < rbi.b_move.size(); i++) {
                 //실험용
 
                 Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
-
+                Log.i("높이높이", imglist.getHeight()+"");
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 
                 video_list.add(rbi.b_move.get(i));
 
-                videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
+                videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i),imglist.getHeight()));
                 videoarr.get(videoarr.size()-1).setId((20+(videoarr.size()-1)));
                 videoarr.get(videoarr.size()-1).setOnClickListener(listener);
 
                 imglist.addView(videoarr.get(videoarr.size() - 1));
-
             }
         }
 
@@ -180,7 +175,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < rbi.b_photos.size(); i++) {
 
-                imagearr.add(NewImageCrate.ReadnewViewCreate(this)); //여러개라서 리스트에 넣기
+                imagearr.add(NewImageCrate.ReadnewViewCreate(this,imglist.getHeight())); //여러개라서 리스트에 넣기
                 imagearr.get(imagearr.size()-1).setId(imagearr.size()-1);
                 imagearr.get(imagearr.size()-1).setOnClickListener(this);
 
@@ -191,16 +186,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
                         .into(imagearr.get(imagearr.size()-1));
 
-
-
-
                 //실험용
 
                 Log.i("photo uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-               Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -210,6 +202,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         });
             }
         }
+
+        userid.setText(rbi.user_id.toString());
+        content.setText(rbi.content.toString());
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
 
@@ -245,6 +240,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         change.setOnClickListener(this);
         delete.setOnClickListener(this);
         profile.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @SuppressLint("ResourceType")

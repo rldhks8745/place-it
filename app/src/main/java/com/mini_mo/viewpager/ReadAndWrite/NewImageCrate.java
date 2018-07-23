@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,39 +26,23 @@ public class NewImageCrate {
 
     //새로운 이미지를 만들어주는 클래스 , Bitmap , DrawAble 등
 
-    public static ImageView ReadnewViewCreate(Activity activity){
+    public static ImageView ReadnewViewCreate(Activity activity, int height){
         ImageView imgv = new ImageButton(activity);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.CENTER;
         imgv.setBackgroundColor(Color.rgb(255,255,255));
         imgv.setLayoutParams(layoutParams);
         imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        imgv.getLayoutParams().height = 300;
-        imgv.getLayoutParams().width = 300;
+        imgv.getLayoutParams().width = height+100;
 
         newImageMargin(imgv,40,40,40,50);
 
         return imgv;
     }
 
-    public static ImageButton ReadnewImageCreate(Activity activity, Bitmap bitmap){
-        ImageButton imgv = new ImageButton(activity);
-
-        imgv.setLayoutParams(new LinearLayout.LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT));
-        imgv.setImageBitmap(bitmap);
-        imgv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        imgv.getLayoutParams().height=400;
-        imgv.getLayoutParams().width = 400;
-
-        newImageMargin(imgv,40,40,40,50);
-
-        return imgv;
-    }
-
-    public static FrameLayout ReadnewVideoCreate(Activity activity, String path){
+    public static FrameLayout ReadnewVideoCreate(Activity activity, String path, int height){
 
         VideoView videov = new VideoView(activity);
         ImageView play = new ImageView(activity);
@@ -65,8 +50,8 @@ public class NewImageCrate {
 
         frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         frameLayout.setBackgroundColor(Color.rgb(0,0,0));
-        frameLayout.getLayoutParams().height=300;
-        frameLayout.getLayoutParams().width=300;
+
+        frameLayout.getLayoutParams().width= height+100;
 
 
 
@@ -77,16 +62,16 @@ public class NewImageCrate {
         FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)play.getLayoutParams();
         lp1.gravity = Gravity.CENTER;
         play.setLayoutParams(lp1);
-        play.getLayoutParams().width=150;
-        play.getLayoutParams().height=150;
+        play.getLayoutParams().width=height;
+        play.getLayoutParams().height=height;
 
         videov.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams)videov.getLayoutParams();
         lp2.gravity = Gravity.CENTER;
         videov.setLayoutParams(lp2);
         videov.setVideoPath(path);
-        videov.getLayoutParams().height = 300;
-        videov.getLayoutParams().width=300;
+
+        videov.getLayoutParams().width=height+100;
 
         newVideoMargin(frameLayout,40,40,40,50);
 

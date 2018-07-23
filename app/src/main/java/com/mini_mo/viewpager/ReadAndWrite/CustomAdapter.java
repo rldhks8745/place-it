@@ -15,8 +15,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 public class CustomAdapter extends BaseAdapter {
 
     View view;
+    Data data;
 
     /* 아이템을 세트로 담기 위한 어레이 */
     private ArrayList<CustomListviewitem> mItems = new ArrayList<>();
@@ -95,8 +99,13 @@ public class CustomAdapter extends BaseAdapter {
 
                 CustomListviewitem Item = getItem(position);
 
+                data = new Data();
                 mItems.remove(position);
-                //myItem.getComment_number();// DB에 DELETE해주는 메소드에 넣으면 OK
+                try {
+                    data.deleteComment(Integer.parseInt(myItem.getBoard_number()),Integer.parseInt(myItem.getComment_number()));// DB에 DELETE해주는 메소드에 넣으면 OK
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 notifyDataSetChanged();
             }
@@ -109,13 +118,14 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String number ,String icon, String title, String id) {
+    public void addItem(String board_num,String comment_num ,String icon, String title, String id) {
 
         CustomListviewitem mItem = new CustomListviewitem();
 
         /* MyItem에 아이템을 setting한다. */
 
-        mItem.setComment_number(number);
+        mItem.setBoard_number(board_num);
+        mItem.setComment_number(comment_num);
         mItem.setIcon(icon);
         mItem.setId(id);
         mItem.setTitle(title);

@@ -7,6 +7,8 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
  */
 
 public class CustomListviewitem {
+
+    private String board_number;
     private String comment_number;
     private String icon;
     private String title;
@@ -28,6 +30,10 @@ public class CustomListviewitem {
         return comment_number;
     }
 
+    public String getBoard_number(){
+        return board_number;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -40,7 +46,11 @@ public class CustomListviewitem {
         this.id = id;
     }
 
-    public void setComment_number(String number){
-        this.comment_number = number;
+    public void setComment_number(String comment_number){
+        this.comment_number = comment_number;
+    }
+
+    public void setBoard_number(String board_number){
+        this.board_number = board_number;
     }
 }

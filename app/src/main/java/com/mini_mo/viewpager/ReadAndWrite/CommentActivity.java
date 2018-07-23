@@ -90,7 +90,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
 
-            myadapter.addItem(rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
+            myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
             count++;
         }
 
@@ -131,7 +131,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }
                                 Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
 
-                                myadapter.addItem(rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
+                                myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
 
                             count++;
                         }

@@ -248,9 +248,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     String str;
                     if(Store.check){
-                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl);
+                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl,category_number);
                     }else {
-                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl);
+                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl,category_number);
                     }
                     if(str.equals("-3")){
                         Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
