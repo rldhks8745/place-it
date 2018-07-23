@@ -137,7 +137,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         longlistener = this;
 
         try {
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num),Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }

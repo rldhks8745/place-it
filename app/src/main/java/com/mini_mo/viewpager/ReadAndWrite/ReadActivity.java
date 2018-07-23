@@ -73,6 +73,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     Data data;
     User_Info user_info;
     int count;
+    boolean like;
 
     //실험용
 
@@ -130,6 +131,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         data = new Data();
 
         count = 0;
+        like = false;
 
         listener = this;
         videoarr = new ArrayList<>();
@@ -144,7 +146,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //String.valueOf(Store.board_num)
         try {
             //String.valueOf(Store.board_num)
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num),Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -152,6 +154,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         if(!Store.userid.equals(rbi.user_id)) {
             bar.removeView(delete);
             bar.removeView(change);
+        }
+
+        Log.i("좋아요",rbi.is_good+"");
+
+        if(rbi.is_good == 0){
+            like = true;
+            like_button.setImageResource(R.drawable.like_true);
         }
 
         if(rbi.b_move != null) {
@@ -323,15 +332,36 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                 like_button.startAnimation(ani);
 
-                try {
-                    data.plus_good(Store.board_num);
+                if(like){
+                    try {
+                        data.plus_good(Store.board_num, Store.userid);
 
-                    int likecount = Integer.parseInt(like_count.getText().toString());
-                    like_count.setText(String.valueOf((likecount+1)));
+                        int likecount = Integer.parseInt(like_count.getText().toString());
+                        like_count.setText(String.valueOf((likecount - 1)));
 
-                    Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "좋아요 취소", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    like_button.setImageResource(R.drawable.heart);
+
+                    like = false;
+                }else {
+                    try {
+                        data.plus_good(Store.board_num, Store.userid);
+
+                        int likecount = Integer.parseInt(like_count.getText().toString());
+                        like_count.setText(String.valueOf((likecount + 1)));
+
+                        Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    like_button.setImageResource(R.drawable.like_true);
+
+                    like = true;
                 }
                 break;
         }

@@ -91,7 +91,7 @@ public class SearchActivity extends AppCompatActivity{
             try {
                 user_info = data.read_myPage(listViewItemDatas.get(i).user_id);
                 rci = data.readComment(String.valueOf(listViewItemDatas.get(i).board_num));
-                rbi = data.readBoardInfo(String.valueOf(listViewItemDatas.get(i).board_num));
+                rbi = data.readBoardInfo(String.valueOf(listViewItemDatas.get(i).board_num),Store.userid);
 
                 Util.Log("rci 사이즈",String.valueOf(rci.size()));
 
