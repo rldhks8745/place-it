@@ -8,6 +8,8 @@
     
     <ImageView
         android:id="@+id/select_img"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
         android:scaleType="centerCrop"
         android:background="#000000"
         android:layout_width="match_parent"

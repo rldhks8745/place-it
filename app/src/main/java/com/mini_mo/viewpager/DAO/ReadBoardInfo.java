@@ -22,6 +22,7 @@ public class ReadBoardInfo {
     public String date; //YYYY-MM-DD HH:MM
     public int good;
     public int hits;
+    public int is_good; // 1은 좋아요 눌렀음. 0은 안누름.
 
 
 }

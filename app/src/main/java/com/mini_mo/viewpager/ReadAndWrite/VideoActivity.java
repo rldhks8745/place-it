@@ -27,6 +27,8 @@ public class VideoActivity extends AppCompatActivity {
         String uri = intent.getStringExtra("video");
 
         vv.setVideoPath(uri);
+        vv.requestFocus();
+        vv.start();
 
     }
 

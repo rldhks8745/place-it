@@ -14,6 +14,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,12 @@ import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
 
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -41,7 +45,7 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 // RecyclerView 어댑터
 // ViewHolder : 뷰들을 홀더에 꼽아놓듯 보관하는 객체
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> { ;
 
     public static Fragment instance = null ;
     public AppCompatActivity activity = null ;
@@ -98,6 +102,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.userId.setText(item.user_id);
         viewHolder.contents.setText(item.content);
         viewHolder.date.setText(item.date_board);
+        viewHolder.like.setText(String.valueOf(item.good));
+        viewHolder.comment.setText(String.valueOf(item.comment_cnt));
         // 사진 넣기
 
         if(item.user_photo!=null) {
@@ -153,6 +159,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView userId;
         public TextView date;
         public TextView contents;
+        public TextView like;
+        public TextView comment;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -163,28 +171,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             userId = (TextView) itemView.findViewById(R.id.userid);
             date = (TextView) itemView.findViewById(R.id.date);
             contents = (TextView) itemView.findViewById(R.id.contents);
+            like = (TextView) itemView.findViewById(R.id.like);
+            comment = (TextView) itemView.findViewById(R.id.comment);
         }
-    }
-
-    static public Bitmap ReSizing(byte[] bytes){
-        Bitmap bitmap;
-
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 4;
-        opt.inDither = true;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inTempStorage = new byte[32 * 1024];
-        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
-
-        return bitmap;
-    }
-
-    static public byte[] bitmapToByteArray( Bitmap bitmap ) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
-        return byteArray ;
     }
 }

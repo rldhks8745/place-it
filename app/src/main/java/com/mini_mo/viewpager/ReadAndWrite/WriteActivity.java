@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,13 +22,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +41,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.maps.model.LatLng;
 import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
+import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
@@ -87,19 +93,17 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     Geocoder geocoder = null;
     Animation ani=null;
 
-    ImageView usericon,getloction,history,video,img,send, back,tapmap;
+    Spinner category;
+
+    ImageView usericon,getlocation,history,video,img,send, back,tapmap;
     TextView location,userid;
     EditText content;
 
     LinearLayout imglist;
     ArrayList<View> viewarr;
-    Bitmap bmp = null;
-    String str= null;
-
-
-    InputStream inputStream;
-
     ArrayList<String> imgurl;
+
+    int category_number;
 
     LoadingDialog loading = new LoadingDialog();
 
@@ -116,24 +120,23 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_writeboard);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-
         geocoder = new Geocoder(this);
 
         data = new Data();
         imgurl = new ArrayList<>();
 
-        //실험
-
         latitude = 0.0;
         longitude = 0.0;
-        //실험
+        category_number = 0;
 
         mc = new MediaController(this);
+
+        category = (Spinner)findViewById(R.id.spinner);
 
         send = (ImageView)findViewById(R.id.send);
         back = (ImageView)findViewById(R.id.back);
         usericon = (ImageView)findViewById(R.id.usericon);
-        getloction = (ImageView)findViewById(R.id.getloction);
+        getlocation = (ImageView)findViewById(R.id.getlocation);
         history = (ImageView)findViewById(R.id.history);
         img = (ImageView)findViewById(R.id.img);
         video = (ImageView)findViewById(R.id.video);
@@ -145,7 +148,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         userid = (TextView)findViewById(R.id.userid);
         content = (EditText)findViewById(R.id.content);
 
-
         viewarr = new ArrayList();
 
         Setting();
@@ -154,9 +156,21 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         back.setOnClickListener(this);
         img.setOnClickListener(this);
         video.setOnClickListener(this);
-        getloction.setOnClickListener(this);
+        getlocation.setOnClickListener(this);
         history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
+
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                category_number = position;
+                Log.i("카테고리 넘버", position+"");            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @SuppressLint("ResourceType")
@@ -191,7 +205,11 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.tapmap:
-                Intent cintent = new Intent(this, ClusterMap.class);
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                tapmap.startAnimation(ani);
+
+
+                Intent cintent = new Intent(this, Selectlocationmap.class);
                 startActivityForResult(cintent,TAPMAP);
 
                 break;
@@ -219,7 +237,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 loadingDialog.progressON( this, "보내는 중..." );*/
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                getloction.startAnimation(ani);
+                send.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
 
@@ -230,9 +248,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     String str;
                     if(Store.check){
-                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl);
+                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl,category_number);
                     }else {
-                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl);
+                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl,category_number);
                     }
                     if(str.equals("-3")){
                         Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
@@ -250,10 +268,10 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
 
-            case R.id.getloction:
+            case R.id.getlocation:
 
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                getloction.startAnimation(ani);
+                getlocation.startAnimation(ani);
 
                 location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
                 MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );

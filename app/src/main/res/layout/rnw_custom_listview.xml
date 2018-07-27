@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/listlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -40,5 +41,13 @@
                 android:hint="contents"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            app:srcCompat="@android:drawable/ic_delete" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -80,11 +80,18 @@
                 android:id="@+id/userid"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="8"
+                android:layout_weight="5"
                 android:gravity="center_vertical"
                 android:text="user id"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:entries="@array/category" />
         </LinearLayout>
 
         <LinearLayout
@@ -127,7 +134,7 @@
                     android:textColor="#000000" />
 
                 <ImageView
-                    android:id="@+id/getloction"
+                    android:id="@+id/getlocation"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -152,6 +159,7 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:scrollbars="none"
                 android:layout_weight="2">
 
                 <LinearLayout

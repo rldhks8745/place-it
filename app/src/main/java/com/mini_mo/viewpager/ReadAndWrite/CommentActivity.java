@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
@@ -32,10 +34,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
-
-    RoundedBitmapDrawable roundedBitmapDrawable;
-
     Data data;
     User_Info user_info;
 
@@ -63,8 +64,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         comment_list = (ListView)findViewById(R.id.listview);
         title = (EditText)findViewById(R.id.comment);
-        myadapter = new CustomAdapter(this);
-
+        myadapter = new CustomAdapter(this, this);
 
         comment_list.setAdapter(myadapter);
 
@@ -72,63 +72,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         try {
             rci = data.readComment(String.valueOf(Store.board_num));
-            user_info = data.read_myPage(Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if(user_info.user_photo!=null) {
-            Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                            roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                            roundedBitmapDrawable.setCircular(true);
-
-                            myprofile.setImageDrawable(roundedBitmapDrawable);
-                        }
-                    });
+        for(int i=0;i<rci.size();i++) {
+            Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
         }
 
-        roundedBitmapDrawable = null;
         count = 0;
         temp = 0;
 
-
-
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
-            final String content = readCommentInfo.comment_content;
-            final String id = rci.get(i).comment_id;
 
             Log.i("사진"+i , rci.get(i).user_photo);
 
-            try {
-                user_info = data.read_myPage(rci.get(i).comment_id);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
 
-            if(user_info.user_photo!=null) {
-
-                Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                                roundedBitmapDrawable.setCircular(true);
-
-                                myadapter.addItem(roundedBitmapDrawable,content,id);
-                            }
-                        });
-
-            }
-
-            roundedBitmapDrawable = null;
+            myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
             count++;
         }
 
@@ -167,24 +129,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                                Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
 
-                            if (user_info.user_photo != null) {
+                                myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
 
-                                Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                                        .into(new SimpleTarget<Bitmap>() {
-                                            @Override
-                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                                Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
-
-                                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                                                roundedBitmapDrawable.setCircular(true);
-                                            }
-                                        });
-
-                                myadapter.addItem(roundedBitmapDrawable, readCommentInfo.comment_content, readCommentInfo.comment_id);
-                            }
-
-                            roundedBitmapDrawable = null;
                             count++;
                         }
 
@@ -220,29 +168,4 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         return formatDate;
     }
-
-    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
-    public Bitmap ReSizing(byte[] bytes){
-        Bitmap bitmap;
-
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        opt.inSampleSize = 6;
-        opt.inDither = true;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inTempStorage = new byte[32 * 1024];
-        bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,opt);
-
-        return bitmap;
-    }
-
-    public byte[] bitmapToByteArray( Bitmap bitmap ) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
-        return byteArray ;
-    }
-
-
 }

@@ -16,6 +16,29 @@ public class Data {
 
     }
 
+    public String deleteComment(int board_num , int comment_num) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "delete_comment");
+        c_d.put("comment_num",comment_num);
+        c_d.put("board_num",board_num);
+        obj.put("delete_comment_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
 
     public ArrayList<ListViewItemData> search_board(String tag) throws JSONException //매개변수 = 검색할 태그 (태그 하나만 검색가능.)(#부분 필요 x)
     {
@@ -168,7 +191,7 @@ public class Data {
         return r;
     }
 
-    public String plus_good(int board_num) throws JSONException
+    public String plus_good(int board_num,String user_name) throws JSONException
     {
         JSONObject jobj = new JSONObject();
         JSONObject result = null;
@@ -177,6 +200,7 @@ public class Data {
         JSONObject login_data = new JSONObject();
 
         login_data.put("board_num",board_num+"");
+        login_data.put("user_name",user_name);
 
         jobj.put("flag","plus_good");
         jobj.put("plus_good_data", login_data);
@@ -599,6 +623,8 @@ public class Data {
                 t.longitude = tjo.getDouble("board_longitude");
                 t.user_id = tjo.getString("user_id");
                 t.user_photo = tjo.getString("user_photo");
+                t.category = tjo.getInt("category");
+                t.comment_cnt = tjo.getInt("comment_cnt");
 
                 fl.add(t);
             }
@@ -704,6 +730,8 @@ public class Data {
                 t.longitude = tjo.getDouble("board_longitude");
                 t.user_id = tjo.getString("user_id");
                 t.user_photo = tjo.getString("user_photo");
+                t.category = tjo.getInt("category");
+                t.comment_cnt = tjo.getInt("comment_cnt");
 
                 fl.add(t);
             }
@@ -927,7 +955,7 @@ public class Data {
     }
 
 
-    public ReadBoardInfo readBoardInfo(String board_num) throws JSONException
+    public ReadBoardInfo readBoardInfo(String board_num,String user_name) throws JSONException
     {
         ReadBoardInfo rbi = new ReadBoardInfo();
 
@@ -936,6 +964,7 @@ public class Data {
         JSONObject b_n = new JSONObject();
         obj.put("flag","ReadBoardInfo");
         b_n.put("Board_num",board_num);
+        b_n.put("user_name",user_name);
         obj.put("Board_Info_data",b_n);
 
         try
@@ -974,6 +1003,7 @@ public class Data {
             rbi.longitude = result.getDouble("longitude");
             rbi.user_id = result.getString("user_id");
             rbi.user_photo = result.getString("user_photo");
+            rbi.is_good = result.getInt("is_good");
 
             int count = result.getInt("img_count");
 
@@ -1003,7 +1033,7 @@ public class Data {
 
 
 
-    public String writeBorard(String Content, String user_name, String tag, double latitude , double longitute, ArrayList<String> urls) throws JSONException {
+    public String writeBorard(String Content, String user_name, String tag, double latitude , double longitute,ArrayList<String> urls,int category) throws JSONException {
         String r = "-3";
         String board_number = "-30";
 
@@ -1016,6 +1046,7 @@ public class Data {
         b_d.put("tag",tag);
         b_d.put("latitude",latitude);
         b_d.put("longitude",longitute);
+        b_d.put("category",category);
         obj.put("Board_data", b_d);
 
         try {

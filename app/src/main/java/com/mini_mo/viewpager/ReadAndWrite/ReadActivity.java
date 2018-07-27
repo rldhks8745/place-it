@@ -18,12 +18,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,18 +60,20 @@ import java.util.Date;
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
-public class ReadActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReadActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
 
     Activity activity;
     InputStream inputStream;
-    ArrayList<View> viewarr;
+    ArrayList<FrameLayout> videoarr;
+    ArrayList<ImageView> imagearr;
     View.OnClickListener listener;
     Data data;
     User_Info user_info;
     int count;
+    boolean like;
 
     //실험용
 
@@ -126,9 +131,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         data = new Data();
 
         count = 0;
+        like = false;
 
         listener = this;
-        viewarr = new ArrayList<>();
+        videoarr = new ArrayList<>();
+        imagearr = new ArrayList<>();
 
         change = (ImageButton)findViewById(R.id.change);
         delete = (ImageButton)findViewById(R.id.delete);
@@ -139,7 +146,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //String.valueOf(Store.board_num)
         try {
             //String.valueOf(Store.board_num)
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num),Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -149,10 +156,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             bar.removeView(change);
         }
 
-        userid.setText(rbi.user_id.toString());
-        content.setText(rbi.content.toString());
+        Log.i("좋아요",rbi.is_good+"");
 
-
+        if(rbi.is_good == 0){
+            like = true;
+            like_button.setImageResource(R.drawable.like_true);
+        }
 
         if(rbi.b_move != null) {
 
@@ -160,17 +169,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 //실험용
 
                 Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
-
+                Log.i("높이높이", imglist.getHeight()+"");
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 
                 video_list.add(rbi.b_move.get(i));
 
-                viewarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i)));
-                viewarr.get(viewarr.size()-1).setId((20+(viewarr.size()-1)));
-                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
+                videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i),imglist.getHeight()));
+                videoarr.get(videoarr.size()-1).setId((20+(videoarr.size()-1)));
+                videoarr.get(videoarr.size()-1).setOnTouchListener(this);
 
-                imglist.addView(viewarr.get(viewarr.size() - 1));
-
+                imglist.addView(videoarr.get(videoarr.size() - 1));
             }
         }
 
@@ -178,19 +186,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < rbi.b_photos.size(); i++) {
 
-                ImageButton button = NewImageCrate.ReadnewViewCreate(this); //여러개라서 리스트에 넣기
-                button.setId(i);
-                button.setOnClickListener(this);
+                imagearr.add(NewImageCrate.ReadnewViewCreate(this,imglist.getHeight())); //여러개라서 리스트에 넣기
+                imagearr.get(imagearr.size()-1).setId(imagearr.size()-1);
+                imagearr.get(imagearr.size()-1).setOnClickListener(this);
 
-                imglist.addView(button);
+                imglist.addView(imagearr.get(imagearr.size()-1));
 
                 Glide.with(this)
                         .load( rbi.b_photos.get(i))
                         .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
-                        .into( button );
-
-
-
+                        .into(imagearr.get(imagearr.size()-1));
 
                 //실험용
 
@@ -198,24 +203,19 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
-               /* Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
+                Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 Bitmap bitmap = ReSizing( bitmapToByteArray( resource ) );
-
-                                viewarr.add(NewImageCrate.ReadnewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
-
-                                Log.i("buttons 크기 : ", viewarr.size()+"");
-                                viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
-                                viewarr.get(viewarr.size()-1).setOnClickListener(listener);
-
                                 Store.readboard_image.add(bitmap);
-                                imglist.addView(viewarr.get(viewarr.size() - 1));
                             }
-                        });*/
+                        });
             }
         }
+
+        userid.setText(rbi.user_id.toString());
+        content.setText(rbi.content.toString());
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
 
@@ -251,6 +251,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         change.setOnClickListener(this);
         delete.setOnClickListener(this);
         profile.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @SuppressLint("ResourceType")
@@ -326,15 +332,36 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                 like_button.startAnimation(ani);
 
-                try {
-                    data.plus_good(Store.board_num);
+                if(like){
+                    try {
+                        data.plus_good(Store.board_num, Store.userid);
 
-                    int likecount = Integer.parseInt(like_count.getText().toString());
-                    like_count.setText(String.valueOf((likecount+1)));
+                        int likecount = Integer.parseInt(like_count.getText().toString());
+                        like_count.setText(String.valueOf((likecount - 1)));
 
-                    Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "좋아요 취소", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    like_button.setImageResource(R.drawable.heart);
+
+                    like = false;
+                }else {
+                    try {
+                        data.plus_good(Store.board_num, Store.userid);
+
+                        int likecount = Integer.parseInt(like_count.getText().toString());
+                        like_count.setText(String.valueOf((likecount + 1)));
+
+                        Toast.makeText(getApplicationContext(), "좋아요!", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    like_button.setImageResource(R.drawable.like_true);
+
+                    like = true;
                 }
                 break;
         }
@@ -347,7 +374,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-    //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
     static public Bitmap ReSizing(byte[] bytes){
         Bitmap bitmap;
 
@@ -368,5 +394,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
         byte[] byteArray = stream.toByteArray() ;
         return byteArray ;
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onTouch(View v, MotionEvent motionEvent) {
+
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("video",String.valueOf(Uri.parse(video_list.get((v.getId()-20)))));
+        startActivity(intent);
+
+        return false;
     }
 }

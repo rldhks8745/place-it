@@ -30,10 +30,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.mini_mo.viewpager.Camera.LoadingDialog;
+import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ReadBoardInfo;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
@@ -55,10 +59,13 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
     final int SELECT_VIDEO = 200;
+    final int TAPMAP = 300;
 
     private String selectedPath;
 
     HashtagSpans hashtagSpans;
+    Animation ani=null;
+    LoadingDialog loading = new LoadingDialog();
 
     Data data;
 
@@ -75,23 +82,24 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     ArrayList<String> arr_delete_url;
 
     ImageList imgarrlist;
-    Animation ani=null;
 
     InputStream inputStream;
 
-    ImageView usericon,send,back,img,video;
+    ImageView usericon,send,back,img,video,getlocation,tapmap,history;
 
     LinearLayout imglayout;
 
     EditText content;
 
-    TextView userid;
+    TextView userid,location;
 
     ReadBoardInfo rbi;
 
+    private double latitude,longitude;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chage);
+        setContentView(R.layout.activity_writeboard);
 
         //서버연결 부분
 
@@ -111,21 +119,33 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         img = (ImageView)findViewById(R.id.img);
         video = (ImageView)findViewById(R.id.video);
         usericon=(ImageView)findViewById(R.id.usericon);
+        getlocation = (ImageView)findViewById(R.id.getlocation);
+        tapmap = (ImageView)findViewById(R.id.tapmap);
+        history = (ImageView)findViewById(R.id.history);
 
         userid = (TextView)findViewById(R.id.userid);
+        location = (TextView)findViewById(R.id.location);
 
         imglayout = (LinearLayout)findViewById(R.id.linear);
 
         imgarrlist = new ImageList();
 
+        latitude = 0.0;
+        longitude = 0.0;
+
         listener = this;
         longlistener = this;
 
         try {
-            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num));
+            rbi = new Data().readBoardInfo(String.valueOf(Store.board_num),Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        location.setText(AddressTransformation.getAddress(this, rbi.latitude, rbi.longitude));
+
+        Log.i("동영상 길이", rbi.b_move.size()+"");
+        Log.i("사진 길이", rbi.b_photos.size()+"");
 
         if(rbi.user_photo != null){
             Glide.with(this).load(rbi.user_photo).apply(bitmapTransform(new CircleCrop())).into(usericon);
@@ -135,8 +155,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         if(rbi.b_move != null) {
 
             for (int i = 0; i < rbi.b_move.size(); i++) {
-                //실험용
                 origin_url.add(rbi.b_move.get(i));
+
+                //실험용
                 Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
@@ -151,10 +172,13 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         }
 
         if(rbi.b_photos != null) {
-            //서버에서 이미지를 받아 ImageView에 넣으니 아웃오브메모리 뜬다. 고쳐야됨
+
             for (int i = 0; i < rbi.b_photos.size(); i++) {
+
                 //실험용
                 origin_url.add(rbi.b_photos.get(i));
+
+                Log.i("이미지 URL",rbi.b_photos.get(i)+"");
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
@@ -163,7 +187,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
-                                Log.i("이미지 URL",rbi.b_photos.get(viewarr.size())+"");
+
 
                                 Bitmap bitmap = ReSizing(bitmapToByteArray(resource));
 
@@ -172,12 +196,10 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                                 Log.i("buttons 크기 : ", viewarr.size()+"");
                                 viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
                                 viewarr.get(viewarr.size()-1).setOnLongClickListener(longlistener);
-                                Store.readboard_image.add(bitmap);
+
                                 imglayout.addView(viewarr.get(viewarr.size() - 1));
                             }
                         });
-
-
             }
         }
         //서버연결 부분
@@ -192,6 +214,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         back.setOnClickListener(this);
         img.setOnClickListener(this);
         video.setOnClickListener(this);
+        getlocation.setOnClickListener(this);
+        tapmap.setOnClickListener(this);
+        history.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")
@@ -273,6 +298,39 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                         }).create().show();
                 break;
 
+            case R.id.getlocation:
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                getlocation.startAnimation(ani);
+
+                latitude = MainPageFragment.getInstance().latitude;
+                longitude = MainPageFragment.getInstance().longitude;
+
+                if( MainPageFragment.getInstance().latitude == 0.0 )
+                    loading.progressON( this, "위치 수신 준비중");
+
+                break;
+
+            case R.id.history:
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                history.startAnimation(ani);
+
+                Intent intent = new Intent(this,LoadLocateActivity.class);
+                intent.putExtra("check",1);
+                startActivity(intent);
+                finish();
+
+                break;
+
+            case R.id.tapmap:
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                tapmap.startAnimation(ani);
+
+                Intent cintent = new Intent(this, ClusterMap.class);
+                startActivityForResult(cintent,TAPMAP);
+
+                break;
+
+
             case R.id.img:
 
                 int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -340,7 +398,16 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
 
-        if(resultCode == RESULT_OK){
+        if(resultCode == TAPMAP){
+            if(Store.point!=null) {
+                Log.i("위치 저장 값", Store.point.latitude + ", " + Store.point.longitude);
+                location.setText(AddressTransformation.getAddress(this, Store.point.latitude, Store.point.longitude));
+
+                latitude = Store.point.latitude;
+                longitude = Store.point.longitude;
+            }else
+                Log.i("위치 저장 값", "널 포인트");
+        }else if(resultCode == RESULT_OK){
             if(imglayout.getChildCount()<=10) {
                 switch (requestCode){
                     case SELECT_VIDEO:
