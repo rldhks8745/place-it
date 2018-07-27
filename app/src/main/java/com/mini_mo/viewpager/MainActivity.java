@@ -165,6 +165,8 @@ public class MainActivity extends AppCompatActivity{
                     return  myPageFragment;
                 case 2:
                     return new FriendListFragment();
+                case 3:
+                    return new SettingFrg();
                 default:
                     return null;
             }
@@ -172,7 +174,7 @@ public class MainActivity extends AppCompatActivity{
         @Override // ViewPager의 Page 수
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
     }
 
