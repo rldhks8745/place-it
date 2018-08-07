@@ -1,6 +1,5 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -11,14 +10,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.MainPageFragment;
 
 
@@ -60,13 +56,13 @@ public class GpsInfo extends Service implements LocationListener {
 
     @TargetApi(23)
 
-    public void setupLocation( int f ) {
+    public boolean setupLocation( int f ) {
         flag = f;
 
         if ( ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
         {
-            return;
+            return false;
         }
 
         try {
@@ -74,12 +70,10 @@ public class GpsInfo extends Service implements LocationListener {
                     .getSystemService(LOCATION_SERVICE);
 
             // GPS 정보 가져오기
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // 현재 네트워크 상태 값 알아오기
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 
             if (!isGPSEnabled && !isNetworkEnabled) {
@@ -107,6 +101,8 @@ public class GpsInfo extends Service implements LocationListener {
                 if (isGPSEnabled) {
                     if (location == null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, this);
+                        if( MainPageFragment.getInstance().latitude == 0.0 )
+                            MainPageFragment.getInstance().loading.progressON( MainPageFragment.getInstance().getActivity(), "위치 수신 준비중");
 
                         if (locationManager != null) {
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -122,6 +118,7 @@ public class GpsInfo extends Service implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 

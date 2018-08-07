@@ -190,7 +190,6 @@ public class CameraActivity extends AppCompatActivity {
         display.getSize( size );
         mScreenWIdth = size.x; // 코멘트 표시될때 화면 넘어서까지 부드럽게 이동하기 위해서
         mScreenHeight = size.y;
-        int a = camera_rel.getHeight();
     }
 
     @Override

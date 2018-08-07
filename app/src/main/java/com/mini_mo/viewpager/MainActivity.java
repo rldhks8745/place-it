@@ -1,18 +1,22 @@
 package com.mini_mo.viewpager;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -193,7 +197,49 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if( grantResults.length > 0)
+        {
+            // 권한허가를 받았는가
+            boolean cameraAccepted = ( grantResults[0] == PackageManager.PERMISSION_GRANTED );
+            if( !cameraAccepted )
+            {
+                return;
+            }
+            else
+            {
+                if (requestCode == 100)
+                {
+                    if( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
+                    {
+                        ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 101 );
+                    }
+                    else
+                    {
+                        // GPS 사용유무 가져오기
+                        if (!MainPageFragment.getInstance().gps.isGetLocation())
+                        {
+                            // GPS 를 사용할수 없으므로
+                            MainPageFragment.getInstance().loading.progressOFF();
+                            MainPageFragment.getInstance().gps.showSettingsAlert();
+                        }
+                    }
+
+                }
+                else if (requestCode == 101)
+                {
+                    // GPS 사용유무 가져오기
+                    if (!MainPageFragment.getInstance().gps.isGetLocation())
+                    {
+                        // GPS 를 사용할수 없으므로
+                        MainPageFragment.getInstance().loading.progressOFF();
+                        MainPageFragment.getInstance().gps.showSettingsAlert();
+                    }
+                }
+            }
+        }
     }
+
 
 
 }

@@ -17,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
 public class MainPageFragment extends Fragment{
 
     //GPS파트
-    private GpsInfo gps;
+    public GpsInfo gps;
     public double latitude = 0.0;
     public double longitude = 0.0;
     private ClusterMap clusterMap;
@@ -54,7 +53,7 @@ public class MainPageFragment extends Fragment{
     ArrayList<ListViewItemData> near;
     LinearLayout linearLayout;
 
-    LoadingDialog loading;
+    public LoadingDialog loading;
 
     public static MainPageFragment getInstance()
     {
@@ -83,9 +82,6 @@ public class MainPageFragment extends Fragment{
 
         location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
         getLocation( GpsInfo.MAINPAGE );
-
-        if( latitude == 0.0 )
-            loading.progressON( this.getActivity(), "위치 수신 준비중");
 
         return rootView;
     }
@@ -185,28 +181,74 @@ public class MainPageFragment extends Fragment{
 
     public void getLocation( int flag )
     {
-        gps.setupLocation( flag );
-
-        if( ContextCompat.checkSelfPermission( this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission( this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
+        if( !gps.setupLocation( flag ) ) // 정상적으로 gps가 실행되지 않으면
         {
-            ActivityCompat.requestPermissions( MainActivity.getInstance(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            ActivityCompat.requestPermissions( MainActivity.getInstance(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            if (ContextCompat.checkSelfPermission(this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            } else {
+                if (ContextCompat.checkSelfPermission(this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+                } else {
+                    // GPS 사용유무 가져오기
+                    if (!gps.isGetLocation()) {
+                        // GPS 를 사용할수 없으므로
+                        loading.progressOFF();
+                        gps.showSettingsAlert();
+                    }
+                }
+            }
         }
         else
         {
-            // GPS 사용유무 가져오기
-            if ( !gps.isGetLocation() ) {
-                // GPS 를 사용할수 없으므로
-                loading.progressOFF();
-                gps.showSettingsAlert();
-            }
+            loading.progressON( this.getActivity(), "GPS 수신중");
         }
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if( grantResults.length > 0)
+        {
+            // 권한허가를 받았는가
+            boolean cameraAccepted = ( grantResults[0] == PackageManager.PERMISSION_GRANTED );
+            if( cameraAccepted )
+            {
+                return;
+            }
+            else
+            {
+                if (requestCode == 100)
+                {
+                    if( ContextCompat.checkSelfPermission( this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
+                    {
+                        ActivityCompat.requestPermissions( this.getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 101 );
+                    }
+                    else
+                    {
+                        // GPS 사용유무 가져오기
+                        if (!gps.isGetLocation())
+                        {
+                            // GPS 를 사용할수 없으므로
+                            loading.progressOFF();
+                            gps.showSettingsAlert();
+                        }
+                    }
+
+                }
+                else if (requestCode == 101)
+                {
+                    // GPS 사용유무 가져오기
+                    if (!gps.isGetLocation())
+                    {
+                        // GPS 를 사용할수 없으므로
+                        loading.progressOFF();
+                        gps.showSettingsAlert();
+                    }
+                }
+            }
+        }
     }
 
     @Override
