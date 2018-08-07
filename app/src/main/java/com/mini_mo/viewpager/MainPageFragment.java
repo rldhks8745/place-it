@@ -36,6 +36,11 @@ import java.util.ArrayList;
 
 public class MainPageFragment extends Fragment{
 
+    public static final int START_UP = 0;
+    public static final int MAP_UP = 1;
+    // 어떤 글을 가지고 왔나
+    public int whatContent = START_UP;
+
     //GPS파트
     public GpsInfo gps;
     public double latitude = 0.0;
@@ -51,7 +56,6 @@ public class MainPageFragment extends Fragment{
     private static MainPageFragment instance = null;
 
     ArrayList<ListViewItemData> near;
-    LinearLayout linearLayout;
 
     public LoadingDialog loading;
 
@@ -80,8 +84,15 @@ public class MainPageFragment extends Fragment{
         loading = new LoadingDialog();
         gps = new GpsInfo( getContext() );
 
-        location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
-        getLocation( GpsInfo.MAINPAGE );
+        location.setText( AddressTransformation.getAddress( instance.getActivity(), latitude, longitude ) );
+
+        if( whatContent != MAP_UP ) // 맵을통해 사용자가 content를 가져왔으면
+        {
+            if( latitude == 0.0 )
+                getLocation(GpsInfo.MAINPAGE);
+            else
+                nearSearch();
+        }
 
         return rootView;
     }
@@ -146,7 +157,12 @@ public class MainPageFragment extends Fragment{
         try{
             near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
             Store.sendboard = near;
-            recyclerListView.add(near);
+            if(recyclerListView.listViewItems!=null)
+            {
+                recyclerListView.listViewItems.clear();
+                recyclerListView.add(near);
+                recyclerListView.adapter.notifyDataSetChanged();
+            }
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -158,8 +174,12 @@ public class MainPageFragment extends Fragment{
         super.onResume();
         if(recyclerListView.listViewItems!=null)
             recyclerListView.listViewItems.clear();
+
         if(Store.sendboard!=null)
+        {
             recyclerListView.add(Store.sendboard);
+            recyclerListView.adapter.notifyDataSetChanged();
+        }
     }
 
     public void setTextLocation( Location lo )

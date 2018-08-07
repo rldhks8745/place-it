@@ -33,7 +33,7 @@ public class YourPageActivity extends AppCompatActivity {
 
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
-    private User_Info user_info;
+    public User_Info user_info;
 
     String loginId;
     String yourId;
@@ -44,8 +44,6 @@ public class YourPageActivity extends AppCompatActivity {
     private TextView userId;
     private TextView message;
     private ImageView usericon;
-
-    public Bitmap icon_bitmap;
 
     static public YourPageActivity getInstance()
     {
@@ -115,7 +113,7 @@ public class YourPageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 clickImage = true;
 
-                Intent intent = new Intent( YourPageActivity.getInstance() , ReadBoard_Image_Activity.class);
+                Intent intent = new Intent( YourPageActivity.getInstance() , ProfileImageActivity.class);
                 startActivity(intent);
             }
         });
@@ -157,11 +155,5 @@ public class YourPageActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if( icon_bitmap != null )
-        {
-            icon_bitmap.recycle();
-            icon_bitmap = null;
-        }
     }
 }

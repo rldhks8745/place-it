@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
@@ -134,6 +135,7 @@ public class ClusterMap extends AppCompatActivity
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
+
     }
 
 
@@ -666,7 +668,7 @@ public class ClusterMap extends AppCompatActivity
                 if(clustericon!=null){
                     Store.sendboard = clustericon;
                 }
-
+                MainPageFragment.getInstance().whatContent = MainPageFragment.MAP_UP;
                 finish();
 
                 break;

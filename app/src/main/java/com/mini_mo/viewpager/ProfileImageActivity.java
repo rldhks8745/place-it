@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 
 public class ProfileImageActivity extends AppCompatActivity {
     ImageView profileImage;
@@ -14,6 +16,10 @@ public class ProfileImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         profileImage = (ImageView)findViewById(R.id.profile_image);
-        profileImage.setImageBitmap( YourPageActivity.getInstance().icon_bitmap );
+
+        Glide.with( this )
+                .load( YourPageActivity.getInstance().user_info.user_photo )
+                //.apply( new RequestOptions().placeholder( R.drawable.user ).error( R.drawable.user ))
+                .into( profileImage );
     }
 }
