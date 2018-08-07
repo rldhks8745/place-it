@@ -1,10 +1,15 @@
 package com.mini_mo.viewpager.Camera;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 import android.support.v7.widget.AppCompatSeekBar;
+
+import com.mini_mo.viewpager.R;
 
 public class VerticalSeekbar extends AppCompatSeekBar {
 
@@ -28,6 +33,13 @@ public class VerticalSeekbar extends AppCompatSeekBar {
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(heightMeasureSpec, widthMeasureSpec);
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
+
+        setThumbOffset(1);
+    }
+
+    @Override
+    public void setThumb(Drawable thumb) {
+        super.setThumb(thumb);
     }
 
     protected void onDraw(Canvas c) {
