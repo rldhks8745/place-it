@@ -289,7 +289,7 @@ public class Data {
 
     }
 
-    public String change_board(int board_num, String content, String tag,ArrayList<String> addPhoto,ArrayList<String> delPhoto) throws JSONException {
+    public String change_board(int board_num, String content,double longitude,double latitude,String tag,ArrayList<String> addPhoto,ArrayList<String> delPhoto) throws JSONException {
         String r = "-3";
         String board_number = "-30";
 
@@ -300,6 +300,8 @@ public class Data {
         b_d.put("content", content);
         b_d.put("board_num", board_num);
         b_d.put("tag", tag);
+        b_d.put("longitude", longitude);
+        b_d.put("latitude", latitude);
         obj.put("change_board_data", b_d);
 
         try {
