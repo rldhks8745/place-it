@@ -156,7 +156,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             bar.removeView(change);
         }
 
-        Log.i("좋아요",rbi.is_good+"");
 
         if(rbi.is_good == 0){
             like = true;
@@ -166,12 +165,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         if(rbi.b_move != null) {
 
             for (int i = 0; i < rbi.b_move.size(); i++) {
-                //실험용
-
-                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
-                Log.i("높이높이", imglist.getHeight()+"");
-                //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
-
                 video_list.add(rbi.b_move.get(i));
 
                 videoarr.add(NewImageCrate.ReadnewVideoCreate(this,rbi.b_move.get(i),imglist.getHeight()));
@@ -196,10 +189,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         .load( rbi.b_photos.get(i))
                         .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
                         .into(imagearr.get(imagearr.size()-1));
-
-                //실험용
-
-                Log.i("photo uri", String.valueOf(Uri.parse(rbi.b_photos.get(i))));
 
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
@@ -264,14 +253,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         if (0 <= v.getId() && v.getId() <= 9) { //0 ~ 9 번 째 클릭시
-            Log.i("Click", "클릭 하셨습니다.");
 
             Intent intent = new Intent(this, ReadBoard_Image_Activity.class);
             startActivity(intent);
         }
 
         if (20 <= v.getId() && v.getId() <= 29) { // 번 째 클릭시
-            Log.i("Click", "클릭 하셨습니다.");
 
             Intent intent = new Intent(this, VideoActivity.class);
             intent.putExtra("video",String.valueOf(Uri.parse(video_list.get((v.getId()-20)))));

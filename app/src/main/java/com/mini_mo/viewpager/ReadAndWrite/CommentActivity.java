@@ -86,8 +86,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
 
-            Log.i("사진"+i , rci.get(i).user_photo);
-
             Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
 
             myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);

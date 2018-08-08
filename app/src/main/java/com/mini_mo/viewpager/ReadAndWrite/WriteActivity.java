@@ -164,7 +164,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 category_number = position;
-                Log.i("카테고리 넘버", position+"");            }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -240,10 +240,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 send.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
-
-               //hashtagSpans.getHashtags()  추출한 태그 String형
-
-                Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
 
                 try {
                     String str;
@@ -379,7 +375,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         if(resultCode == TAPMAP){
                 if(Store.point!=null) {
-                    Log.i("위치 저장 값", Store.point.latitude + ", " + Store.point.longitude);
                     location.setText(AddressTransformation.getAddress(this, Store.point.latitude, Store.point.longitude));
 
                     latitude = Store.point.latitude;

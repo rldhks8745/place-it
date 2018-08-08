@@ -83,8 +83,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     ImageList imgarrlist;
 
-    InputStream inputStream;
-
     ImageView usericon,send,back,img,video,getlocation,tapmap,history;
 
     LinearLayout imglayout;
@@ -144,9 +142,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         location.setText(AddressTransformation.getAddress(this, rbi.latitude, rbi.longitude));
 
-        Log.i("동영상 길이", rbi.b_move.size()+"");
-        Log.i("사진 길이", rbi.b_photos.size()+"");
-
         if(rbi.user_photo != null){
             Glide.with(this).load(rbi.user_photo).apply(bitmapTransform(new CircleCrop())).into(usericon);
         }else
@@ -156,9 +151,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
             for (int i = 0; i < rbi.b_move.size(); i++) {
                 origin_url.add(rbi.b_move.get(i));
-
-                //실험용
-                Log.i("video uri", String.valueOf(Uri.parse(rbi.b_move.get(i))));
 
                 //vv.setVideoURI(Uri.parse(rbi.b_photos.get(i)));
 
@@ -178,8 +170,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 //실험용
                 origin_url.add(rbi.b_photos.get(i));
 
-                Log.i("이미지 URL",rbi.b_photos.get(i)+"");
-
                 //서버에서 이미지를 Glide를 이용한 Bitmap으로 받아와 사이즈를 줄이고 이미지버튼으로 만들어준다.
                 //id 와 리스너 까지 부여해줘서 클릭시 핀치줌을 가능하게 만들었다. 2018-05-29
                 Glide.with(getApplicationContext()).asBitmap().load(rbi.b_photos.get(i))
@@ -193,7 +183,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                                 viewarr.add(NewImageCrate.WritenewImageCreate(activity, bitmap)); // 나중에 서버에서 받을땐 Bitmap 으로 바꿔야된다
 
-                                Log.i("buttons 크기 : ", viewarr.size()+"");
                                 viewarr.get(viewarr.size()-1).setId(viewarr.size()-1);
                                 viewarr.get(viewarr.size()-1).setOnLongClickListener(longlistener);
 
@@ -302,6 +291,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 getlocation.startAnimation(ani);
 
+                location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
+                MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
+
                 latitude = MainPageFragment.getInstance().latitude;
                 longitude = MainPageFragment.getInstance().longitude;
 
@@ -400,14 +392,17 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         if(resultCode == TAPMAP){
             if(Store.point!=null) {
-                Log.i("위치 저장 값", Store.point.latitude + ", " + Store.point.longitude);
                 location.setText(AddressTransformation.getAddress(this, Store.point.latitude, Store.point.longitude));
 
                 latitude = Store.point.latitude;
                 longitude = Store.point.longitude;
             }else
                 Log.i("위치 저장 값", "널 포인트");
-        }else if(resultCode == RESULT_OK){
+        }else{
+            Toast.makeText(this,"위치 선택을 취소하셨습니다..",Toast.LENGTH_SHORT).show();
+        }
+
+        if(resultCode == RESULT_OK){
             if(imglayout.getChildCount()<=10) {
                 switch (requestCode){
                     case SELECT_VIDEO:
@@ -513,7 +508,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             }
 
         }else{
-            Toast.makeText(this,"사진 선택을 취소하셨습니다.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"사진 및 동영상 선택을 취소하셨습니다.",Toast.LENGTH_SHORT).show();
         }
     }
 
