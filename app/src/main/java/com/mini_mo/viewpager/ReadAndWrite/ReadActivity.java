@@ -209,6 +209,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)
 
         if(rbi.latitude != 0.0 && rbi.longitude != 0.0){
+            Log.i("위도 경도", rbi.latitude + " , " + rbi.longitude);
             gps.setText( AddressTransformation.getAddress(this,rbi.latitude,rbi.longitude));
         }else{
             gps.setText("위치 불안정");
@@ -275,6 +276,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.change:
                 Intent intent2 = new Intent(this, ChangeBoard.class);
+
+
+
                 startActivity(intent2);
                 finish();
                 break;

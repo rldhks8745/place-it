@@ -93,6 +93,8 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     ReadBoardInfo rbi;
 
+    int select;
+
     private double latitude,longitude;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,17 +130,19 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         imgarrlist = new ImageList();
 
-        latitude = 0.0;
-        longitude = 0.0;
-
         listener = this;
         longlistener = this;
+
+        select = 0;
 
         try {
             rbi = new Data().readBoardInfo(String.valueOf(Store.board_num),Store.userid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        latitude = rbi.latitude;
+        longitude = rbi.longitude;
 
         location.setText(AddressTransformation.getAddress(this, rbi.latitude, rbi.longitude));
 
@@ -249,14 +253,18 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
 
                 try {
-                   String str = data.change_board(Store.board_num,content.getText().toString(),hashtagSpans.getHashtags().toString(),latitude,longitude,imgurl,arr_delete_url);
+                    Log.i("글 수정 된거",content.getText().toString());
+                    Log.i("게시판 번호", Store.board_num+"");
+                    Log.i("위도 경도", latitude+ ",       "+longitude+"");
+
+                   String str = data.change_board(Store.board_num,content.getText().toString(),hashtagSpans.getHashtags().toString(),longitude,latitude,imgurl,arr_delete_url);
 
                    //리턴값에 따라서 글 수정이 성공인지 실패인지 알려준다.
                     if(str.equals("1")){
-                        Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"글이 수정이 되었습니다.",Toast.LENGTH_SHORT).show();
 
                     }else{
-                        Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"글 수정이 실패하였습니다.",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -292,7 +300,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 getlocation.startAnimation(ani);
 
                 location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
-                MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
+                MainPageFragment.getInstance().getLocation( GpsInfo.MAINPAGE );
 
                 latitude = MainPageFragment.getInstance().latitude;
                 longitude = MainPageFragment.getInstance().longitude;
@@ -316,6 +324,8 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
             case R.id.tapmap:
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 tapmap.startAnimation(ani);
+
+                select = 3;
 
                 Intent cintent = new Intent(this, ClusterMap.class);
                 startActivityForResult(cintent,TAPMAP);
@@ -346,6 +356,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                     if(viewarr.size() <= 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         img.startAnimation(ani);
+
+                        select = 1;
+
                         //사진 추가하기
                         Intent imgadd = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);//사진을 여러개 선택할수 있도록 한다
                         imgadd.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -373,6 +386,9 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                     if(viewarr.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         video.startAnimation(ani);
+
+                        select = 2;
+
                         //사진 추가하기
                         Intent videointent = new Intent();
                         videointent.setType("video/*");
@@ -398,11 +414,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 longitude = Store.point.longitude;
             }else
                 Log.i("위치 저장 값", "널 포인트");
-        }else{
-            Toast.makeText(this,"위치 선택을 취소하셨습니다..",Toast.LENGTH_SHORT).show();
-        }
-
-        if(resultCode == RESULT_OK){
+        }else if(resultCode == RESULT_OK){
             if(imglayout.getChildCount()<=10) {
                 switch (requestCode){
                     case SELECT_VIDEO:
@@ -507,8 +519,15 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(this,"최대 10장까지 올리실 수 있어요!.",Toast.LENGTH_SHORT).show();
             }
 
-        }else{
-            Toast.makeText(this,"사진 및 동영상 선택을 취소하셨습니다.",Toast.LENGTH_SHORT).show();
+        }else if(select == 1){
+            select = 0;
+            Toast.makeText(this,"사진 선택을 취소하셨습니다.",Toast.LENGTH_SHORT).show();
+        }else if(select == 2) {
+            select = 0;
+            Toast.makeText(this, "동영상 선택을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
+        }else if(select == 3) {
+            select = 0;
+            Toast.makeText(this, "위치 선택을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 

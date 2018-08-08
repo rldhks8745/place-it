@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class SaveLocateActivity extends AppCompatActivity implements View.OnClic
 
     EditText title;
     Button save;
-    ImageButton back;
+    ImageView back;
 
     LocateListviewAdapter locateadapter;
     ListView locatelist;
@@ -63,7 +64,7 @@ public class SaveLocateActivity extends AppCompatActivity implements View.OnClic
 
         title = (EditText)findViewById(R.id.title);
         save = (Button)findViewById(R.id.save);
-        back = (ImageButton)findViewById(R.id.back);
+        back = (ImageView)findViewById(R.id.back);
 
         data = new Data();
 
