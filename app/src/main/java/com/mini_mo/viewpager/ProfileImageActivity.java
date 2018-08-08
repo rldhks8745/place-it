@@ -14,8 +14,9 @@ public class ProfileImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.yourpage_image);
 
-        profileImage = (ImageView)findViewById(R.id.profile_image);
+        profileImage = (ImageView)findViewById(R.id.profile_img);
 
         Glide.with( this )
                 .load( YourPageActivity.getInstance().user_info.user_photo )
