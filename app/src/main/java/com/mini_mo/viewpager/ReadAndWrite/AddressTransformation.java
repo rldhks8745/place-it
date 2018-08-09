@@ -39,8 +39,6 @@ public class AddressTransformation {
 
                 String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
 
-                Log.i("주소 전체 : ", list.get(0).toString());
-
                 return str;
             }
 

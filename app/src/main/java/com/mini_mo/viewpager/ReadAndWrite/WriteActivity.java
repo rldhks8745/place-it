@@ -103,7 +103,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
     ArrayList<View> viewarr;
     ArrayList<String> imgurl;
 
-    int category_number;
+    int category_number,select;
 
     LoadingDialog loading = new LoadingDialog();
 
@@ -128,6 +128,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         latitude = 0.0;
         longitude = 0.0;
         category_number = 0;
+        select = 0;
 
         mc = new MediaController(this);
 
@@ -164,7 +165,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 category_number = position;
-                Log.i("카테고리 넘버", position+"");            }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -208,6 +209,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 tapmap.startAnimation(ani);
 
+                select = 3;
 
                 Intent cintent = new Intent(this, Selectlocationmap.class);
                 startActivityForResult(cintent,TAPMAP);
@@ -240,10 +242,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 send.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
-
-               //hashtagSpans.getHashtags()  추출한 태그 String형
-
-                Log.i("태그 ", (hashtagSpans.getHashtags().toString()+"#"));
 
                 try {
                     String str;
@@ -323,6 +321,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     if(viewarr.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         img.startAnimation(ani);
+
+                        select = 1;
+
                         //사진 추가하기
                         Intent imgadd = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);//사진을 여러개 선택할수 있도록 한다
                         imgadd.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -350,6 +351,9 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     if(viewarr.size() < 10) {
                         ani = AnimationUtils.loadAnimation(this, R.anim.button_anim);
                         video.startAnimation(ani);
+
+                        select = 2;
+
                         //사진 추가하기
                         Intent videointent = new Intent();
                         videointent.setType("video/*");
@@ -379,7 +383,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
         if(resultCode == TAPMAP){
                 if(Store.point!=null) {
-                    Log.i("위치 저장 값", Store.point.latitude + ", " + Store.point.longitude);
                     location.setText(AddressTransformation.getAddress(this, Store.point.latitude, Store.point.longitude));
 
                     latitude = Store.point.latitude;
@@ -483,8 +486,15 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(this,"최대 10장까지 올리실 수 있어요!.",Toast.LENGTH_SHORT).show();
             }
 
-        }else{
+        }else if(select == 1){
+            select = 0;
             Toast.makeText(this,"사진 선택을 취소하셨습니다.",Toast.LENGTH_SHORT).show();
+        }else if(select == 2) {
+            select = 0;
+            Toast.makeText(this, "동영상 선택을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
+        }else if(select == 3) {
+            select = 0;
+            Toast.makeText(this, "위치 선택을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 

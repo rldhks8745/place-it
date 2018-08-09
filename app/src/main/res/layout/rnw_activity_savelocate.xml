@@ -11,26 +11,25 @@
     android:weightSum="100"
     tools:context=".ReadAndWrite.WriteActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:weightSum="100"
         android:layout_weight="10">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary">
+            android:layout_weight="12"
+            android:layout_gravity="start"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/back" />
 
-            <ImageButton
-                android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/back"
-                android:clickable="true"
-                android:scaleType="centerInside" />
-        </android.support.v7.widget.Toolbar>
-    </FrameLayout>
+    </LinearLayout>
 
 
 

@@ -84,6 +84,8 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
+    double zoomLevel=17.0;
+
 
     LatLng centerlocation;
 
@@ -145,13 +147,14 @@ public class ClusterMap extends AppCompatActivity
         super.onResume();
 
 
+        if(centerlocation != null)
         if (mGoogleApiClient.isConnected()) {
 
             Log.d(TAG, "onResume : call startLocationUpdates");
             if (!mRequestingLocationUpdates) startLocationUpdates();
         }
-
-
+        else
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(centerlocation));
         //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
         if (askPermissionOnceAgain) {
 
@@ -242,7 +245,8 @@ public class ClusterMap extends AppCompatActivity
         });
 
 
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo((float) zoomLevel));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy((float)zoomLevel+1));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -669,6 +673,7 @@ public class ClusterMap extends AppCompatActivity
                     Store.sendboard = clustericon;
                 }
                 MainPageFragment.getInstance().whatContent = MainPageFragment.MAP_UP;
+                zoomLevel = mGoogleMap.getCameraPosition().zoom;
                 finish();
 
                 break;

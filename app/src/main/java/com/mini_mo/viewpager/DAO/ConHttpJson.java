@@ -42,6 +42,8 @@ public class ConHttpJson extends AsyncTask<JSONObject,JSONObject ,JSONObject>
             //conn.setRequestProperty("Accept","application/json");
             conn.setDoInput(true);
             conn.setDoOutput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(100000);
             conn.setRequestProperty("Accept-Charset","UTF-8");
             conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");// charset=EUC-KR"
             conn.setRequestMethod("POST");
