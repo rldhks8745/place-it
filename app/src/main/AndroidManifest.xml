@@ -46,6 +46,7 @@
         <!-- Camera Activity ( 김기완 ) -->
         <activity android:name=".Camera.CameraActivity" />
         <activity android:name=".Camera.CameraCommentsList" />
+        <activity android:name=".Setting.AlarmSetting" />
 
         <!-- Write & Read Comment Activity ( 황의원 ) -->
         <activity android:name=".ReadAndWrite.VideoActivity"/>
