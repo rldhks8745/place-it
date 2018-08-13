@@ -84,10 +84,9 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    double zoomLevel=17.0;
+    LatLng savePoint=null;
 
-
-    LatLng centerlocation;
+    float zoomLevel=16;
 
     ImageView ok, nowlocation, cancel, mapmenu;
     TextView textView;
@@ -138,6 +137,11 @@ public class ClusterMap extends AppCompatActivity
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
 
+        if(savedInstanceState!=null){
+            savePoint = new LatLng(savedInstanceState.getDouble("lat"),savedInstanceState.getDouble("lng"));
+            zoomLevel = savedInstanceState.getFloat("zoom");
+        }
+
     }
 
 
@@ -146,24 +150,21 @@ public class ClusterMap extends AppCompatActivity
 
         super.onResume();
 
+            if (mGoogleApiClient.isConnected()) {
 
-        if(centerlocation != null)
-        if (mGoogleApiClient.isConnected()) {
-
-            Log.d(TAG, "onResume : call startLocationUpdates");
-            if (!mRequestingLocationUpdates) startLocationUpdates();
-        }
-        else
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(centerlocation));
-        //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
-        if (askPermissionOnceAgain) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                askPermissionOnceAgain = false;
-
-                checkPermissions();
+                Log.d(TAG, "onResume : call startLocationUpdates");
+                if (!mRequestingLocationUpdates) startLocationUpdates();
             }
-        }
+
+            //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
+            if (askPermissionOnceAgain) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    askPermissionOnceAgain = false;
+
+                    checkPermissions();
+                }
+            }
     }
 
     //권한 확인하고 위치 갱신
@@ -236,17 +237,18 @@ public class ClusterMap extends AppCompatActivity
                 return false;
             }
         });
-
+        if(savePoint != null) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savePoint,zoomLevel));
+        }
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                centerlocation = cameraPosition.target;
+                savePoint = cameraPosition.target;
             }
         });
 
 
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo((float) zoomLevel));
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomBy((float)zoomLevel+1));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo( 16));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -280,6 +282,15 @@ public class ClusterMap extends AppCompatActivity
             mClusterManager.addItem(offsetItem2);
 
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putFloat("zoom",zoomLevel);
+        outState.putDouble("lat",savePoint.latitude);
+        outState.putDouble("lng",savePoint.longitude);
     }
 
 
@@ -672,8 +683,8 @@ public class ClusterMap extends AppCompatActivity
                 if(clustericon!=null){
                     Store.sendboard = clustericon;
                 }
-                MainPageFragment.getInstance().whatContent = MainPageFragment.MAP_UP;
                 zoomLevel = mGoogleMap.getCameraPosition().zoom;
+                MainPageFragment.getInstance().whatContent = MainPageFragment.MAP_UP;
                 finish();
 
                 break;
@@ -682,7 +693,7 @@ public class ClusterMap extends AppCompatActivity
                 break;
 
             case R.id.nowlocation:
-                textView.setText(AddressTransformation.getAddress(this, centerlocation.latitude, centerlocation.longitude));
+                textView.setText(AddressTransformation.getAddress(this, savePoint.latitude, savePoint.longitude));
                 getVisibleRegion();
                 break;
 
