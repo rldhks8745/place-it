@@ -1,15 +1,21 @@
 package com.mini_mo.viewpager.Setting;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -21,18 +27,26 @@ import com.mini_mo.viewpager.YourPageActivity;
  * Created by userForGame on 2018-08-09.
  */
 
-public class AlarmSetting extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AlarmSetting extends AppCompatActivity {
 
     public static AlarmSetting instance;
 
     // 알람 설정에 필요한 변수들
     public static boolean alarmOn = false; // 알람을 사용하나, 안하나 ( Service 실행여부 )
     public static String selectedCategory = "전체";
+    public static int selectedDistance = 10;
+
+    public static int selectedNum = 0;
+    public static int selectedArea = 0;
 
     // XML 객체들
     private RadioGroup onOffRadioGroup;
+
     private Spinner category;
     private String[] categoryItem;
+
+    private Spinner around;
+    private String[] aroundItem;
 
     public static AlarmSetting getInstance(){ return instance; }
 
@@ -42,44 +56,168 @@ public class AlarmSetting extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.setting_alarm);
         instance = this;
 
-        // 알람 온,오프 라디오 그룹 설정
+        /** 알람 온,오프 라디오 그룹 설정 **/
         onOffRadioGroup = (RadioGroup)findViewById( R.id.setting_alarm_onoff_group );
         onOffRadioGroup.setOnCheckedChangeListener( radioGroupButtonChangeListener );
-        onOffRadioGroup.check( R.id.setting_alarm_off ); // 디폴트로 Off에 체크 되어있음.
+        // 체크되있는 상태
+        if( !alarmOn )
+            onOffRadioGroup.check( R.id.setting_alarm_off ); // 디폴트로 Off에 체크 되어있음.
+        else
+            onOffRadioGroup.check( R.id.setting_alarm_on ); // 디폴트로 Off에 체크 되어있음.
 
-        // 카테고리 설정
+        /** 카테고리 설정 **/
         categoryItem = new String[]{"전체","의류","뷰티","잡화","가구","생활","건강","음식","기타"};
         category = (Spinner)findViewById(R.id.setting_alarm_category);
-        category.setOnItemSelectedListener( this );
+        category.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextSize(20);
+                selectedCategory = (String)category.getItemAtPosition( position );
+
+                if( selectedNum != position )
+                    selectedNum = position;
+
+                category.setSelection( selectedNum );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        } );
 
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>( this, android.R.layout.simple_spinner_item, categoryItem );
         categoryAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
 
         category.setAdapter( categoryAdapter );
+        category.setSelection( selectedNum ); // 어댑터 연결 후 지정해야함
 
-        //
+        /** 범위지정 **/
+        aroundItem = new String[]{"10", "25", "50", "100"};
+        around = (Spinner)findViewById(R.id.setting_alarm_round);
+        around.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextSize(20);
+                selectedDistance = Integer.parseInt( (String)around.getItemAtPosition( position ) );
+
+                if( selectedArea != position )
+                    selectedArea = position;
+
+                around.setSelection( selectedArea );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        } );
+
+        SpinnerAdapter aroundAdapter = new SpinnerAdapter( this, android.R.layout.simple_spinner_item, aroundItem );
+
+        around.setAdapter( aroundAdapter );
+        around.setSelection( selectedArea ); // 어댑터 연결 후 지정해야함
+
+        // 만약 알람이 off면
+        setAlarmEnabled( alarmOn );
+    }
+
+    public void setAlarmEnabled( boolean on ){
+
+        if( !on ) {
+            if( category != null)
+                category.setEnabled(false);
+            if( around != null)
+                around.setEnabled(false);
+        }
+        else {
+
+            if( category != null)
+                category.setEnabled(true);
+            if( around != null)
+                around.setEnabled(true);
+        }
     }
 
     // 알람 온,오프 라디오 그룹 클릭 리스너
     RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                        if( i == R.id.setting_alarm_on ){
-                            alarmOn = true;
-                        }
-                        else if( i == R.id.setting_alarm_off ){
-                            alarmOn = false;
-                        }
+            if( i == R.id.setting_alarm_on ){
+                alarmOn = true;
+            }
+            else if( i == R.id.setting_alarm_off ){
+                alarmOn = false;
+            }
+
+            // 만약 알람이 off면
+            setAlarmEnabled( alarmOn );
         }
     };
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedCategory = (String)category.getItemAtPosition( position );
+    /*
+        커스텀 카테고리 클래스
+     */
+    public class SpinnerAdapter extends ArrayAdapter<String> {
+        Context context;
+        String[] items = new String[] {};
+
+        public SpinnerAdapter(final Context context,
+                              final int textViewResourceId, final String[] objects) {
+            super(context, textViewResourceId, objects);
+            this.items = objects;
+            this.context = context;
+        }
+
+        /**
+         * 스피너 클릭시 보여지는 View의 정의
+         */
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_dropdown_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(20);
+            tv.setHeight(30);
+            return convertView;
+        }
+
+        /**
+         * 기본 스피너 View 정의
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+
+            tv.setTextSize(12);
+            return convertView;
+        }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    protected void onDestroy() {
+        super.onDestroy();
+        /* 여기에다가 서버로 현재 사용자의 알람설정 보내기 */
+
+
+
+
 
     }
 }
