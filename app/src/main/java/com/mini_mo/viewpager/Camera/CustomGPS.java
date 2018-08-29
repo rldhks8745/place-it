@@ -287,7 +287,7 @@ public class CustomGPS extends Service implements LocationListener,
         customMapView.mvecDirection.setX( Math.sin( phoneAngle * toRadian ) );
         customMapView.mvecDirection.setY( Math.cos( phoneAngle * toRadian ) );
 
-        // 카메라 왼쪽 (-30도) 방향 구하기
+        // 카메라 왼쪽 방향 구하기
         customMapView.mvecLeftAngle.setX( Math.sin( adjustAngle( phoneAngle - CustomGPS.ANGLE/2 ) * toRadian ) );
         customMapView.mvecLeftAngle.setY( Math.cos( adjustAngle( phoneAngle - CustomGPS.ANGLE/2 ) * toRadian ) );
 
