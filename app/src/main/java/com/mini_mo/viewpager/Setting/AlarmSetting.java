@@ -1,11 +1,16 @@
 package com.mini_mo.viewpager.Setting;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.mini_mo.viewpager.BootReceiver;
 import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.Push;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.YourPageActivity;
 
@@ -212,12 +219,32 @@ public class AlarmSetting extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
+        Log.i("AlarmSetting", "onDestroy_start");
         super.onDestroy();
-        /* 여기에다가 서버로 현재 사용자의 알람설정 보내기 */
 
-
-
-
-
+        if(!isServiceRunningCheck()) {
+            if (alarmOn) {
+                Intent intentMyService = new Intent(this, Push.class);
+                startService(intentMyService);
+                Log.i("PushService", "Start");
+            }
+            /* 여기에다가 서버로 현재 사용자의 알람설정 보내기 */
+        }
     }
+
+    public boolean isServiceRunningCheck() {
+        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            Log.i("service_name", service.service.getClassName());
+            if ("com.mini_mo.viewpager.Push".equals(service.service.getClassName())) {
+                Log.i("isServiceRunningCheck()", "true");
+                return true;
+            }
+        }
+        Log.i("isServiceRunningCheck()", "false");
+        return false;
+    }
+
+
 }
