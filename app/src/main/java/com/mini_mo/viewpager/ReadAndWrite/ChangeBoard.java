@@ -218,8 +218,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
         if(0<=v.getId() && v.getId() <= 9){ //나중엔 0부터 이미지 담겨있는 arraylist의 사이즈-1 까지로 정해준다.
 
-            Log.d("이미지 삭제 로그", String.valueOf(v.getId()));
-
             split_url = (origin_url.get(v.getId()).split("/"));
 
             arr_delete_url.add(split_url[split_url.length-1]);
@@ -412,8 +410,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                 latitude = Store.point.latitude;
                 longitude = Store.point.longitude;
-            }else
-                Log.i("위치 저장 값", "널 포인트");
+            }
         }else if(resultCode == RESULT_OK){
             if(imglayout.getChildCount()<=10) {
                 switch (requestCode){

@@ -86,14 +86,6 @@ public class MainPageFragment extends Fragment{
 
         location.setText( AddressTransformation.getAddress( instance.getActivity(), latitude, longitude ) );
 
-        if( whatContent != MAP_UP ) // 맵을통해 사용자가 content를 가져왔으면
-        {
-            if( latitude == 0.0 )
-                getLocation(GpsInfo.MAINPAGE);
-            else
-                nearSearch();
-        }
-
         return rootView;
     }
 
@@ -142,6 +134,7 @@ public class MainPageFragment extends Fragment{
             }
         });
         */
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -172,6 +165,12 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+
+        if( whatContent != MAP_UP ) // 맵을통해 사용자가 content를 가져왔으면
+        {
+            getLocation(GpsInfo.MAINPAGE);
+        }
+
         if(recyclerListView.listViewItems!=null)
             recyclerListView.listViewItems.clear();
 
@@ -220,7 +219,8 @@ public class MainPageFragment extends Fragment{
         }
         else
         {
-            loading.progressON( this.getActivity(), "GPS 수신중");
+            if( latitude == 0.0 )
+                loading.progressON( this.getActivity(), "GPS 수신중");
         }
 
     }

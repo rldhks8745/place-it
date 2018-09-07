@@ -3,6 +3,7 @@ package com.mini_mo.viewpager;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -20,6 +21,9 @@ import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
 import com.mini_mo.viewpager.ReadAndWrite.Util;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
+import android.widget.LinearLayout;
+
+import com.mini_mo.viewpager.Setting.AlarmSetting;
 
 /**
  * Created by 노현민 on 2018-07-27.
@@ -32,6 +36,15 @@ public class SettingFrg extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_setting, container, false);
+
+        LinearLayout push = (LinearLayout)view.findViewById(R.id.push);
+        push.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( SettingFrg.this.getContext() , AlarmSetting.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

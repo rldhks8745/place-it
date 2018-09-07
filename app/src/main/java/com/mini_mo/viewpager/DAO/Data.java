@@ -679,6 +679,8 @@ public class Data {
                 t.longitude = tjo.getDouble("board_longitude");
                 t.user_id = tjo.getString("user_id");
                 t.user_photo = tjo.getString("user_photo");
+                t.category = tjo.getInt("category");
+                t.comment_cnt = tjo.getInt("comment_cnt");
 
                 fl.add(t);
             }

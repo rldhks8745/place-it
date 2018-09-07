@@ -16,6 +16,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- GPS 이용 위치 수신용 Permission -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- 서비스 관련 퍼미션 -->
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE" />
+
+
     <!-- 카메라 Permission -->
     <application
         android:allowBackup="true"
@@ -46,6 +53,7 @@
         <!-- Camera Activity ( 김기완 ) -->
         <activity android:name=".Camera.CameraActivity" />
         <activity android:name=".Camera.CameraCommentsList" />
+        <activity android:name=".Setting.AlarmSetting" />
 
         <!-- Write & Read Comment Activity ( 황의원 ) -->
         <activity android:name=".ReadAndWrite.VideoActivity"/>
@@ -79,6 +87,23 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".ProfileImageActivity" />
         <activity android:name=".StateMessageActivity" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+
+        <service
+            android:name=".Push">
+        </service>
+
+
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="BootReceiver"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="ACTION.RESTART.Push" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

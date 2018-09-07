@@ -76,49 +76,63 @@ public class GpsInfo extends Service implements LocationListener {
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 
-            if (!isGPSEnabled && !isNetworkEnabled) {
+            if (!isGPSEnabled && !isNetworkEnabled)
+            {
                 // GPS 와 네트워크사용이 가능하지 않을때 소스 구현
-            } else {
-
+                return false;
+            }
+            else
+            {
                 this.isGetLocation = true;
 
                 // 네트워크 정보로 부터 위치값 가져오기
 
-                if (isNetworkEnabled) {
+                if (isNetworkEnabled)
+                {
 
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1, 1, this);
 
-                    if (locationManager != null) {
+                    if (locationManager != null)
+                    {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-                        if (location != null) {
+                        if (location != null)
+                        {
                             // 위도 경도 저장
                             lat = location.getLatitude();
                             lon = location.getLongitude();
                         }
                     }
                 }
-                if (isGPSEnabled) {
-                    if (location == null) {
+                if (isGPSEnabled)
+                {
+                    if (location == null)
+                    {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, this);
                         if( MainPageFragment.getInstance().latitude == 0.0 )
                             MainPageFragment.getInstance().loading.progressON( MainPageFragment.getInstance().getActivity(), "위치 수신 준비중");
 
-                        if (locationManager != null) {
+                        if (locationManager != null)
+                        {
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                            if (location != null) {
+                            if (location != null)
+                            {
                                 lat = location.getLatitude();
                                 lon = location.getLongitude();
                             }
                         }
                     }
                 }
+
+                return true;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return true;
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

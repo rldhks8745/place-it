@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity{
         Log.i("세로", Store.display_height+"");
 
 
+
+
         // 상태바 제거
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
        // View mainview = (View) this.getLayoutInflater().inflate(R.layout.activity_main, null);
