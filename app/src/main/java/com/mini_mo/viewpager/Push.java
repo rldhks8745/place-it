@@ -10,18 +10,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
+import com.mini_mo.viewpager.ReadAndWrite.GpsInfo;
 import com.mini_mo.viewpager.Setting.AlarmSetting;
 
 import org.json.JSONException;
@@ -47,6 +51,10 @@ public class Push extends Service implements Runnable {
     private boolean mIsRunning;
     private Bitmap mb;
     private int mStartId = 0;
+    private GpsInfo gif;
+    public static Location location;
+    private double mLatitude;
+    private double mLongitude;
 
     private static final int REBOOT_DELAY_TIMER = 10 * 1000;
     private static int LOCATION_UPDATE_DELAY = 1 * 60 * 1000; // 5 * 60 * 1000
@@ -143,8 +151,9 @@ public class Push extends Service implements Runnable {
         Log.i("function", "function_start");
         notification_region = AlarmSetting.selectedDistance * 0.0001;
 
+        getLocation();
 
-        double latitude=35.8968173,longitude=128.6214437; //매번 갱신해야 하기 때문에 이건 여기에 있는게 맞는 것 같음.
+        double latitude=mLatitude,longitude=mLongitude; //매번 갱신해야 하기 때문에 이건 여기에 있는게 맞는 것 같음.
 
         ArrayList<ListViewItemData> lvi = new ArrayList<ListViewItemData>();
 
@@ -200,7 +209,42 @@ public class Push extends Service implements Runnable {
 
     }
 
+    protected void getLocation()
+    {
+        gif= new GpsInfo( this);
 
+
+        if(!gif.setupLocation( GpsInfo.PUSH ))
+        {
+            Log.i("push Location", "실패");
+        }
+
+        else
+        {
+            if(location == null){
+                Log.i("push Location", "실패");
+            }else {
+                Log.i("push Location", location.getLatitude() + "" + location.getLongitude());
+            }
+
+        }
+
+        // GPS 사용유무 가져오기
+        if (gif.isGetLocation()) {
+
+            mLatitude = gif.getLatitude();
+            mLongitude = gif.getLongitude();
+
+
+        } else {
+            // GPS 를 사용할수 없으므로
+            gif.showSettingsAlert();
+
+        }
+       // MainPageFragment.getInstance().getLocation( GpsInfo.PUSH );
+
+
+    }
 
     private void sendNotification(String messageBody,String user_photo,int push_count)
     {

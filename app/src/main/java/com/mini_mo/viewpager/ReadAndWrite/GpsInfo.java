@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 
 import com.mini_mo.viewpager.MainPageFragment;
+import com.mini_mo.viewpager.Push;
 
 
 public class GpsInfo extends Service implements LocationListener {
@@ -23,6 +24,8 @@ public class GpsInfo extends Service implements LocationListener {
     public static final int MAINPAGE = 1;
     public static final int WRITE = 2;
     public static final int SAVE = 3;
+    public static final int PUSH = 4;
+
 
     public static int flag = -1;
     private final Context mContext;
@@ -267,6 +270,9 @@ public class GpsInfo extends Service implements LocationListener {
                 break;
             case SAVE:
 
+                break;
+            case PUSH:
+                Push.location =location;
                 break;
 
         }
