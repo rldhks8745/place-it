@@ -94,11 +94,7 @@
 
 
         <receiver
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:label="BootReceiver"
-            android:process=":remote" >
+            android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="ACTION.RESTART.Push" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
