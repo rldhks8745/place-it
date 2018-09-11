@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -209,7 +210,6 @@ public class CustomGPS extends Service implements LocationListener,
         // 맵뷰에서 사용할 수 있도록 넘기기
         Collections.sort( comments ); // 내림차순 정렬 ( 가까운 순으로 )
         CustomMapView.getInstance().mComments = comments;
-        Log.d("1","1");
     }
 
     public void isInCamera()
@@ -393,6 +393,10 @@ public class CustomGPS extends Service implements LocationListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        if( loadingDialog != null )
+            loadingDialog.progressOFF();
+
+        Toast.makeText(m_cameraActivity, "GPS 수신 실패", Toast.LENGTH_SHORT).show();
 
     }
 
