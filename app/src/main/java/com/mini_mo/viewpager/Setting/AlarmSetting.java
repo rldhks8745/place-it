@@ -33,11 +33,10 @@ public class AlarmSetting extends AppCompatActivity {
 
     // 알람 설정에 필요한 변수들
     public static boolean alarmOn = false; // 알람을 사용하나, 안하나 ( Service 실행여부 )
-    public static String selectedCategory = "전체";
-    public static int selectedDistance = 10;
+    public static int selectedCategory = 0; // 카테고리
+    public static int selectedDistance = 0; // 반경(m) 거리
+    public static int selectedTime = 0; // 시간(분)
 
-    public static int selectedNum = 0;
-    public static int selectedArea = 0;
 
     // XML 객체들
     private RadioGroup onOffRadioGroup;
@@ -47,6 +46,9 @@ public class AlarmSetting extends AppCompatActivity {
 
     private Spinner around;
     private String[] aroundItem;
+
+    private Spinner time;
+    private String[] timeItem;
 
     public static AlarmSetting getInstance(){ return instance; }
 
@@ -66,19 +68,16 @@ public class AlarmSetting extends AppCompatActivity {
             onOffRadioGroup.check( R.id.setting_alarm_on ); // 디폴트로 Off에 체크 되어있음.
 
         /** 카테고리 설정 **/
-        categoryItem = new String[]{"전체","의류","뷰티","잡화","가구","생활","건강","음식","기타"};
+        categoryItem = new String[]{"기타","의류","뷰티","잡화","가구","생활","건강","음식"};
         category = (Spinner)findViewById(R.id.setting_alarm_category);
         category.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener(){
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextSize(20);
-                selectedCategory = (String)category.getItemAtPosition( position );
+                selectedCategory = position;
 
-                if( selectedNum != position )
-                    selectedNum = position;
-
-                category.setSelection( selectedNum );
+                category.setSelection( selectedCategory );
             }
 
             @Override
@@ -90,22 +89,19 @@ public class AlarmSetting extends AppCompatActivity {
         categoryAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
 
         category.setAdapter( categoryAdapter );
-        category.setSelection( selectedNum ); // 어댑터 연결 후 지정해야함
+        category.setSelection( selectedCategory ); // 어댑터 연결 후 지정해야함
 
         /** 범위지정 **/
-        aroundItem = new String[]{"10", "25", "50", "100"};
+        aroundItem = new String[]{ "10", "25", "50", "100" };
         around = (Spinner)findViewById(R.id.setting_alarm_round);
         around.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener(){
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextSize(20);
-                selectedDistance = Integer.parseInt( (String)around.getItemAtPosition( position ) );
+                selectedDistance = position;
 
-                if( selectedArea != position )
-                    selectedArea = position;
-
-                around.setSelection( selectedArea );
+                around.setSelection( selectedDistance );
             }
 
             @Override
@@ -116,9 +112,34 @@ public class AlarmSetting extends AppCompatActivity {
         SpinnerAdapter aroundAdapter = new SpinnerAdapter( this, android.R.layout.simple_spinner_item, aroundItem );
 
         around.setAdapter( aroundAdapter );
-        around.setSelection( selectedArea ); // 어댑터 연결 후 지정해야함
+        around.setSelection( selectedDistance ); // 어댑터 연결 후 지정해야함
 
-        // 만약 알람이 off면
+
+        /** 시간지정 **/
+        timeItem = new String[]{ "1", "5", "10", "30", "60" };
+        time = (Spinner)findViewById(R.id.setting_alarm_time);
+        time.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextSize(20);
+                selectedTime = position;
+
+                time.setSelection( selectedTime );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        } );
+
+        SpinnerAdapter timeAdapter = new SpinnerAdapter( this, android.R.layout.simple_spinner_item, timeItem );
+
+        time.setAdapter( timeAdapter );
+        time.setSelection( selectedTime ); // 어댑터 연결 후 지정해야함
+
+
+        // 만약 알람이 off면 선택사항 모두 비활성화 메소드
         setAlarmEnabled( alarmOn );
     }
 
@@ -129,6 +150,8 @@ public class AlarmSetting extends AppCompatActivity {
                 category.setEnabled(false);
             if( around != null)
                 around.setEnabled(false);
+            if( time != null)
+                time.setEnabled(false);
         }
         else {
 
@@ -136,6 +159,8 @@ public class AlarmSetting extends AppCompatActivity {
                 category.setEnabled(true);
             if( around != null)
                 around.setEnabled(true);
+            if( time != null)
+                time.setEnabled(true);
         }
     }
 
@@ -203,7 +228,7 @@ public class AlarmSetting extends AppCompatActivity {
 
             TextView tv = (TextView) convertView
                     .findViewById(android.R.id.text1);
-            tv.setText(items[position]);
+            tv.setText( items[ position ] );
 
             tv.setTextSize(12);
             return convertView;
