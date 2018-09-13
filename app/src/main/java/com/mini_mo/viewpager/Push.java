@@ -218,7 +218,6 @@ public class Push extends Service implements Runnable {
         {
             Log.i("push Location", "실패");
         }
-
         else
         {
             if(location == null){
@@ -234,6 +233,8 @@ public class Push extends Service implements Runnable {
 
             mLatitude = gif.getLatitude();
             mLongitude = gif.getLongitude();
+
+            Log.i("push Location", location.getLatitude() + "" + location.getLongitude());
 
 
         } else {

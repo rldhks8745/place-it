@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,6 +186,10 @@ public class MainPageFragment extends Fragment{
     {
         latitude = lo.getLatitude();
         longitude = lo.getLongitude();
+
+        Log.d("GSP 로그", latitude + " " + longitude);
+
+
         location.setText(AddressTransformation.getAddress(instance.getActivity(), latitude, longitude));
         loading.progressOFF();
 
