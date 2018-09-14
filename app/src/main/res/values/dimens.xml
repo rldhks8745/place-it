@@ -8,6 +8,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="custommarker">20dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

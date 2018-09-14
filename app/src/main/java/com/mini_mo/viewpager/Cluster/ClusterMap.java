@@ -3,9 +3,12 @@ package com.mini_mo.viewpager.Cluster;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,10 +22,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +49,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.ui.IconGenerator;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainPageFragment;
@@ -88,8 +94,12 @@ public class ClusterMap extends AppCompatActivity
 
     LatLng savePoint=null;
 
+
+    MarkerOptions markerOptions = new MarkerOptions();
+
     float zoomLevel=16;
 
+    FrameLayout container;
     ImageView ok, nowlocation, cancel, mapmenu;
     TextView textView;
 
@@ -100,6 +110,9 @@ public class ClusterMap extends AppCompatActivity
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(UPDATE_INTERVAL_MS)
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+
+    public ClusterMap() {
+    }
 
 
     @Override
@@ -116,6 +129,10 @@ public class ClusterMap extends AppCompatActivity
         mapmenu = (ImageView) findViewById(R.id.mapmenu);
 
         textView = (TextView) findViewById(R.id.textView);
+        container = (FrameLayout) findViewById(R.id.container);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.custom_marker,container, true);
 
 
         ok.setOnClickListener(this);
@@ -139,8 +156,8 @@ public class ClusterMap extends AppCompatActivity
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
 
-        if(savedInstanceState!=null){
-            savePoint = new LatLng(savedInstanceState.getDouble("lat"),savedInstanceState.getDouble("lng"));
+        if (savedInstanceState != null) {
+            savePoint = new LatLng(savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lng"));
             zoomLevel = savedInstanceState.getFloat("zoom");
         }
 
@@ -152,21 +169,21 @@ public class ClusterMap extends AppCompatActivity
 
         super.onResume();
 
-            if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
 
-                Log.d(TAG, "onResume : call startLocationUpdates");
-                if (!mRequestingLocationUpdates) startLocationUpdates();
+            Log.d(TAG, "onResume : call startLocationUpdates");
+            if (!mRequestingLocationUpdates) startLocationUpdates();
+        }
+
+        //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
+        if (askPermissionOnceAgain) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                askPermissionOnceAgain = false;
+
+                checkPermissions();
             }
-
-            //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
-            if (askPermissionOnceAgain) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    askPermissionOnceAgain = false;
-
-                    checkPermissions();
-                }
-            }
+        }
     }
 
     //권한 확인하고 위치 갱신
@@ -215,7 +232,6 @@ public class ClusterMap extends AppCompatActivity
 
 
         mGoogleMap = googleMap;
-        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(ClusterMap.this));
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -253,6 +269,7 @@ public class ClusterMap extends AppCompatActivity
         });
 
 
+
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo( 16));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
@@ -273,6 +290,7 @@ public class ClusterMap extends AppCompatActivity
         min_lat = bounds.southwest.latitude;
         min_lng = bounds.southwest.longitude;
 
+
         Data data = new Data();
         try {
             clustericon = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
@@ -283,10 +301,24 @@ public class ClusterMap extends AppCompatActivity
         for (int i = 0; i < clustericon.size(); i++) {
             double lat = clustericon.get(i).latitude;
             double lng = clustericon.get(i).longitude;
-            MyItem offsetItem2 = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem2);
+            LatLng markerposition = new LatLng(lat,lng);
+            if(mGoogleMap.getCameraPosition().zoom >19) {
+                Bitmap orgimage = BitmapFactory.decodeResource(getResources(), R.drawable.speechbubble);
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(orgimage));
+                markerOptions.position(markerposition);
+                mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
+            }
+            else {
+                mClusterManager.getClusterMarkerCollection().clear();
+                MyItem myItem = new MyItem(lat, lng);
+                mClusterManager.addItem(myItem);
+            }
+            if(mGoogleMap.getCameraPosition().zoom > 19)
+                mClusterManager.clearItems();
+
 
         }
+
     }
 
     @Override
@@ -470,7 +502,6 @@ public class ClusterMap extends AppCompatActivity
 
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
