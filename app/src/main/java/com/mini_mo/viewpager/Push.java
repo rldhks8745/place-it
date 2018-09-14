@@ -40,10 +40,10 @@ import java.util.HashMap;
 public class Push extends Service implements Runnable {
     private Data data;
     private NotificationCompat.Builder mbuilder;
-    private int category = 1; //알림띄울 카테고리
+    private int category = AlarmSetting.selectedCategory; //알림띄울 카테고리
     private boolean is_push = false; //알림 기능 쓸지 여부.
     private double notification_region = 0.001; //알림 범위
-    private int notification_time = 1; //알림 주기
+    private int notification_time = AlarmSetting.selectedTime; //알림 주기
     private double notification_distance =0.05; // 얼마나 이동했을 때 통신 할 것인지 설정.
     private double before_latitude = 0,before_longitude = 0; // 얼마나 움직였는지 비교 할 이전의 좌표
     private static HashMap<Integer,Date> push_check = new HashMap<Integer, Date>();
@@ -211,6 +211,7 @@ public class Push extends Service implements Runnable {
 
     protected void getLocation()
     {
+
         gif= new GpsInfo( this);
 
 
@@ -223,7 +224,6 @@ public class Push extends Service implements Runnable {
             if(location == null){
                 Log.i("push Location", "실패");
             }else {
-                Log.i("push Location", location.getLatitude() + "" + location.getLongitude());
             }
 
         }
@@ -233,8 +233,6 @@ public class Push extends Service implements Runnable {
 
             mLatitude = gif.getLatitude();
             mLongitude = gif.getLongitude();
-
-            Log.i("push Location", location.getLatitude() + "" + location.getLongitude());
 
 
         } else {

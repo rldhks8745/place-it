@@ -27,19 +27,36 @@ public class AddressTransformation {
             //위도 받기
             //경도 받기
 
+
+
             list = geocoder.getFromLocation(
                     latitude, // 위도
                     longitude, // 경도
                     10); // 얻어올 값의 개수
 
             if( list.size() != 0 ) {
-                String mainlocal = (list.get(0).getLocality().toString()==null ? null:list.get(0).getLocality().toString());
-                String sublocal = (list.get(0).getSubLocality()==null ? null:list.get(0).getSubLocality());
-                String thoroughfare = (list.get(0).getThoroughfare().toString()==null ? null:list.get(0).getThoroughfare().toString());
+                {
 
-                String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
+                    String mainlocal = (list.get(0).getLocality() == null ? null : list.get(0).getLocality().toString());
+                    String sublocal = (list.get(0).getSubLocality() == null ? null : list.get(0).getSubLocality());
+                    String thoroughfare = (list.get(0).getThoroughfare().toString() == null ? null : list.get(0).getThoroughfare().toString());
 
-                return str;
+                    String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
+
+
+                    return str;
+
+                    /*
+                      String mainlocal = (list.get(0).getLocality().toString() == null ? null : list.get(0).getLocality().toString());
+                    String sublocal = (list.get(0).getSubLocality() == null ? null : list.get(0).getSubLocality());
+                    String thoroughfare = (list.get(0).getThoroughfare().toString() == null ? null : list.get(0).getThoroughfare().toString());
+
+                    String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
+
+                    return str;
+                     */
+
+                }
             }
 
         } catch (IOException e) {
