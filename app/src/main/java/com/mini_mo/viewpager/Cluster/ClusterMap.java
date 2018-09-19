@@ -264,7 +264,6 @@ public class ClusterMap extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
                 startActivity(intent);
                 finish();
-
                 return false;
             }
         });
@@ -275,6 +274,12 @@ public class ClusterMap extends AppCompatActivity
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 savePoint = cameraPosition.target;
+            }
+        });
+        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                getVisibleRegion();
             }
         });
 
@@ -332,7 +337,7 @@ public class ClusterMap extends AppCompatActivity
 
     public Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
-        String formatted = NumberFormat.getCurrencyInstance().format(textView);
+        String formatted = NumberFormat.getCurrencyInstance().format(snippet);
 
         snippet.setText(formatted);
 
@@ -775,7 +780,6 @@ public class ClusterMap extends AppCompatActivity
 
             case R.id.nowlocation:
                 textView.setText(AddressTransformation.getAddress(this, savePoint.latitude, savePoint.longitude));
-                getVisibleRegion();
                 break;
 
             case R.id.mapmenu:
