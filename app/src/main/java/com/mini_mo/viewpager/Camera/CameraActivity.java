@@ -48,13 +48,6 @@ public class CameraActivity extends AppCompatActivity {
     public Sensor sensor;
     public int sensorX, sensorY, sensorZ;
 
-    /***********************
-     *      DB로부터 받은 마커값
-     ***********************/
-
-    public ArrayList<Double> marrLatMarker = null;
-    public  ArrayList<Double> marrLonMarker = null;
-
     /*******************************
      *      코멘트 표시할 맵
      ****************************/
@@ -74,8 +67,6 @@ public class CameraActivity extends AppCompatActivity {
         instance = this;
     }
 
-    public int speed;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +80,8 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-
                 m_customGPS.startLocationUpdates();
+                camera_rel.removeAllViews();
             }
         });
 

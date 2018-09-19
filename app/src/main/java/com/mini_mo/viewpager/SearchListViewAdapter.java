@@ -74,7 +74,7 @@ public class SearchListViewAdapter extends BaseAdapter {
         TextView good = (TextView)convertView.findViewById(R.id.good);
 
         ImageView photo = (ImageView)convertView.findViewById(R.id.photo);
-        ImageView comment = (ImageView)convertView.findViewById(R.id.comment);
+        TextView comment = (TextView)convertView.findViewById(R.id.comment);
 
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */

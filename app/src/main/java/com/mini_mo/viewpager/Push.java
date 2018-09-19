@@ -10,22 +10,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
+import com.mini_mo.viewpager.ReadAndWrite.GpsInfo;
 import com.mini_mo.viewpager.Setting.AlarmSetting;
 
 import org.json.JSONException;
 
+import java.security.Key;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,20 +40,24 @@ import java.util.HashMap;
 public class Push extends Service implements Runnable {
     private Data data;
     private NotificationCompat.Builder mbuilder;
-    private int category = 1; //알림띄울 카테고리
+    private int category = AlarmSetting.selectedCategory; //알림띄울 카테고리
     private boolean is_push = false; //알림 기능 쓸지 여부.
     private double notification_region = 0.001; //알림 범위
-    private int notification_time = 10; //알림 주기
+    private int notification_time = AlarmSetting.selectedTime; //알림 주기
     private double notification_distance =0.05; // 얼마나 이동했을 때 통신 할 것인지 설정.
     private double before_latitude = 0,before_longitude = 0; // 얼마나 움직였는지 비교 할 이전의 좌표
-    private static HashMap<Integer,String> push_check = new HashMap<Integer, String>();
+    private static HashMap<Integer,Date> push_check = new HashMap<Integer, Date>();
     private Handler mHandler;
     private boolean mIsRunning;
     private Bitmap mb;
     private int mStartId = 0;
+    private GpsInfo gif;
+    public static Location location;
+    private double mLatitude;
+    private double mLongitude;
 
     private static final int REBOOT_DELAY_TIMER = 10 * 1000;
-    private static int LOCATION_UPDATE_DELAY = 20 * 1000; // 5 * 60 * 1000
+    private static int LOCATION_UPDATE_DELAY = 1 * 60 * 1000; // 5 * 60 * 1000
 
 
 
@@ -142,8 +151,9 @@ public class Push extends Service implements Runnable {
         Log.i("function", "function_start");
         notification_region = AlarmSetting.selectedDistance * 0.0001;
 
+        getLocation();
 
-        double latitude=35.8968173,longitude=128.6214437; //매번 갱신해야 하기 때문에 이건 여기에 있는게 맞는 것 같음.
+        double latitude=mLatitude,longitude=mLongitude; //매번 갱신해야 하기 때문에 이건 여기에 있는게 맞는 것 같음.
 
         ArrayList<ListViewItemData> lvi = new ArrayList<ListViewItemData>();
 
@@ -177,7 +187,7 @@ public class Push extends Service implements Runnable {
                     Log.i("lvi", i + "인덱스의 board_num = " +lvi.get(i).board_num);
                     content = lvi.get(i).content;
                     user_photo = lvi.get(i).user_photo;
-                    push_check.put(lvi.get(i).board_num, new Date().toString());
+                    push_check.put(lvi.get(i).board_num, new Date());
                     push_count++;
                 }
             }
@@ -199,7 +209,41 @@ public class Push extends Service implements Runnable {
 
     }
 
+    protected void getLocation()
+    {
 
+        gif= new GpsInfo( this);
+
+
+        if(!gif.setupLocation( GpsInfo.PUSH ))
+        {
+            Log.i("push Location", "실패");
+        }
+        else
+        {
+            if(location == null){
+                Log.i("push Location", "실패");
+            }else {
+            }
+
+        }
+
+        // GPS 사용유무 가져오기
+        if (gif.isGetLocation()) {
+
+            mLatitude = gif.getLatitude();
+            mLongitude = gif.getLongitude();
+
+
+        } else {
+            // GPS 를 사용할수 없으므로
+            gif.showSettingsAlert();
+
+        }
+       // MainPageFragment.getInstance().getLocation( GpsInfo.PUSH );
+
+
+    }
 
     private void sendNotification(String messageBody,String user_photo,int push_count)
     {
@@ -246,38 +290,57 @@ public class Push extends Service implements Runnable {
         mb = null;
     }
 
-    private void deleteEntiredPush(HashMap<Integer,String> pc) //삭제할 항목들의 index를 반환
+    private void deleteEntiredPush(HashMap<Integer,Date> pc) //삭제할 항목들의 index를 반환
     {
+        ArrayList<Integer> saveKey= new ArrayList<Integer>();
         for(Integer key : pc.keySet())
         {
-            String reqDateStr = pc.get(key);
+            Date reqDateStr = pc.get(key);
+            Log.i("reqDate", reqDateStr.toString());
             //현재시간 Date
             Date curDate = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
+            Log.i("curDate", curDate.toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//YYYYMMddHHmm
             //요청시간을 Date로 parsing 후 time가져오기
             Date reqDate = null;
             try {
-                reqDate = dateFormat.parse(reqDateStr);
+              // curDate = dateFormat.parse(curDate.toString());
 
-            long reqDateTime = reqDate.getTime();
+             //   Log.i("curDate", curDate.toString());
+
+               // reqDate = dateFormat.parse(reqDateStr.toString());
+
+              //  Log.i("reqDate", reqDate.toString());
+
+            long reqDateTime = reqDateStr.getTime();
 
             //현재시간을 요청시간의 형태로 format 후 time 가져오기
-            curDate = dateFormat.parse(dateFormat.format(curDate));
-            long curDateTime = curDate.getTime();
+          //  curDate = dateFormat.parse(dateFormat.format(curDate));
+                long curDateTime = curDate.getTime();
 
             //분으로 표현
-            long minute = (curDateTime - reqDateTime) / 60000;
+            //long minute = curDate.compareTo(reqDateStr);
+                long minusTime = (curDateTime-reqDateTime)/1000;
 
-            if(minute >= notification_time)
+                Log.i("minute", minusTime+"");
+                Log.i("빼기",curDateTime-reqDateTime+"");
+
+            if(minusTime >= (notification_time*60)) // minusTime이 초 단위기 때문에 * 60을 해줌
             {
-                pc.remove(key);
+                saveKey.add(key);
             }
 
-            } catch (ParseException e) {
+            } catch (Exception e) {
+                //ParseException e
                 e.printStackTrace();
             }
         }
 
+        for(int key : saveKey)
+        {
+            pc.remove(key);
+            Log.i("deleteKey",key+"");
+        }
     }
 
     private void registerRestartAlarm()
