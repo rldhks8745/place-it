@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity{
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
 
+        Toast.makeText(getApplicationContext(),Store.userid,Toast.LENGTH_SHORT).show();
 
         /*Glide.with( context )
                 .load( listViewItemList.get( position ).user_photo )
@@ -178,20 +179,11 @@ public class MainActivity extends AppCompatActivity{
                 case 0:
                     return new MainPageFragment();
                 case 1:
-                    if(Store.userid.equals("guest")){
-                        Toast.makeText(getApplicationContext(),"Guest 유저는 사용이 불가능 합니다.",Toast.LENGTH_SHORT).show();
-                    }else{
                         MyPageFragment myPageFragment = new MyPageFragment();
                         myPageFragment.setLoginId(loginId);
                         return  myPageFragment;
-                    }
-
                 case 2:
-                    if(Store.userid.equals("guest")){
-                        Toast.makeText(getApplicationContext(),"Guest 유저는 사용이 불가능 합니다.",Toast.LENGTH_SHORT).show();
-                    }else{
                         return new FriendListFragment();
-                    }
                 case 3:
                     return new SettingFrg();
                 default:

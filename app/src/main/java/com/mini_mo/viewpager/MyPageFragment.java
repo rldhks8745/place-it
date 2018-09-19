@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -73,68 +74,76 @@ public class MyPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_mypage, container, false);
+        if(Store.userid.equals("Guest")){
+            view = inflater.inflate(R.layout.guest_view, container, false);
+        }else {
+            view = inflater.inflate(R.layout.activity_mypage, container, false);
 
-        nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
-        followers = (TextView) view.findViewById(R.id.follwers);
-        following = (TextView) view.findViewById(R.id.following);
-        userId = (TextView) view.findViewById(R.id.userid);
-        message = (TextView) view.findViewById(R.id.message);
-        usericon = (ImageView) view.findViewById(R.id.usericon);
+            nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
+            followers = (TextView) view.findViewById(R.id.follwers);
+            following = (TextView) view.findViewById(R.id.following);
+            userId = (TextView) view.findViewById(R.id.userid);
+            message = (TextView) view.findViewById(R.id.message);
+            usericon = (ImageView) view.findViewById(R.id.usericon);
+        }
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recyclerListView = new RecyclerListView(getContext(), view, this);
+
+        if(!Store.userid.equals("Guest")){
+            recyclerListView = new RecyclerListView(getContext(), view, this);
 
 
-        /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
-        FloatingActionButton writeButton = (FloatingActionButton) view.findViewById(R.id.write_fab);
-        writeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 게시글 작성 액티비티로 전환
-                Intent intent = new Intent(getActivity(), WriteActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // 유저 이미지 클릭해서 변경할 때
-        usericon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                if(permissionCheck== PackageManager.PERMISSION_DENIED){
-
-                    if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                    }
-                }else{
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
-
-                    intent.setType( MediaStore.Images.Media.CONTENT_TYPE ); // image Content 타입으로 받아오자
-
-                    startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
+            /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
+            FloatingActionButton writeButton = (FloatingActionButton) view.findViewById(R.id.write_fab);
+            writeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 게시글 작성 액티비티로 전환
+                    Intent intent = new Intent(getActivity(), WriteActivity.class);
+                    startActivity(intent);
                 }
-            }
-        });
+            });
 
-        // 상태메세지 변경
-        message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            // 유저 이미지 클릭해서 변경할 때
+            usericon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                Intent intent = new Intent( MyPageFragment.this.getContext(), StateMessageActivity.class ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
-                intent.putExtra("loginId", loginId);
-                intent.putExtra("stateMessage", message.getText().toString() );
+                    if(permissionCheck== PackageManager.PERMISSION_DENIED){
 
-                startActivity( intent );
-            }
-        });
+                        if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        }
+                    }else{
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+
+                        intent.setType( MediaStore.Images.Media.CONTENT_TYPE ); // image Content 타입으로 받아오자
+
+                        startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
+                    }
+                }
+            });
+
+            // 상태메세지 변경
+            message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent( MyPageFragment.this.getContext(), StateMessageActivity.class ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+                    intent.putExtra("loginId", loginId);
+                    intent.putExtra("stateMessage", message.getText().toString() );
+
+                    startActivity( intent );
+                }
+            });
+        }
+
         super.onViewCreated(view, savedInstanceState);
     }
     public void setLoginId(String id)
@@ -146,36 +155,38 @@ public class MyPageFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        try {
-            /* 사용자 정보 */
-            user_info = new Data().read_myPage(loginId);
-            mylistItem = new Data().read_myBoard(loginId, 0);
-            String friends = new Data().count_friends(loginId);
-            following.setText( friends.substring( 0, friends.indexOf(',') ) );
-            followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
+        if(!Store.userid.equals("Guest")){
+            try {
+                /* 사용자 정보 */
+                user_info = new Data().read_myPage(loginId);
+                mylistItem = new Data().read_myBoard(loginId, 0);
+                String friends = new Data().count_friends(loginId);
+                following.setText( friends.substring( 0, friends.indexOf(',') ) );
+                followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
-            /* 보드 정보 */
-            recyclerListView.loginId = loginId;
-            recyclerListView.listViewItems.clear();
-            recyclerListView.add(mylistItem);
-            recyclerListView.loadItems(nestedScrollView, getContext());
+                /* 보드 정보 */
+                recyclerListView.loginId = loginId;
+                recyclerListView.listViewItems.clear();
+                recyclerListView.add(mylistItem);
+                recyclerListView.loadItems(nestedScrollView, getContext());
 
-            userId.setText(user_info.user_id);
+                userId.setText(user_info.user_id);
 
-            //Bitmap bit = BItmap.getBitmap
-            // photo 넣는곳
-            Glide.with( this.getContext() )
-                    .load( user_info.user_photo )
-                    .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
-                    .into( usericon );
+                //Bitmap bit = BItmap.getBitmap
+                // photo 넣는곳
+                Glide.with( this.getContext() )
+                        .load( user_info.user_photo )
+                        .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
+                        .into( usericon );
 
-            Store.myprofile_img = user_info.user_photo;
+                Store.myprofile_img = user_info.user_photo;
 
-            message.setText(user_info.massage);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                message.setText(user_info.massage);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            recyclerListView.adapter.notifyDataSetChanged();
         }
-        recyclerListView.adapter.notifyDataSetChanged();
     }
 
     @Override
