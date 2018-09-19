@@ -3,9 +3,15 @@ package com.mini_mo.viewpager.Cluster;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,10 +25,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +52,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.ui.IconGenerator;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.MainPageFragment;
@@ -56,6 +65,7 @@ import com.mini_mo.viewpager.Store;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -86,12 +96,16 @@ public class ClusterMap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-    LatLng savePoint=null;
+    LatLng savePoint = null;
 
-    float zoomLevel=16;
+
+    MarkerOptions markerOptions = new MarkerOptions();
+
+    float zoomLevel = 16;
 
     ImageView ok, nowlocation, cancel, mapmenu;
-    TextView textView;
+    TextView textView, snippet;
+    View custom_marker;
 
     ArrayList<ListViewItemData> clustericon;
 
@@ -100,6 +114,9 @@ public class ClusterMap extends AppCompatActivity
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(UPDATE_INTERVAL_MS)
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+
+    public ClusterMap() {
+    }
 
 
     @Override
@@ -116,6 +133,8 @@ public class ClusterMap extends AppCompatActivity
         mapmenu = (ImageView) findViewById(R.id.mapmenu);
 
         textView = (TextView) findViewById(R.id.textView);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
         ok.setOnClickListener(this);
@@ -139,8 +158,8 @@ public class ClusterMap extends AppCompatActivity
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
 
-        if(savedInstanceState!=null){
-            savePoint = new LatLng(savedInstanceState.getDouble("lat"),savedInstanceState.getDouble("lng"));
+        if (savedInstanceState != null) {
+            savePoint = new LatLng(savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lng"));
             zoomLevel = savedInstanceState.getFloat("zoom");
         }
 
@@ -152,21 +171,21 @@ public class ClusterMap extends AppCompatActivity
 
         super.onResume();
 
-            if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
 
-                Log.d(TAG, "onResume : call startLocationUpdates");
-                if (!mRequestingLocationUpdates) startLocationUpdates();
+            Log.d(TAG, "onResume : call startLocationUpdates");
+            if (!mRequestingLocationUpdates) startLocationUpdates();
+        }
+
+        //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
+        if (askPermissionOnceAgain) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                askPermissionOnceAgain = false;
+
+                checkPermissions();
             }
-
-            //앱 정보에서 퍼미션을 허가했는지를 다시 검사해봐야 한다.
-            if (askPermissionOnceAgain) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    askPermissionOnceAgain = false;
-
-                    checkPermissions();
-                }
-            }
+        }
     }
 
     //권한 확인하고 위치 갱신
@@ -210,12 +229,19 @@ public class ClusterMap extends AppCompatActivity
         super.onBackPressed();
     }
 
+    private void setCustomMarkerView() {
+
+        View custom_marker = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
+        snippet = (TextView) custom_marker.findViewById(R.id.tv_marker);
+    }
+
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
 
+        setCustomMarkerView();
+
         mGoogleMap = googleMap;
-        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(ClusterMap.this));
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -242,8 +268,8 @@ public class ClusterMap extends AppCompatActivity
                 return false;
             }
         });
-        if(savePoint != null) {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savePoint,zoomLevel));
+        if (savePoint != null) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savePoint, zoomLevel));
         }
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -253,7 +279,7 @@ public class ClusterMap extends AppCompatActivity
         });
 
 
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo( 16));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -273,6 +299,7 @@ public class ClusterMap extends AppCompatActivity
         min_lat = bounds.southwest.latitude;
         min_lng = bounds.southwest.longitude;
 
+
         Data data = new Data();
         try {
             clustericon = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
@@ -283,11 +310,61 @@ public class ClusterMap extends AppCompatActivity
         for (int i = 0; i < clustericon.size(); i++) {
             double lat = clustericon.get(i).latitude;
             double lng = clustericon.get(i).longitude;
-            MyItem offsetItem2 = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem2);
+            LatLng markerposition = new LatLng(lat, lng);
+            if (mGoogleMap.getCameraPosition().zoom > 19) {
+                ArrayList<MarkerItem> markerItems = new ArrayList<>();
+                markerItems.add(new MarkerItem(lat,lng,clustericon.get(i).content));
+                for (MarkerItem sampleList : markerItems) {
+                    addMarker(sampleList, false);
+                }
+            } else {
+                mClusterManager.getClusterMarkerCollection().clear();
+                MyItem myItem = new MyItem(lat, lng);
+                mClusterManager.addItem(myItem);
+            }
+            if (mGoogleMap.getCameraPosition().zoom > 19)
+                mClusterManager.clearItems();
+
 
         }
+
     }
+
+    public Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
+        LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
+        String formatted = NumberFormat.getCurrencyInstance().format(textView);
+
+        snippet.setText(formatted);
+
+        if(isSelectedMarker){
+            snippet.setBackgroundResource(R.drawable.speechbubble);
+            snippet.setTextColor(Color.BLACK);
+        }
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title(String.valueOf(snippet));
+        markerOptions.position(position);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, custom_marker)));
+
+        return mGoogleMap.addMarker(markerOptions);
+    }
+
+    private Bitmap createDrawableFromView(Context context, View view) {
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        return bitmap;
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState){
@@ -470,7 +547,6 @@ public class ClusterMap extends AppCompatActivity
 
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
