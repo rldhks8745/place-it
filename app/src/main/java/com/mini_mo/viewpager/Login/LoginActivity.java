@@ -20,7 +20,7 @@ import org.json.JSONException;
 public class LoginActivity extends AppCompatActivity {
 
     Button mbutton;
-    Button lbutton;
+    Button lbutton,guest;
     EditText lid,lpasswd;
     String loginId,loginPwd;
 
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mbutton = (Button) findViewById(R.id.mbutton);
         lbutton = (Button) findViewById(R.id.lbutton);
+        guest = (Button) findViewById(R.id.guest);
         lid = (EditText) findViewById(R.id.lid);
         lpasswd = (EditText) findViewById(R.id.lpasswd);
 
@@ -61,11 +62,23 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+        guest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lid.setText("Guest");
+                lpasswd.setText("Guest");
+                Login();
+
+
+            }
+        });
+
         mbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Membershipactivity.class);
                 startActivity(intent);
+
             }
         });
 
@@ -75,40 +88,45 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                int result=0;
-                try
-                {
-                    result = Integer.parseInt(new Data().login(lid.getText().toString(),lpasswd.getText().toString()));
-
-                }
-                catch (Exception e)
-                {
-                    Toast.makeText(getApplicationContext(),"get 실패", Toast.LENGTH_SHORT).show();
-                }
-                if(1 == result) //아이디와 비밀번호가 일치 시
-                {
-
-                    SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE); //SharedPreferences에 id와 비밀번호 저장
-                    SharedPreferences.Editor autoLogin = auto.edit();
-                    autoLogin.putString("inputId", lid.getText().toString());
-                    autoLogin.putString("inputPwd", lpasswd.getText().toString());
-                    autoLogin.commit();
-
-                    Toast.makeText(getApplicationContext(),"로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-
-                    finish();
-                }
-                else //아이디 비밀번호 틀린 경우
-                {
-                    Toast.makeText(getApplicationContext(),"로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                }
+                Login();
             }
 
 
 
          });
+    }
+
+    public void Login()
+    {
+        int result=0;
+        try
+        {
+            result = Integer.parseInt(new Data().login(lid.getText().toString(),lpasswd.getText().toString()));
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),"get 실패", Toast.LENGTH_SHORT).show();
+        }
+        if(1 == result) //아이디와 비밀번호가 일치 시
+        {
+
+            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE); //SharedPreferences에 id와 비밀번호 저장
+            SharedPreferences.Editor autoLogin = auto.edit();
+            autoLogin.putString("inputId", lid.getText().toString());
+            autoLogin.putString("inputPwd", lpasswd.getText().toString());
+            autoLogin.commit();
+
+            Toast.makeText(getApplicationContext(),"로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+
+            finish();
+        }
+        else //아이디 비밀번호 틀린 경우
+        {
+            Toast.makeText(getApplicationContext(),"로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
