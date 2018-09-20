@@ -1,7 +1,4 @@
 package com.mini_mo.viewpager.Cluster;
-
-import android.widget.TextView;
-
 public class MarkerItem {
     String text;
     double lat;

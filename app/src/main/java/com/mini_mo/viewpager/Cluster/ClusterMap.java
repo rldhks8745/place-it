@@ -143,6 +143,8 @@ public class ClusterMap extends AppCompatActivity
         mapmenu.setOnClickListener(this);
 
 
+        MarkerOptions markerOptions = new MarkerOptions();
+
         Log.d(TAG, "onCreate");
         mActivity = this;
 
@@ -229,18 +231,8 @@ public class ClusterMap extends AppCompatActivity
         super.onBackPressed();
     }
 
-    private void setCustomMarkerView() {
-
-        View custom_marker = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
-        snippet = (TextView) custom_marker.findViewById(R.id.tv_marker);
-    }
-
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-
-
-        setCustomMarkerView();
-
         mGoogleMap = googleMap;
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -319,9 +311,10 @@ public class ClusterMap extends AppCompatActivity
             if (mGoogleMap.getCameraPosition().zoom > 19) {
                 ArrayList<MarkerItem> markerItems = new ArrayList<>();
                 markerItems.add(new MarkerItem(lat,lng,clustericon.get(i).content));
-                for (MarkerItem sampleList : markerItems) {
-                    addMarker(sampleList, false);
-                }
+                markerOptions.position(markerposition);
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.speechbubble));
+                markerOptions.title(clustericon.get(i).content);
+                mGoogleMap.addMarker(markerOptions);
             } else {
                 mClusterManager.getClusterMarkerCollection().clear();
                 MyItem myItem = new MyItem(lat, lng);
@@ -333,40 +326,6 @@ public class ClusterMap extends AppCompatActivity
 
         }
 
-    }
-
-    public Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
-        LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
-        String formatted = NumberFormat.getCurrencyInstance().format(snippet);
-
-        snippet.setText(formatted);
-
-        if(isSelectedMarker){
-            snippet.setBackgroundResource(R.drawable.speechbubble);
-            snippet.setTextColor(Color.BLACK);
-        }
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.title(String.valueOf(snippet));
-        markerOptions.position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, custom_marker)));
-
-        return mGoogleMap.addMarker(markerOptions);
-    }
-
-    private Bitmap createDrawableFromView(Context context, View view) {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        view.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-
-        return bitmap;
     }
 
 
