@@ -16,6 +16,31 @@ public class Data {
 
     }
 
+    public String change_nickname(String nickname, String id) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "change_nickname");
+        c_d.put("nickname",nickname);
+        c_d.put("id",id);
+        obj.put("change_nickname_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
+
+
     public String deleteComment(int board_num , int comment_num) throws JSONException
     {
 
