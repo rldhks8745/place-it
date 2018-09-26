@@ -235,8 +235,9 @@ public class ClusterMap extends AppCompatActivity
                 }
             }
             getSampleMarkerItems(sampleList);
-        }/*
+        }
          else {
+
             for (int i = 0; i < clustericon.size(); i++) {
                 double lat = clustericon.get(i).latitude;
                 double lng = clustericon.get(i).longitude;
@@ -244,7 +245,7 @@ public class ClusterMap extends AppCompatActivity
                 MyItem myItem = new MyItem(lat, lng);
                 mClusterManager.addItem(myItem);
             }
-        }*/
+        }
     }
     private void getSampleMarkerItems(ArrayList<MarkerItem> sampleList) {
 
