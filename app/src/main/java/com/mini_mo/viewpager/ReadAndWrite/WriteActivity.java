@@ -241,28 +241,31 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 send.startAnimation(ani);
 
                 hashtagSpans = new HashtagSpans(content.getText().toString(), '#');
+                if (!location.getText().equals("위치")) {
+                    try {
+                        String str;
 
-                try {
-                    String str;
-                    if(Store.check){
-                         str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude,Store.longitude, imgurl,category_number);
-                    }else {
-                        str= data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl,category_number);
-                    }
-                    if(str.equals("-3")){
-                        Toast.makeText(getApplicationContext(),"글 등록이 실패하였습니다.",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"글이 등록되었습니다.",Toast.LENGTH_SHORT).show();
-                    }
+                            if (Store.check) {
+                                str = data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), Store.latitude, Store.longitude, imgurl, category_number);
+                            } else {
+                                str = data.writeBorard(content.getText().toString(), Store.userid, (hashtagSpans.getHashtags().toString() + "#"), latitude, longitude, imgurl, category_number);
+                            }
+                            if (str.equals("-3")) {
+                                Toast.makeText(getApplicationContext(), "글 등록이 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "글이 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                            }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    //loadingDialog.progressOFF();
-                    finish();
+
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                            finish();
+                        }
+
+                        finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"위치를 설정해주세요!",Toast.LENGTH_SHORT).show();
                 }
-
-                //loadingDialog.progressOFF();
-                finish();
                 break;
 
             case R.id.getlocation:

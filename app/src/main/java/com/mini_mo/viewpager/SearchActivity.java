@@ -88,59 +88,9 @@ public class SearchActivity extends AppCompatActivity{
         for(int i=0;i<listViewItemDatas.size();i++){
             listViewItemData = listViewItemDatas.get(i);
 
-            try {
-                user_info = data.read_myPage(listViewItemDatas.get(i).user_id);
-                rci = data.readComment(String.valueOf(listViewItemDatas.get(i).board_num));
-                rbi = data.readBoardInfo(String.valueOf(listViewItemDatas.get(i).board_num),Store.userid);
+            searchadapter.addItem(listViewItemData.board_num,listViewItemData.content,listViewItemData.date_board,listViewItemData.good,listViewItemData.latitude,listViewItemData.longitude,listViewItemData.user_id,listViewItemData.user_photo,listViewItemData.comment_cnt);
+            searchadapter.notifyDataSetChanged();
 
-                Util.Log("rci 사이즈",String.valueOf(rci.size()));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            if(user_info.user_photo!=null) {
-
-                Glide.with(getApplicationContext()).asBitmap().load(user_info.user_photo)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                int count=0;
-                                Bitmap bitmap = ImageResizing.ReSizing(ImageResizing.bitmapToByteArray(resource));
-
-                                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                                roundedBitmapDrawable.setCircular(true);
-
-
-
-                                if(rbi.b_photos == null || rbi.b_photos.size() == 0){
-                                    count = 0;
-                                }else{
-                                    count = rbi.b_photos.size();
-                                    Util.Log("사진 유무",rbi.b_photos.get(0));
-                                }
-
-                                Util.Log("객체 안속", listViewItemData.board_num+"\n"+
-                                        listViewItemData.content+"\n"+
-                                        listViewItemData.date_board+"\n"+
-                                        listViewItemData.good+"\n"+
-                                        listViewItemData.latitude+"\n"+
-                                        listViewItemData.longitude+"\n"+
-                                        listViewItemData.user_id+"\n"+
-                                        listViewItemData.user_photo);
-
-
-                                searchadapter.addItem(listViewItemData.board_num,listViewItemData.content,listViewItemData.date_board,
-                                        listViewItemData.good,listViewItemData.latitude,listViewItemData.longitude,
-                                        listViewItemData.user_id,roundedBitmapDrawable,rci.size(),count);
-
-                                searchadapter.notifyDataSetChanged();
-                            }
-                        });
-
-            }
-
-            roundedBitmapDrawable = null;
         }
 
         cameraButton.setOnClickListener(new View.OnClickListener() {

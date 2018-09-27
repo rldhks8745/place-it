@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity{
         loginId = auto.getString("inputId",null);
         Store.userid = auto.getString("inputId",null);
 
-        Toast.makeText(getApplicationContext(),Store.userid,Toast.LENGTH_SHORT).show();
-
         /*Glide.with( context )
                 .load( listViewItemList.get( position ).user_photo )
                 .apply( new RequestOptions().override(100,100).placeholder( R.drawable.user ).error( R.drawable.user  ))
