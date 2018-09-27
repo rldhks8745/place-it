@@ -41,9 +41,11 @@ public class AddressTransformation {
                     String sublocal = (list.get(0).getSubLocality() == null ? null : list.get(0).getSubLocality());
                     String thoroughfare = (list.get(0).getThoroughfare() == null ? null : list.get(0).getThoroughfare().toString());
 
-                    String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
+                    //String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
 
-                    Log.i("풀 주소",list.get(0).toString());
+                    String str = list.get(0).getAddressLine(0).toString().substring(5);
+
+                    Log.i("풀 주소",list.get(0).getAddressLine(0).toString().substring(5));
 
                     return str;
 

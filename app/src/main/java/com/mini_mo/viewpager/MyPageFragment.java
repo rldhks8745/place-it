@@ -51,6 +51,7 @@ public class MyPageFragment extends Fragment {
     String loginId; // 로그인 아이디
 
     ArrayList<ListViewItemData> mylistItem;
+    private User_Info read_location;
     private TextView followers;
     private TextView following;
     private TextView userId;
@@ -189,6 +190,7 @@ public class MyPageFragment extends Fragment {
                 /* 사용자 정보 */
                 user_info = new Data().read_myPage(loginId);
                 mylistItem = new Data().read_myBoard(loginId, 0);
+                read_location = new Data().read_myLocation(Store.userid);
                 String friends = new Data().count_friends(loginId);
                 following.setText( friends.substring( 0, friends.indexOf(',') ) );
                 followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
@@ -200,6 +202,7 @@ public class MyPageFragment extends Fragment {
                 recyclerListView.loadItems(nestedScrollView, getContext());
 
                 userId.setText(user_info.user_id);
+                location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
 
                 //Bitmap bit = BItmap.getBitmap
                 // photo 넣는곳
@@ -224,11 +227,19 @@ public class MyPageFragment extends Fragment {
 
         if(resultCode == TAPMAP){
             if(Store.point!=null) {
+                Data change_location = new Data();
+
                 location.setText(AddressTransformation.getAddress(getActivity(), Store.point.latitude, Store.point.longitude));
 
-            }else
-                Toast.makeText(getActivity().getApplicationContext(),"주소 입력 실패!",Toast.LENGTH_SHORT).show();
+                try {
+                    change_location.change_myLocation(Store.point.latitude,Store.point.longitude,Store.userid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                Toast.makeText(getActivity().getApplicationContext(), "주소 입력 실패!", Toast.LENGTH_SHORT).show();
                 Log.i("위치 저장 값", "주소 널 포인트");
+            }
         }else if (resultCode == RESULT_OK) {
 
             switch (requestCode) {

@@ -43,6 +43,7 @@ import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
@@ -95,7 +96,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     Spinner category;
 
-    ImageView usericon,getlocation,history,video,img,send, back,tapmap;
+    ImageView usericon,getlocation,video,img,send, back,tapmap;
     TextView location,userid;
     EditText content;
 
@@ -157,7 +158,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         img.setOnClickListener(this);
         video.setOnClickListener(this);
         getlocation.setOnClickListener(this);
-        history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -270,6 +270,22 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 getlocation.startAnimation(ani);
 
+                User_Info read_location = null;
+
+                try {
+                    read_location = new Data().read_myLocation(Store.userid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if( read_location.latitude == 0.0 || read_location.longitude == 0.0) {
+                    location.setText("위치가 설정되지 않았습니다.");
+                }else {
+                    location.setText(AddressTransformation.getAddress(this, read_location.latitude, read_location.longitude));
+
+                    latitude = read_location.latitude;
+                    longitude = read_location.longitude;
+                }
                 location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
                 MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
 

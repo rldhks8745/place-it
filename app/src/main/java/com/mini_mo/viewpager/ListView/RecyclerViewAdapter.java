@@ -106,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.comment.setText(String.valueOf(item.comment_cnt));
         // 사진 넣기
 
-        if(item.user_photo!=null) {
+        if(!(item.user_photo.equals("No Photo"))) {
 
             Glide.with(viewHolder.mView).load(item.user_photo).apply(bitmapTransform(new CircleCrop())).into(viewHolder.userIcon);
 
