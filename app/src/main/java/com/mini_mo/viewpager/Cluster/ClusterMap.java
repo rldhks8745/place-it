@@ -176,11 +176,11 @@ public class ClusterMap extends AppCompatActivity
         });
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 getVisibleRegion();
+                mGoogleMap.setOnCameraIdleListener(mClusterManager);
             }
         });
 
