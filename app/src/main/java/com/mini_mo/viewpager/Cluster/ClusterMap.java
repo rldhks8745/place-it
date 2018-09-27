@@ -1,28 +1,13 @@
 package com.mini_mo.viewpager.Cluster;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -34,11 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -61,11 +46,9 @@ import com.mini_mo.viewpager.Store;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 public class ClusterMap extends AppCompatActivity
@@ -74,6 +57,7 @@ public class ClusterMap extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
     private Marker currentMarker = null;
+    Marker customMarker=null;
 
     private static final String TAG = "googlemap_example";
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
@@ -88,11 +72,12 @@ public class ClusterMap extends AppCompatActivity
     ArrayList<MarkerItem> sampleList = new ArrayList();
     float zoomLevel = 16;
 
-    ImageView ok, nowlocation, cancel, mapmenu;
-    TextView textView, tv_marker;
+    ImageView ok, nowlocation, cancel, mapmenu,store_image;
+    TextView textView,store_name,store_status;
     View marker_root_view;
 
     ArrayList<ListViewItemData> clustericon;
+    MarkerOptions marker = new MarkerOptions();
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -118,13 +103,16 @@ public class ClusterMap extends AppCompatActivity
         mapmenu = (ImageView) findViewById(R.id.mapmenu);
 
         textView = (TextView) findViewById(R.id.textView);
+
         ok.setOnClickListener(this);
         nowlocation.setOnClickListener(this);
         cancel.setOnClickListener(this);
         mapmenu.setOnClickListener(this);
 
         marker_root_view = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
-        tv_marker = (TextView) marker_root_view.findViewById(R.id.tv_marker);
+        store_name = (TextView)marker_root_view.findViewById(R.id.store_name);
+        store_status = (TextView)marker_root_view.findViewById(R.id.store_status);
+        store_image = (ImageView)marker_root_view.findViewById(R.id.store_iamge);
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -186,17 +174,12 @@ public class ClusterMap extends AppCompatActivity
                 savePoint = cameraPosition.target;
             }
         });
-
-
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
+        mGoogleMap.setOnCameraIdleListener(mClusterManager);
         mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
-            public void onCameraIdle(){
-                if(!isSetClusteringListener) {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
-                    isSetClusteringListener = true;
-                }
+            public void onCameraIdle() {
                 getVisibleRegion();
             }
         });
@@ -224,20 +207,20 @@ public class ClusterMap extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (mGoogleMap.getCameraPosition().zoom > 19) {
+        if (mGoogleMap.getCameraPosition().zoom >= 19) {
             mClusterManager.clearItems();
             for (int i = 0; i < clustericon.size(); i++) {
                 double lat = clustericon.get(i).latitude;
                 double lng = clustericon.get(i).longitude;
                 if (mGoogleMap.getCameraPosition().zoom > 19) {
-                    sampleList.add(new MarkerItem(lat, lng, clustericon.get(i).content));
-                    // getSampleMarkerItems(lat,lng,clustericon.get(i).content);
+                    sampleList.add(new MarkerItem(lat, lng, clustericon.get(i).content,clustericon.get(i).user_id,clustericon.get(i).user_photo));
                 }
             }
             getSampleMarkerItems(sampleList);
         }
          else {
-
+            if(customMarker != null)
+            mGoogleMap.clear();
             for (int i = 0; i < clustericon.size(); i++) {
                 double lat = clustericon.get(i).latitude;
                 double lng = clustericon.get(i).longitude;
@@ -246,6 +229,7 @@ public class ClusterMap extends AppCompatActivity
                 mClusterManager.addItem(myItem);
             }
         }
+
     }
     private void getSampleMarkerItems(ArrayList<MarkerItem> sampleList) {
 
@@ -259,21 +243,25 @@ public class ClusterMap extends AppCompatActivity
 
 
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
-        String text = markerItem.getText();
+        String status = markerItem.getStatus();
+        String name = markerItem.getName();
 
-        tv_marker.setText(text);
+        store_status.setText(status.toString());
+        store_name.setText(name.toString());
 
-        if (isSelectedMarker!=true) {
-            tv_marker.setBackgroundResource(R.drawable.speechbubble);
-            tv_marker.setTextColor(Color.WHITE);
-        }
+        store_status.setTextColor(Color.BLACK);
+        store_name.setTextColor(Color.BLACK);
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.title(text);
-        markerOptions.position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view)));
+        Glide.with(this)
+                .load( markerItem.getImage())
+                .apply( new RequestOptions().override(50,50).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                .into(store_image);
 
-        return mGoogleMap.addMarker(markerOptions);
+
+        MarkerOptions marker = new MarkerOptions();
+        marker.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view)));
+        marker.position(position);
+        return customMarker = mGoogleMap.addMarker(marker);
 
     }
 

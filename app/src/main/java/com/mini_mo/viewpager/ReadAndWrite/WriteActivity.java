@@ -138,7 +138,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         back = (ImageView)findViewById(R.id.back);
         usericon = (ImageView)findViewById(R.id.usericon);
         getlocation = (ImageView)findViewById(R.id.getlocation);
-        history = (ImageView)findViewById(R.id.history);
         img = (ImageView)findViewById(R.id.img);
         video = (ImageView)findViewById(R.id.video);
         tapmap = (ImageView)findViewById(R.id.tapmap);
@@ -279,16 +278,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
                 if( MainPageFragment.getInstance().latitude == 0.0 )
                     loading.progressON( this, "위치 수신 준비중");
-
-                break;
-
-            case R.id.history:
-
-                Store.content = content.getText().toString();
-
-                Intent intent = new Intent(this,LoadLocateActivity.class);
-                startActivity(intent);
-                finish();
 
                 break;
 
