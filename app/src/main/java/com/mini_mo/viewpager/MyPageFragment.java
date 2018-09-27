@@ -108,6 +108,19 @@ public class MyPageFragment extends Fragment {
                 }
             });
 
+
+            userId.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent( MyPageFragment.this.getContext(), NicknameActivity.class ); // 앱안에는 없지만 안드로이드 폰에 존재하는 컨텐트들의 URI를 받아오자
+                    intent.putExtra("loginId", loginId);
+                    intent.putExtra("NIckname", userId.getText().toString() );
+
+                    startActivity( intent );
+                }
+            });
+
             // 유저 이미지 클릭해서 변경할 때
             usericon.setOnClickListener(new View.OnClickListener() {
                 @Override
