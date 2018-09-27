@@ -289,6 +289,15 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     latitude = read_location.latitude;
                     longitude = read_location.longitude;
                 }
+                location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
+                MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
+
+                latitude = MainPageFragment.getInstance().latitude;
+                longitude = MainPageFragment.getInstance().longitude;
+
+                if( MainPageFragment.getInstance().latitude == 0.0 )
+                    loading.progressON( this, "위치 수신 준비중");
+
                 break;
 
             case R.id.img:

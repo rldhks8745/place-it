@@ -1,13 +1,21 @@
 package com.mini_mo.viewpager.Cluster;
+
+import android.media.Image;
+import android.widget.ImageView;
+
 public class MarkerItem {
-    String text;
+    String image;
+    String status;
+    String name;
     double lat;
     double lon;
 
-    public MarkerItem(double lat, double lon, String text){
-        this.text = text;
+    public MarkerItem(double lat, double lon, String status,String name,String image){
+        this.status = status;
         this.lat = lat;
         this.lon = lon;
+        this.name = name;
+        this.image = image;
     }
 
     public double getLat() {
@@ -27,11 +35,19 @@ public class MarkerItem {
     }
 
 
-    public String getText(){
-        return text;
+    public String getStatus(){
+        return status;
     }
 
-    public void setText(String text){
-        this.text = text;
+    public void setStatus(String status){
+        this.status = status;
     }
+
+    public String getName(){return name;}
+
+    public void setName(String name){this.name=name;}
+
+    public String getImage(){return image;}
+
+    public void setImage(String image){this.image = image;}
 }
