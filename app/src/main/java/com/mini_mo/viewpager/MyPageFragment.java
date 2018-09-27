@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 import org.json.JSONException;
@@ -39,6 +42,7 @@ public class MyPageFragment extends Fragment {
 
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     private final int GALLERY_CODE=1112; // 이미지 불러오기 후 onActivityResult로 받을 request코드값
+    final int TAPMAP = 300;
 
     private View view;
     private NestedScrollView nestedScrollView;
@@ -50,6 +54,7 @@ public class MyPageFragment extends Fragment {
     private TextView followers;
     private TextView following;
     private TextView userId;
+    private TextView location;
     private TextView message;
     private ImageView usericon;
 
@@ -83,6 +88,7 @@ public class MyPageFragment extends Fragment {
             followers = (TextView) view.findViewById(R.id.follwers);
             following = (TextView) view.findViewById(R.id.following);
             userId = (TextView) view.findViewById(R.id.userid);
+            location = (TextView) view.findViewById(R.id.location);
             message = (TextView) view.findViewById(R.id.message);
             usericon = (ImageView) view.findViewById(R.id.usericon);
         }
@@ -140,6 +146,16 @@ public class MyPageFragment extends Fragment {
 
                         startActivityForResult( Intent.createChooser( intent, "Select Pictures"), GALLERY_CODE); // Start
                     }
+                }
+            });
+
+            // 가게주소 변경
+            location.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent cintent = new Intent(MyPageFragment.this.getContext(), Selectlocationmap.class);
+                    startActivityForResult(cintent,TAPMAP);
                 }
             });
 
@@ -206,7 +222,14 @@ public class MyPageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if(resultCode == TAPMAP){
+            if(Store.point!=null) {
+                location.setText(AddressTransformation.getAddress(getActivity(), Store.point.latitude, Store.point.longitude));
+
+            }else
+                Toast.makeText(getActivity().getApplicationContext(),"주소 입력 실패!",Toast.LENGTH_SHORT).show();
+                Log.i("위치 저장 값", "주소 널 포인트");
+        }else if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
                 case GALLERY_CODE:

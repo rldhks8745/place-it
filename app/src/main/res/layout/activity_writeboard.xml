@@ -137,21 +137,14 @@
                     android:id="@+id/getlocation"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     app:srcCompat="@drawable/location" />
-
-                <ImageView
-                    android:id="@+id/history"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/history" />
 
                 <ImageView
                     android:id="@+id/tapmap"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:padding="8dp"
                     app:srcCompat="@drawable/tapmap" />
             </LinearLayout>
