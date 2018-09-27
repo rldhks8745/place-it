@@ -43,6 +43,7 @@ import com.mini_mo.viewpager.Camera.LoadingDialog;
 import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
@@ -95,7 +96,7 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     Spinner category;
 
-    ImageView usericon,getlocation,history,video,img,send, back,tapmap;
+    ImageView usericon,getlocation,video,img,send, back,tapmap;
     TextView location,userid;
     EditText content;
 
@@ -138,7 +139,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         back = (ImageView)findViewById(R.id.back);
         usericon = (ImageView)findViewById(R.id.usericon);
         getlocation = (ImageView)findViewById(R.id.getlocation);
-        history = (ImageView)findViewById(R.id.history);
         img = (ImageView)findViewById(R.id.img);
         video = (ImageView)findViewById(R.id.video);
         tapmap = (ImageView)findViewById(R.id.tapmap);
@@ -158,7 +158,6 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
         img.setOnClickListener(this);
         video.setOnClickListener(this);
         getlocation.setOnClickListener(this);
-        history.setOnClickListener(this);
         tapmap.setOnClickListener(this);
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -271,25 +270,22 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 getlocation.startAnimation(ani);
 
-                location.setText(AddressTransformation.getAddress(this, MainPageFragment.getInstance().latitude, MainPageFragment.getInstance().longitude));
-                MainPageFragment.getInstance().getLocation( GpsInfo.WRITE );
+                User_Info read_location = null;
 
-                latitude = MainPageFragment.getInstance().latitude;
-                longitude = MainPageFragment.getInstance().longitude;
+                try {
+                    read_location = new Data().read_myLocation(Store.userid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                if( MainPageFragment.getInstance().latitude == 0.0 )
-                    loading.progressON( this, "위치 수신 준비중");
+                if( read_location.latitude == 0.0 || read_location.longitude == 0.0) {
+                    location.setText("위치가 설정되지 않았습니다.");
+                }else {
+                    location.setText(AddressTransformation.getAddress(this, read_location.latitude, read_location.longitude));
 
-                break;
-
-            case R.id.history:
-
-                Store.content = content.getText().toString();
-
-                Intent intent = new Intent(this,LoadLocateActivity.class);
-                startActivity(intent);
-                finish();
-
+                    latitude = read_location.latitude;
+                    longitude = read_location.longitude;
+                }
                 break;
 
             case R.id.img:

@@ -121,7 +121,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         usericon=(ImageView)findViewById(R.id.usericon);
         getlocation = (ImageView)findViewById(R.id.getlocation);
         tapmap = (ImageView)findViewById(R.id.tapmap);
-        history = (ImageView)findViewById(R.id.history);
 
         userid = (TextView)findViewById(R.id.userid);
         location = (TextView)findViewById(R.id.location);
@@ -305,17 +304,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
                 if( MainPageFragment.getInstance().latitude == 0.0 )
                     loading.progressON( this, "위치 수신 준비중");
-
-                break;
-
-            case R.id.history:
-                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                history.startAnimation(ani);
-
-                Intent intent = new Intent(this,LoadLocateActivity.class);
-                intent.putExtra("check",1);
-                startActivity(intent);
-                finish();
 
                 break;
 

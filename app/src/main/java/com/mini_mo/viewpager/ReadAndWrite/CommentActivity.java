@@ -77,7 +77,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         for(int i=0;i<rci.size();i++) {
-            Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
+            if(!(rci.get(i).user_photo.equals("No Photo"))) {
+
+                Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
+
+            }else {
+                Glide.with(getApplicationContext())
+                        .load( rci.get(i).user_photo)
+                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
+                        .into(myprofile);
+            }
+
         }
 
         count = 0;
@@ -86,7 +96,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
 
-            Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
+            if(!(rci.get(i).user_photo.equals("No Photo"))) {
+
+                Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
+
+            }else {
+                Glide.with(getApplicationContext())
+                        .load( rci.get(i).user_photo)
+                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
+                        .into(myprofile);
+            }
 
             myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
             count++;
@@ -127,7 +146,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            if(!(rci.get(i).user_photo.equals("No Photo"))) {
+
                                 Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
+
+                            }else {
+                                Glide.with(getApplicationContext())
+                                        .load( rci.get(i).user_photo)
+                                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
+                                        .into(myprofile);
+                            }
 
                                 myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
 

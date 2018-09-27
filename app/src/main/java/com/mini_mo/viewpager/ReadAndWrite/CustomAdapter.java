@@ -121,7 +121,18 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
+        if(!(myItem.getIcon().equals("No Photo"))) {
+
+            Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
+
+        }else {
+            Glide.with(convertView)
+                    .load(myItem.getIcon())
+                    .apply( new RequestOptions().override(100,100).placeholder(R.drawable.user).error(R.drawable.user))
+                    .into(iv_img);
+        }
+
+        //Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
         tv_id.setText(myItem.getId());
         tv_title.setText(myItem.getTile());
 

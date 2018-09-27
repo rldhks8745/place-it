@@ -230,8 +230,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        if(user_info.user_photo!=null) {
+        if(!(user_info.user_photo.equals("No Photo"))) {
             Glide.with(getApplicationContext()).load(user_info.user_photo).apply(bitmapTransform(new CircleCrop())).into(profile);
+        }else {
+            Glide.with(getApplicationContext())
+                    .load(user_info.user_photo)
+                    .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
+                    .into(profile);
         }
 
 
