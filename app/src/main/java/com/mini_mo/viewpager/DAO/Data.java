@@ -16,6 +16,61 @@ public class Data {
 
     }
 
+    public User_Info read_myLocation(String id)  throws JSONException
+    {
+        User_Info fl = new User_Info();
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject u_n = new JSONObject();
+
+        obj.put("flag", "read_myLocation");
+        u_n.put("id", id);
+
+        obj.put("read_myLocation_data", u_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+
+        fl.latitude = result.getDouble("latitude");
+        fl.longitude = result.getDouble("longitude");
+
+
+
+        return fl;
+    }
+
+    public String change_myLocation(double latitude, double longitude, String id) throws JSONException
+    {
+
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "change_myLocation");
+        c_d.put("latitude",latitude);
+        c_d.put("id",id);
+        c_d.put("longitude",longitude);
+        obj.put("change_myLocation_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
+    }
+
     public String change_nickname(String nickname, String id) throws JSONException
     {
 
@@ -605,6 +660,8 @@ public class Data {
         fl.date_member = result.getString("date_member");
         fl.user_photo = result.getString("user_photo");
         fl.massage = result.getString("massage");
+        fl.latitude = result.getDouble("latitude");
+        fl.longitude = result.getDouble("longitude");
 
 
 

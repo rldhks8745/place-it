@@ -7,4 +7,6 @@ public class User_Info
     public String date_member;
     public String user_photo;
     public String massage;
+    public double latitude;
+    public double longitude;
 }
