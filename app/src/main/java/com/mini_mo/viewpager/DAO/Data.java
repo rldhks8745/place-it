@@ -663,6 +663,8 @@ public class Data {
         fl.massage = result.getString("massage");
         fl.latitude = result.getDouble("latitude");
         fl.longitude = result.getDouble("longitude");
+        fl.nickname = result.getString("nickname");
+
 
 
 
@@ -884,6 +886,7 @@ public class Data {
                     tbll.content = tjob.getString("content");
                     tbll.id = tjob.getString("id");
                     tbll.user_photo = tjob.getString("user_photo");
+                    tbll.nickname = tjob.getString("nickname");
 
                     if(tjob.getInt("is_Photo") == 1)
                     {
