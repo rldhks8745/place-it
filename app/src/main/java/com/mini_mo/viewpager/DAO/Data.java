@@ -1007,7 +1007,11 @@ public class Data {
                 t.comment_date = tjo.getString("comment_date");
                 t.comment_content = tjo.getString("comment_content");
                 t.comment_id = tjo.getString("comment_id");
-                t.user_photo = tjo.getString("user_photo");
+                t.comment_photo = tjo.getString("comment_photo");
+                t.comment_pw = tjo.getString("comment_pw");
+                t.comment_nickname = tjo.getString("comment_nickname");
+                t.guest_photo = tjo.getInt("guest_photo");
+
 
                 rci.add(t);
             }
@@ -1018,9 +1022,11 @@ public class Data {
     }
 
 
-    public String writeComment(String board_num, String user_id, String content) throws JSONException
+    public String writeComment(String board_num, String user_id, String content,String comment_photo ,String nickname,String pw, int guestPhoto) throws JSONException
     {
 
+        String comment_num;
+        int r = -2;
         JSONObject result = null;
         JSONObject obj = new JSONObject();
         JSONObject c_d = new JSONObject();
@@ -1029,6 +1035,9 @@ public class Data {
         c_d.put("Board_num",board_num);
         c_d.put("user_name", user_id);
         c_d.put("content", content);
+        c_d.put("pw", pw);
+        c_d.put("nickname", nickname);
+        c_d.put("guestPhoto", guestPhoto);
         obj.put("write_comment_data",c_d);
 
         try {
@@ -1039,7 +1048,20 @@ public class Data {
             e.printStackTrace();
         }
 
-        return result.toString();
+        if(result != null)
+        {
+
+            comment_num = result.getString("result");
+            if((Integer.parseInt(comment_num) > 0))
+            {
+
+                    new Imagehttp(comment_photo, comment_num, "comment_num").execute();
+
+                 r= 1;
+            }
+        }
+
+        return r+"";
     }
 
 
