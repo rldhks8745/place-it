@@ -5,13 +5,11 @@ import android.widget.ImageView;
 
 public class MarkerItem {
     String image;
-    String status;
     String name;
     double lat;
     double lon;
 
-    public MarkerItem(double lat, double lon, String status,String name,String image){
-        this.status = status;
+    public MarkerItem(double lat, double lon,String name,String image){
         this.lat = lat;
         this.lon = lon;
         this.name = name;
@@ -32,15 +30,6 @@ public class MarkerItem {
 
     public void setLon(double lon) {
         this.lon = lon;
-    }
-
-
-    public String getStatus(){
-        return status;
-    }
-
-    public void setStatus(String status){
-        this.status = status;
     }
 
     public String getName(){return name;}

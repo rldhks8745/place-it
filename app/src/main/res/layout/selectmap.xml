@@ -9,7 +9,6 @@
         android:id="@+id/selectmap"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="10" />
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

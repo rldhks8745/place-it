@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,10 +20,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -65,6 +64,7 @@ public  class Selectlocationmap extends AppCompatActivity
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
+    private Activity activity;
     private Selectlocationmap mActivity;
     private ClusterManager<MyItem> mClusterManager = null;
     boolean askPermissionOnceAgain = false;
@@ -90,6 +90,7 @@ public  class Selectlocationmap extends AppCompatActivity
         setContentView(R.layout.selectmap);
         Log.d(TAG, "onCreate");
         mActivity = this;
+        activity = this;
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -173,19 +174,33 @@ public  class Selectlocationmap extends AppCompatActivity
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
-
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 
         mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
-                Store.point = latLng;
-                setResult(300);
-                finish();
+            public void onMapLongClick(final LatLng latLng) {
+
+                android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(activity);
+                dialog  .setTitle("선택위치 저장")
+                        .setMessage("현재 지정한 위치로 글을 등록하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Store.point = latLng;
+                                setResult(300);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
             }
         });
 
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
 
     }
 

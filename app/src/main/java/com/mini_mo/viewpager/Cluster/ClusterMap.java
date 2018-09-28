@@ -38,11 +38,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
+import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
 
@@ -70,7 +72,7 @@ public class ClusterMap extends AppCompatActivity
     boolean isSetClusteringListener= false;
     LatLng savePoint;
     ArrayList<MarkerItem> sampleList = new ArrayList();
-    float zoomLevel = 16;
+    float zoomLevel = 17;
 
     ImageView ok, nowlocation, cancel, mapmenu,store_image;
     TextView textView,store_name,store_status;
@@ -117,6 +119,7 @@ public class ClusterMap extends AppCompatActivity
         Log.d(TAG, "onCreate");
         mActivity = this;
 
+
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
@@ -159,7 +162,8 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
+                Intent intent = new Intent(getApplicationContext(), YourPageActivity.class);
+                intent.putExtra("id",marker.getTitle());
                 startActivity(intent);
                 finish();
                 return false;
@@ -179,8 +183,10 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
+                if(customMarker != null)
+                    mGoogleMap.clear();
                 getVisibleRegion();
-                mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                mClusterManager.cluster();
             }
         });
 
@@ -203,17 +209,23 @@ public class ClusterMap extends AppCompatActivity
         Data data = new Data();
         try {
             clustericon = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
-
+            for (int i = 0; i < clustericon.size(); i++) {
+                if (i > 0) {
+                    if (clustericon.get(i).user_id.equals(clustericon.get(i - 1).user_id)) {
+                        clustericon.remove(i);
+                    }
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (mGoogleMap.getCameraPosition().zoom >= 19) {
+        if (mGoogleMap.getCameraPosition().zoom >= 18.8) {
             mClusterManager.clearItems();
             for (int i = 0; i < clustericon.size(); i++) {
                 double lat = clustericon.get(i).latitude;
                 double lng = clustericon.get(i).longitude;
-                if (mGoogleMap.getCameraPosition().zoom > 19) {
-                    sampleList.add(new MarkerItem(lat, lng, clustericon.get(i).content,clustericon.get(i).user_id,clustericon.get(i).user_photo));
+                if (mGoogleMap.getCameraPosition().zoom >= 18.8) {
+                    sampleList.add(new MarkerItem(lat, lng,clustericon.get(i).user_id,clustericon.get(i).user_photo));
                 }
             }
             getSampleMarkerItems(sampleList);
@@ -221,6 +233,8 @@ public class ClusterMap extends AppCompatActivity
          else {
             if(customMarker != null)
             mGoogleMap.clear();
+            if(sampleList!=null)
+            sampleList.clear();
             for (int i = 0; i < clustericon.size(); i++) {
                 double lat = clustericon.get(i).latitude;
                 double lng = clustericon.get(i).longitude;
@@ -234,16 +248,22 @@ public class ClusterMap extends AppCompatActivity
     private void getSampleMarkerItems(ArrayList<MarkerItem> sampleList) {
 
         for (MarkerItem markerItem : sampleList) {
-            addMarker(markerItem, false);
+            addMarker(markerItem);
         }
 
     }
 
-    private Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
+    private Marker addMarker(MarkerItem markerItem) {
 
+        User_Info user_info = new User_Info();
+        try {
+            user_info = new Data().read_myPage(markerItem.getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
-        String status = markerItem.getStatus();
+        String status = user_info.massage;
         String name = markerItem.getName();
 
         store_status.setText(status.toString());
@@ -260,6 +280,7 @@ public class ClusterMap extends AppCompatActivity
 
         MarkerOptions marker = new MarkerOptions();
         marker.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view)));
+        marker.title(name);
         marker.position(position);
         return customMarker = mGoogleMap.addMarker(marker);
 
