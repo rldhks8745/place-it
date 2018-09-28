@@ -1055,8 +1055,9 @@ public class Data {
             if((Integer.parseInt(comment_num) > 0))
             {
 
+                if(comment_photo.equals("No Photo")) {
                     new Imagehttp(comment_photo, comment_num, "comment_num").execute();
-
+                }
                  r= 1;
             }
         }
