@@ -20,7 +20,7 @@ public class Membershipactivity extends AppCompatActivity {
 
     Button cbutton;
     Button accept,checkid;
-    EditText mid , mpasswd,rpasswd,birth;
+    EditText mid , mpasswd,rpasswd;
     boolean ch_id = false;
     boolean ch_pwd = false;
 
@@ -35,17 +35,16 @@ public class Membershipactivity extends AppCompatActivity {
         mid = (EditText) findViewById(R.id.mid);
         mpasswd = (EditText) findViewById(R.id.mpasswd);
         rpasswd = (EditText) findViewById(R.id.rpasswd);
-        birth = (EditText) findViewById(R.id.birth);
         checkid = (Button) findViewById(R.id.checkid);
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(ch_id && ch_pwd && (birth.getText().toString() != null))
+                if(ch_id && ch_pwd )
                 {
                     try {
-                        new Data().membership(mid.getText().toString(),mpasswd.getText().toString(),birth.getText().toString());
+                        new Data().membership(mid.getText().toString(),mpasswd.getText().toString(),"0");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

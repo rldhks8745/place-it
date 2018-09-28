@@ -11,10 +11,10 @@ public class SearchListViewItem{
     public double latitude;
     public double longitude;
     private String user_id;
-    private RoundedBitmapDrawable user_photo;
-    private int comment,photo;
+    private String user_photo;
+    private int comment;
 
-    public SearchListViewItem(int board_num,String content,String date_board, int good, double latitude, double longitude, String user_id, RoundedBitmapDrawable user_photo,int commentsize, int photosize){
+    public SearchListViewItem(int board_num,String content,String date_board, int good, double latitude, double longitude, String user_id, String user_photo,int commentsize){
         this.board_num = board_num;
         this.content = content;
         this.date_board = date_board;
@@ -24,7 +24,6 @@ public class SearchListViewItem{
         this.user_id = user_id;
         this.user_photo = user_photo;
         comment = commentsize;
-        photo = photosize;
     }
 
     public int getBoard_num(){
@@ -47,7 +46,7 @@ public class SearchListViewItem{
         return user_id;
     }
 
-    public RoundedBitmapDrawable getUser_photo(){
+    public String getUser_photo(){
         return user_photo;
     }
 
@@ -63,10 +62,6 @@ public class SearchListViewItem{
 
     public int getCommentSize(){
         return comment;
-    }
-
-    public int getPhotoSize(){
-        return photo;
     }
 
 }

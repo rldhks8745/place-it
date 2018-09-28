@@ -12,10 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.mini_mo.viewpager.ReadAndWrite.Util;
 
 import java.util.ArrayList;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class SearchListViewAdapter extends BaseAdapter {
 
@@ -55,71 +61,49 @@ public class SearchListViewAdapter extends BaseAdapter {
         final int pos = position;
         final Context context = parent.getContext();
 
-        /* 'listview_custom' Layout을 inflate하여 convertView 참조 획득 */
+        //-----------'listview_custom' Layout을 inflate하여 convertView 참조 획득
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listview_item1, parent, false);
         }
 
-        /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-
-        LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.test1);
-        TableRow tableRow = (TableRow)convertView.findViewById(R.id.test2);
-
-
-        TableLayout tableLayout = (TableLayout)convertView.findViewById(R.id.table);
-        ImageView profile = (ImageView)convertView.findViewById(R.id.userIcon);
+        //-----------'listview_custom'에 정의된 위젯에 대한 참조 획득
+        ImageView profile = (ImageView)convertView.findViewById(R.id.usericon);
         TextView id = (TextView)convertView.findViewById(R.id.userid);
-        TextView text = (TextView)convertView.findViewById(R.id.context);
-        TextView good = (TextView)convertView.findViewById(R.id.good);
-
-        ImageView photo = (ImageView)convertView.findViewById(R.id.photo);
+        TextView text = (TextView)convertView.findViewById(R.id.contents);
+        TextView date = (TextView)convertView.findViewById(R.id.date);
+        TextView good = (TextView)convertView.findViewById(R.id.like);
         TextView comment = (TextView)convertView.findViewById(R.id.comment);
 
-
-        /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
+        //-----------각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용
         SearchListViewItem myItem = getItem(position);
 
-        if(myItem.getCommentSize() == 0) {
-            tableRow.removeView(comment);
+        //-----------여기서 리스트뷰 xml에 각각 값들 주면 됨.
+        if(!(myItem.getUser_photo().equals("No Photo"))) {
+            Glide.with(convertView).load(myItem.getUser_photo()).apply(bitmapTransform(new CircleCrop())).into(profile);
+        }else {
+            Glide.with(convertView)
+                    .load(myItem.getUser_photo())
+                    .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                    .into(profile);
         }
 
-        if(myItem.getPhotoSize() == 0) {
-            linearLayout.removeView(photo);
-        }
-
-        Util.Log("아이템 안속", myItem.getContent()+"\n"+
-                myItem.getUser_id()+"\n"+
-                myItem.getUser_photo()+"\n"+
-                myItem.getCommentSize()+"\n"+
-                myItem.getPhotoSize()+"\n"+
-                String.valueOf(myItem.getGood()));
-
-        //여기서 리스트뷰 xml에 각각 값들 주면 됨.
-        profile.setImageDrawable(myItem.getUser_photo());
         id.setText(myItem.getUser_id());
         text.setText(myItem.getContent());
+        date.setText(myItem.getDate_board());
         good.setText(String.valueOf(myItem.getGood()));
-
-        //String address = AddressTransformation.getAddress(activity,myItem.getLatitude(),myItem.getLongitude());
-
-        /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        // tv_locate.setText(address);
-        // tv_message.setText(myItem.getMessage());
-
-        /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
+        comment.setText(String.valueOf(myItem.getCommentSize()));
 
 
         return convertView;
     }
 
-    public void addItem(int board_num,String content,String date_board, int good, double latitude, double longitude, String user_id, RoundedBitmapDrawable user_photo,int commentsize, int photosize) {
+    public void addItem(int board_num,String content,String date_board, int good, double latitude, double longitude, String user_id, String user_photo,int commentsize) {
 
-        SearchListViewItem searchListViewItem = new SearchListViewItem(board_num,content,date_board,good,latitude,longitude,user_id,user_photo,commentsize,photosize);
+        SearchListViewItem searchListViewItem = new SearchListViewItem(board_num,content,date_board,good,latitude,longitude,user_id,user_photo,commentsize);
 
         /* LocateItems에 MyItem을 추가한다. */
         searchListViewItems.add(searchListViewItem);
-
     }
 
     public double[] getLocate(int position){

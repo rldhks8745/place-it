@@ -79,16 +79,6 @@ public class SettingFrg extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
-        LinearLayout save = (LinearLayout)view.findViewById(R.id.save);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(getActivity(), SaveLocateActivity.class);
-               startActivity(intent);
-            }
-        });
-
         super.onViewCreated(view, savedInstanceState);
     }
 }
