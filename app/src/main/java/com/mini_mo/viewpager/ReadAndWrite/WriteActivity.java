@@ -73,40 +73,40 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
 
     //GPS파트
 
-    int permissionCheck;
+    private int permissionCheck;
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1000;
     final int IMAGE_CODE = 100;
     final int SELECT_VIDEO = 200;
     final int TAPMAP = 300;
 
     private String selectedPath;
-    MediaController mc;
+    private  MediaController mc;
 
     //실험
-    HashtagSpans hashtagSpans;
+    private HashtagSpans hashtagSpans;
 
-    double latitude;
-    double longitude;
+    private double latitude;
+    private double longitude;
     //실험
 
-    Data data;
+    private Data data;
 
-    Geocoder geocoder = null;
-    Animation ani=null;
+    private Geocoder geocoder = null;
+    private Animation ani=null;
 
-    Spinner category;
+    private Spinner category;
 
-    ImageView usericon,getlocation,video,img,send, back,tapmap;
-    TextView location,userid;
-    EditText content;
+    private ImageView usericon,getlocation,video,img,send, back,tapmap;
+    private TextView location,userid;
+    private EditText content;
 
-    LinearLayout imglist;
-    ArrayList<View> viewarr;
-    ArrayList<String> imgurl;
+    private LinearLayout imglist;
+    private ArrayList<View> viewarr;
+    private ArrayList<String> imgurl;
 
-    int category_number,select;
+    private int category_number,select;
 
-    LoadingDialog loading = new LoadingDialog();
+    private LoadingDialog loading = new LoadingDialog();
 
     public static WriteActivity instance;
 
@@ -423,68 +423,21 @@ public class WriteActivity extends AppCompatActivity implements View.OnClickList
                     case IMAGE_CODE:
                         ArrayList realPath = new ArrayList();
 
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            ClipData clipData = data.getClipData();
-                            if(data.getClipData() == null){
-                                realPath.add( getRealPathFromURI(data.getData())); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
+                        if(data.getClipData() == null){
+                            realPath.add( getRealPathFromURI(data.getData())); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
 
+                            imgurl.add(realPath.get(0).toString()); //imgurl 이라는 arraylist에 절대경로를 넣어준다.
 
-                                imgurl.add(realPath.get(0).toString()); //imgurl 이라는 arraylist에 절대경로를 넣어준다.
+                            Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
 
-                                Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
+                            Store.arr_uri.add(uri);
 
-                                Store.arr_uri.add(uri);
+                            viewarr.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
+                            viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
+                            viewarr.get(viewarr.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
 
-                                viewarr.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri))); //uri로 만든 사진을 ReSizing() 메소드에 넣어 크기를 줄인 후 bitmap으로 반환 -> bitmap을 가지고 새로운 imageview 생성 후 imgarrlist에 추가
-                                viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨 <클릭이벤트를 하기위함>
-                                viewarr.get(viewarr.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
-
-
-                                imglist.addView(viewarr.get(viewarr.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.>
-
-
-
-                            }else if(clipData.getItemCount() > 10){
-                                Toast.makeText(this,"사진은 10장까지 선택 가능합니다.",Toast.LENGTH_SHORT).show();
-                                return;
-                            }else if(clipData.getItemCount() == 1){
-
-                                realPath.add( getRealPathFromURI(clipData.getItemAt(0).getUri()));
-
-                                imgurl.add(realPath.get(0).toString());
-
-                                Uri uri = clipData.getItemAt(0).getUri();
-
-                                Store.arr_uri.add(uri);
-
-                                viewarr.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                viewarr.get(viewarr.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
-
-
-                                imglist.addView(viewarr.get(viewarr.size()-1));
-
-                            }else{
-                                for(int i=0;i<clipData.getItemCount();i++){
-                                    realPath.add( getRealPathFromURI(clipData.getItemAt(i).getUri()));
-
-                                    imgurl.add(realPath.get(i).toString());
-
-                                    Uri uri = clipData.getItemAt(i).getUri();
-
-                                    Store.arr_uri.add(uri);
-
-                                    viewarr.add(NewImageCrate.WritenewImageCreate(this,ImageResizing.ReSizing(this.getContentResolver(),uri)));
-                                    viewarr.get(viewarr.size() - 1).setId(viewarr.size() - 1); // imarrlist의 0번째 값의 id를 정해준다. 여긴 나중에 arraylist의 크기를 바로 id로 정해주면 됨
-                                    viewarr.get(viewarr.size() - 1).setOnLongClickListener(this); //추가해주는 이미지마다 클릭리스너 달아준다.
-
-
-                                    imglist.addView(viewarr.get(viewarr.size()-1));
-                                }
-
+                            imglist.addView(viewarr.get(viewarr.size()-1)); //imglist에 imgarrlist의 ImageView를 추가해준다.<imglist는 사진이 들어갈 LinearLayout 이다.
                             }
-
-                        }
                         break;
 
                     default:

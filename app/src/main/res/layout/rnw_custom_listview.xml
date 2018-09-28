@@ -24,30 +24,42 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="85"
+            android:weightSum="100"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/userid"
+                android:id="@+id/nickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="user id"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_weight="10"/>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_weight="10"
+                />
 
             <TextView
                 android:id="@+id/contents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="contents"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_weight="30"/>
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="center"
+                android:layout_margin="20dp"
+                android:layout_weight="50"/>
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/delete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:layout_gravity="end"
-            app:srcCompat="@android:drawable/ic_delete" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

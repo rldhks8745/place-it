@@ -59,6 +59,7 @@
         <activity android:name=".ReadAndWrite.VideoActivity"/>
         <activity android:name=".ReadAndWrite.WriteActivity" />
         <activity android:name=".ReadAndWrite.CommentActivity" />
+        <activity android:name=".ReadAndWrite.CommentWriteActivity" />
         <activity android:name=".ReadAndWrite.ReadActivity" />
         <activity android:name=".ReadAndWrite.ReadBoard_Image_Activity" />
         <activity android:name=".ReadAndWrite.ChangeBoard" />

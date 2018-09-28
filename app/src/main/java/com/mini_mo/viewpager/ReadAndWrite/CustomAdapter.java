@@ -77,25 +77,26 @@ public class CustomAdapter extends BaseAdapter {
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
         LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.listlayout);
-        ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon) ;
-        TextView tv_id = (TextView) convertView.findViewById(R.id.userid) ;
-        TextView tv_title = (TextView) convertView.findViewById(R.id.contents) ;
+        ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon);
+        TextView tv_nickname = (TextView) convertView.findViewById(R.id.nickname);
+        TextView tv_date = (TextView) convertView.findViewById(R.id.date);
+        ImageView tv_iamge = (ImageView) convertView.findViewById(R.id.image);
+        TextView tv_title = (TextView) convertView.findViewById(R.id.contents);
         ImageButton  button = (ImageButton)convertView.findViewById(R.id.delete);
 
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         final CustomListviewitem myItem = getItem(position);
 
-        if(!Store.userid.equals(myItem.getId())){
+        if(!Store.userid.equals(myItem.getNickname())){
             linearLayout.removeView(button);
 
             iv_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(view.getContext(), position+"번째 리스트", Toast.LENGTH_SHORT).show();
-
                     Intent intent = new Intent(activity, YourPageActivity.class);
-                    intent.putExtra("id",myItem.getId());
+                    intent.putExtra("id",myItem.getNickname());
                     activity.startActivity(intent);
                 }
             });
@@ -122,9 +123,7 @@ public class CustomAdapter extends BaseAdapter {
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         if(!(myItem.getIcon().equals("No Photo"))) {
-
             Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
-
         }else {
             Glide.with(convertView)
                     .load(myItem.getIcon())
@@ -132,8 +131,13 @@ public class CustomAdapter extends BaseAdapter {
                     .into(iv_img);
         }
 
+        if(!(myItem.getPhoto().equals("No Photo"))) {
+            Glide.with(convertView).load(myItem.getPhoto()).into(tv_iamge);
+        }
+
         //Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
-        tv_id.setText(myItem.getId());
+        tv_nickname.setText(myItem.getNickname());
+        tv_date.setText(myItem.getDate().substring(0,16));
         tv_title.setText(myItem.getTile());
 
         view = convertView;
@@ -143,7 +147,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String board_num,String comment_num ,String icon, String title, String id) {
+    public void addItem(String board_num,String comment_num ,String icon, String title, String nickname, String date, String photo) {
 
         CustomListviewitem mItem = new CustomListviewitem();
 
@@ -152,8 +156,10 @@ public class CustomAdapter extends BaseAdapter {
         mItem.setBoard_number(board_num);
         mItem.setComment_number(comment_num);
         mItem.setIcon(icon);
-        mItem.setId(id);
+        mItem.setNickname(nickname);
         mItem.setTitle(title);
+        mItem.setDate(date);
+        mItem.setPhoto(photo);
 
 
         /* mItems에 MyItem을 추가한다. */
