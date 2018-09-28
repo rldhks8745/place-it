@@ -8,5 +8,6 @@ public class Board_Location_List
    public String user_photo;
    public int photo_count = 0;
    public String board_photo = null;
+   public String nickname;
 
 }

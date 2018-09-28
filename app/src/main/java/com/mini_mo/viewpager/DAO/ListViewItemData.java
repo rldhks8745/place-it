@@ -12,4 +12,5 @@ public class ListViewItemData
     public String user_photo;
     public int category;
     public int comment_cnt;
+    public String nickname;
 }

@@ -6,13 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,10 +23,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.Store;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CommentWriteActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener{
 
@@ -33,6 +40,9 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
     private Animation ani=null;
     private int permissionCheck;
     private Intent intent;
+    private String photo;
+    private int userphoto_num;
+    private Random user_random;
 
     private ImageView usericon;
     private ImageView back;
@@ -49,6 +59,10 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rnw_comment_write_activity);
 
+        user_random = new Random();
+        photo = "No Photo";
+        userphoto_num = 0;
+
         usericon = (ImageView)findViewById(R.id.usericon);
         nickname = (EditText)findViewById(R.id.nickname);
         password = (EditText)findViewById(R.id.password);
@@ -59,6 +73,24 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
 
         if(!Store.userid.equals("Guest")){
             nickname.setText(Store.userid.toString());
+        }else{
+            userphoto_num = (user_random.nextInt(4)+1);
+
+            Drawable user = null;
+
+            if(userphoto_num == 1){
+                user = getResources().getDrawable(R.drawable.comment_1);
+            }else if(userphoto_num == 2){
+                user = getResources().getDrawable(R.drawable.comment_2);
+            }else if(userphoto_num == 3){
+                user = getResources().getDrawable(R.drawable.comment_3);
+            }else if(userphoto_num == 4){
+                user = getResources().getDrawable(R.drawable.comment_4);
+            }else if(userphoto_num == 5){
+                user = getResources().getDrawable(R.drawable.comment_5);
+            }
+
+            usericon.setImageDrawable(user);
         }
 
         image.setOnClickListener(this);
@@ -70,8 +102,20 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
     @Override
     public boolean onLongClick(View v) {
         if(v.getId()==R.id.img){
+            photo = "No Photo" ;
 
-            Toast.makeText(getApplicationContext(),"삭제실행",Toast.LENGTH_SHORT).show();
+            Animation alpahanim = AnimationUtils.loadAnimation(this,R.anim.alpha);
+            image.startAnimation(alpahanim);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Drawable drawable = getResources().getDrawable(R.drawable.add_image);
+                    image.setImageDrawable(drawable);
+                }
+                }, 1200 );
+
 
             return true;
         }
@@ -135,6 +179,22 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.send:
 
+                Data data = new Data();
+                if(nickname.getText().equals("") || password.getText().equals("")){
+                    Toast.makeText(getApplicationContext(),"닉네임 또는 패스워드는 반드시 입력하세요!",Toast.LENGTH_SHORT).show();
+                }else{
+                    intent = new Intent(this, CommentActivity.class);
+                    try {
+                        data.writeComment(String.valueOf(Store.board_num),Store.userid,content.getText().toString(),photo,nickname.getText().toString(),password.getText().toString(),userphoto_num);
+                        Toast.makeText(getApplicationContext(),"댓글 등록 성공!",Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                        finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"댓글 등록 실패..",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
                 break;
         }
 
@@ -152,7 +212,7 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             ClipData clipData = data.getClipData();
                             if(data.getClipData() == null){
-                                String photo = getRealPathFromURI(data.getData()); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
+                                photo = getRealPathFromURI(data.getData()); //갤러리에서 받아온 uri를 절대경로로 변경 해준다.
 
                                 Uri uri = data.getData(); //갤러리 사진을 uri로 받아온다.
                                 Store.arr_uri.add(uri);

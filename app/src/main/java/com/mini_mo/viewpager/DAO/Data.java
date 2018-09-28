@@ -557,6 +557,7 @@ public class Data {
                 t.longitude = tjo.getDouble("board_longitude");
                 t.user_id = tjo.getString("user_id");
                 t.user_photo = tjo.getString("user_photo");
+                t.nickname = tjo.getString("nickname");
 
                 fl.add(t);
             }
@@ -662,6 +663,8 @@ public class Data {
         fl.massage = result.getString("massage");
         fl.latitude = result.getDouble("latitude");
         fl.longitude = result.getDouble("longitude");
+        fl.nickname = result.getString("nickname");
+
 
 
 
@@ -711,6 +714,7 @@ public class Data {
                 t.user_photo = tjo.getString("user_photo");
                 t.category = tjo.getInt("category");
                 t.comment_cnt = tjo.getInt("comment_cnt");
+                t.nickname = tjo.getString("nickname");
 
                 fl.add(t);
             }
@@ -765,6 +769,7 @@ public class Data {
                 t.user_photo = tjo.getString("user_photo");
                 t.category = tjo.getInt("category");
                 t.comment_cnt = tjo.getInt("comment_cnt");
+                t.nickname = tjo.getString("nickname");
 
                 fl.add(t);
             }
@@ -820,6 +825,7 @@ public class Data {
                 t.user_photo = tjo.getString("user_photo");
                 t.category = tjo.getInt("category");
                 t.comment_cnt = tjo.getInt("comment_cnt");
+                t.nickname = tjo.getString("nickname");
 
                 fl.add(t);
             }
@@ -880,6 +886,7 @@ public class Data {
                     tbll.content = tjob.getString("content");
                     tbll.id = tjob.getString("id");
                     tbll.user_photo = tjob.getString("user_photo");
+                    tbll.nickname = tjob.getString("nickname");
 
                     if(tjob.getInt("is_Photo") == 1)
                     {
@@ -1006,6 +1013,7 @@ public class Data {
                 t.comment_num = tjo.getInt("comment_num")+"";
                 t.comment_date = tjo.getString("comment_date");
                 t.comment_content = tjo.getString("comment_content");
+                t.user_photo = tjo.getString("user_photo");
                 t.comment_id = tjo.getString("comment_id");
                 t.comment_photo = tjo.getString("comment_photo");
                 t.comment_pw = tjo.getString("comment_pw");

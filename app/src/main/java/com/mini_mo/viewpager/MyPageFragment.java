@@ -115,7 +115,7 @@ public class MyPageFragment extends Fragment {
                 }
             });
 
-
+            //닉네임 변경
             userId.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -201,7 +201,7 @@ public class MyPageFragment extends Fragment {
                 recyclerListView.add(mylistItem);
                 recyclerListView.loadItems(nestedScrollView, getContext());
 
-                userId.setText(user_info.user_id);
+                userId.setText(user_info.nickname);
                 location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
 
                 //Bitmap bit = BItmap.getBitmap

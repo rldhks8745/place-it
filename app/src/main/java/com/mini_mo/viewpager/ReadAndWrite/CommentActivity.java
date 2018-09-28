@@ -75,46 +75,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-        for(int i=0;i<rci.size();i++) {
-            if(!(rci.get(i).user_photo.equals("No Photo"))) {
-
-                Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
-
-            }else {
-                Glide.with(getApplicationContext())
-                        .load( rci.get(i).user_photo)
-                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
-                        .into(myprofile);
-            }
-
-        }
-
-        count = 0;
-        temp = 0;
-
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
-
-            if(!(rci.get(i).user_photo.equals("No Photo"))) {
-
-                Glide.with(getApplicationContext()).load(rci.get(i).user_photo).apply(bitmapTransform(new CircleCrop())).into(myprofile);
-
-            }else {
-                Glide.with(getApplicationContext())
-                        .load( rci.get(i).user_photo)
-                        .apply( new RequestOptions().override(300,300).placeholder(R.drawable.user).error(R.drawable.user))
-                        .into(myprofile);
-            }
-
-            //용훈이 오면 db 바꾸고 매개변수값 더 주기
-            //myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
-            count++;
+            myadapter.addItem(readCommentInfo.board_num,readCommentInfo.comment_num,readCommentInfo.comment_id,readCommentInfo.guest_photo,readCommentInfo.user_photo, readCommentInfo.comment_content, readCommentInfo.comment_nickname,readCommentInfo.comment_date,readCommentInfo.comment_photo);
+            myadapter.notifyDataSetChanged();
         }
 
         comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        myadapter.notifyDataSetChanged();
         write.setOnClickListener(this);
-
     }
 
     @Override
