@@ -65,36 +65,36 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     //실험용
     com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
 
-    Activity activity;
-    InputStream inputStream;
-    ArrayList<FrameLayout> videoarr;
-    ArrayList<ImageView> imagearr;
-    View.OnClickListener listener;
-    Data data;
-    User_Info user_info;
-    int count;
-    boolean like;
+    private Activity activity;
+    private InputStream inputStream;
+    private ArrayList<FrameLayout> videoarr;
+    private ArrayList<ImageView> imagearr;
+    private View.OnClickListener listener;
+    private Data data;
+    private User_Info user_info;
+    private int count;
+    private boolean like;
 
     //실험용
 
-    MediaController mc;
-    VideoView vv;
+    private MediaController mc;
+    private VideoView vv;
 
-    ImageList imgarrlist;
+    private ImageList imgarrlist;
 
-    ArrayList<String> video_list;
+    private ArrayList<String> video_list;
 
-    LinearLayout imglist,bar;
+    private LinearLayout imglist,bar;
 
-    ImageButton like_button,change,delete;
-    ImageView profile,back;
-    Button comment = null;
-    TextView userid,gps,like_count,content;
+    private ImageButton like_button,change,delete;
+    private ImageView profile,back;
+    private Button comment = null;
+    private TextView userid,gps,like_count,content;
 
-    Animation ani=null;
-    Geocoder geocoder = null;
+    private Animation ani=null;
+    private Geocoder geocoder = null;
 
-    int count_state,total_count;
+    private int count_state,total_count;
 
 
     @SuppressLint("ResourceType")

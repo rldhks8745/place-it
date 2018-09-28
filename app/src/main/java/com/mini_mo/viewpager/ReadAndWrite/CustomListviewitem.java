@@ -11,8 +11,11 @@ public class CustomListviewitem {
     private String board_number;
     private String comment_number;
     private String icon;
+    private String nickname;
     private String title;
-    private String id;
+    private String date;
+    private String photo;
+
 
     public String getIcon() {
         return icon;
@@ -22,8 +25,8 @@ public class CustomListviewitem {
         return title;
     }
 
-    public String getId() {
-        return id;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getComment_number(){
@@ -34,16 +37,24 @@ public class CustomListviewitem {
         return board_number;
     }
 
+    public String getDate(){
+        return date;
+    }
+
+    public String getPhoto(){
+        return photo;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setIcon(String photo){
-        this.icon = photo;
+    public void setIcon(String icon){
+        this.icon = icon;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setComment_number(String comment_number){
@@ -52,5 +63,13 @@ public class CustomListviewitem {
 
     public void setBoard_number(String board_number){
         this.board_number = board_number;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

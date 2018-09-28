@@ -27,8 +27,6 @@ public class AddressTransformation {
             //위도 받기
             //경도 받기
 
-
-
             list = geocoder.getFromLocation(
                     latitude, // 위도
                     longitude, // 경도
@@ -36,32 +34,19 @@ public class AddressTransformation {
 
             if( list.size() != 0 ) {
                 {
-
-                    String mainlocal = (list.get(0).getLocality() == null ? null : list.get(0).getLocality().toString());
+                    /*String mainlocal = (list.get(0).getLocality() == null ? null : list.get(0).getLocality().toString());
                     String sublocal = (list.get(0).getSubLocality() == null ? null : list.get(0).getSubLocality());
                     String thoroughfare = (list.get(0).getThoroughfare() == null ? null : list.get(0).getThoroughfare().toString());
 
-                    //String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
+                    String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);*/
 
                     String str = list.get(0).getAddressLine(0).toString().substring(5);
 
-                    Log.i("풀 주소",list.get(0).getAddressLine(0).toString().substring(5));
+                    //Log.i("풀 주소",list.get(0).getAddressLine(0).toString().substring(5));
 
                     return str;
-
-                    /*
-                      String mainlocal = (list.get(0).getLocality().toString() == null ? null : list.get(0).getLocality().toString());
-                    String sublocal = (list.get(0).getSubLocality() == null ? null : list.get(0).getSubLocality());
-                    String thoroughfare = (list.get(0).getThoroughfare().toString() == null ? null : list.get(0).getThoroughfare().toString());
-
-                    String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);
-
-                    return str;
-                     */
-
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("test", "server err - location read err");

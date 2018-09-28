@@ -1,5 +1,6 @@
 package com.mini_mo.viewpager.ReadAndWrite;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -37,16 +39,16 @@ import java.util.Date;
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
-    Data data;
-    User_Info user_info;
+    private Data data;
+    private User_Info user_info;
 
-    int count,temp;
+    private int count,temp;
 
-    ImageView send = null;
-    ImageView myprofile;
+    private ImageView write;
+    private ImageView myprofile;
 
-    Animation ani=null;
-    EditText title = null;
+    private Animation ani=null;
+    private EditText title = null;
     private ListView comment_list ;
     private CustomAdapter myadapter;
 
@@ -58,12 +60,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.rnw_activity_comment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        send = (ImageView)findViewById(R.id.send);
-
+        write = (ImageView)findViewById(R.id.write);
         myprofile = (ImageView)findViewById(R.id.usericon);
-
         comment_list = (ListView)findViewById(R.id.listview);
-        title = (EditText)findViewById(R.id.comment);
         myadapter = new CustomAdapter(this, this);
 
         comment_list.setAdapter(myadapter);
@@ -107,13 +106,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         .into(myprofile);
             }
 
-            myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
+            //용훈이 오면 db 바꾸고 매개변수값 더 주기
+            //myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
             count++;
         }
 
         comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         myadapter.notifyDataSetChanged();
-        send.setOnClickListener(this);
+        write.setOnClickListener(this);
 
     }
 
@@ -125,10 +125,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
 
-            case R.id.send:
+            case R.id.write:
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
-                send.startAnimation(ani);
-                if(!title.getText().toString().equals("")) {
+                write.startAnimation(ani);
+
+                Intent intent = new Intent(this,CommentWriteActivity.class);
+                startActivity(intent);
+
+                finish();
+
+                /*if(!title.getText().toString().equals("")) {
                     try {
                         data.writeComment(String.valueOf(Store.board_num), Store.userid, title.getText().toString());
 
@@ -157,7 +163,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         .into(myprofile);
                             }
 
-                                myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
+                                //myadapter.addItem(rci.get(i).board_num,rci.get(i).comment_num,rci.get(i).user_photo, readCommentInfo.comment_content, readCommentInfo.comment_id);
 
                             count++;
                         }
@@ -170,10 +176,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     title.setText("");
                 }else{
                     Util.Toast(this,"내용을 입력하세요!");
-                }
-
-
-
+                }*/
                 break;
         }
 
