@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.Store;
 
 import java.io.IOException;
@@ -73,6 +75,7 @@ public  class Selectlocationmap extends AppCompatActivity
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
+    String location;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -183,7 +186,7 @@ public  class Selectlocationmap extends AppCompatActivity
 
                 android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(activity);
                 dialog  .setTitle("선택위치 저장")
-                        .setMessage("현재 지정한 위치로 글을 등록하시겠습니까?")
+                        .setMessage(AddressTransformation.getAddress(activity,latLng.latitude,latLng.longitude)+"\n이 위치가 맞습니까 ?")
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

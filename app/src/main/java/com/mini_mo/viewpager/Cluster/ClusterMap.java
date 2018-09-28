@@ -3,6 +3,7 @@ package com.mini_mo.viewpager.Cluster;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,12 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -42,7 +42,6 @@ import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
-import com.mini_mo.viewpager.ReadAndWrite.ReadActivity;
 import com.mini_mo.viewpager.Store;
 import com.mini_mo.viewpager.YourPageActivity;
 
@@ -50,12 +49,10 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-
 
 public class ClusterMap extends AppCompatActivity
         implements OnMapReadyCallback,View.OnClickListener {
-
+    public ArrayList<BoardItem> boardItems = new ArrayList<BoardItem>();
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
     private Marker currentMarker = null;
@@ -65,11 +62,11 @@ public class ClusterMap extends AppCompatActivity
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
+    private Activity activity;
     private AppCompatActivity mActivity;
     private ClusterManager<MyItem> mClusterManager = null;
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
-    boolean isSetClusteringListener= false;
     LatLng savePoint;
     ArrayList<MarkerItem> sampleList = new ArrayList();
     float zoomLevel = 17;
@@ -77,8 +74,10 @@ public class ClusterMap extends AppCompatActivity
     ImageView ok, nowlocation, cancel, mapmenu,store_image;
     TextView textView,store_name,store_status;
     View marker_root_view;
+    ImageButton exchange_button;
 
     ArrayList<ListViewItemData> clustericon;
+    ArrayList<MarkerItem> storeList;
     MarkerOptions marker = new MarkerOptions();
 
     @SuppressLint("RestrictedApi")
@@ -106,6 +105,8 @@ public class ClusterMap extends AppCompatActivity
 
         textView = (TextView) findViewById(R.id.textView);
 
+        exchange_button = (ImageButton)findViewById(R.id.exchange_button);
+
         ok.setOnClickListener(this);
         nowlocation.setOnClickListener(this);
         cancel.setOnClickListener(this);
@@ -124,6 +125,7 @@ public class ClusterMap extends AppCompatActivity
                 .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
         savePoint = new LatLng(MainPageFragment.getInstance().latitude,MainPageFragment.getInstance().longitude);
+
     }
 
 
@@ -161,11 +163,33 @@ public class ClusterMap extends AppCompatActivity
 
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(getApplicationContext(), YourPageActivity.class);
-                intent.putExtra("id",marker.getTitle());
-                startActivity(intent);
-                finish();
+            public boolean onMarkerClick(final Marker marker) {android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(mActivity);
+                dialog  .setTitle("프로필 선택")
+                        .setMessage("같은 위치에 다른 가게가 있습니다. 다음 가게 정보를 보시겠습니까?")
+                        .setPositiveButton("다음 가게", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int boardItemIndex = Integer.parseInt( marker.getSnippet() );
+
+                                if( boardItems.get( boardItemIndex ).index >= boardItems.get( boardItemIndex ).items.size()-1 ) // 0,1,2   size = 3 ;  index = 2 ,  2  >= 2
+                                    boardItems.get( boardItemIndex ).index = 0;
+                                else
+                                    boardItems.get( boardItemIndex ).index++;
+
+                                getVisibleRegion();
+                                return;
+                            }
+                        })
+                        .setNegativeButton("가게 페이지", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(getApplicationContext(), YourPageActivity.class);
+                                String str =marker.getTitle();
+                                intent.putExtra("id",marker.getTitle());
+                                startActivity(intent);
+                            }
+                        }).create().show();
+
                 return false;
             }
         });
@@ -189,11 +213,12 @@ public class ClusterMap extends AppCompatActivity
                 mClusterManager.cluster();
             }
         });
-
     }
 
     //디바이스에 출력되는 지도 범위
     public void getVisibleRegion() {
+
+        Data data = new Data();
 
         mClusterManager.clearItems();
 
@@ -206,14 +231,14 @@ public class ClusterMap extends AppCompatActivity
         min_lng = bounds.southwest.longitude;
 
 
-        Data data = new Data();
         try {
             clustericon = data.read_board_list(min_lat, min_lng, max_lat, max_lng);
             for (int i = 0; i < clustericon.size(); i++) {
-                if (i > 0) {
-                    if (clustericon.get(i).user_id.equals(clustericon.get(i - 1).user_id)) {
-                        clustericon.remove(i);
-                    }
+                for( int j=0; j< clustericon.size(); j++)
+                {
+                    if( i != j )
+                        if (clustericon.get(i).user_id.equals(clustericon.get(j).user_id))
+                            clustericon.remove(j);
                 }
             }
         } catch (JSONException e) {
@@ -221,14 +246,32 @@ public class ClusterMap extends AppCompatActivity
         }
         if (mGoogleMap.getCameraPosition().zoom >= 18.8) {
             mClusterManager.clearItems();
-            for (int i = 0; i < clustericon.size(); i++) {
-                double lat = clustericon.get(i).latitude;
-                double lng = clustericon.get(i).longitude;
-                if (mGoogleMap.getCameraPosition().zoom >= 18.8) {
-                    sampleList.add(new MarkerItem(lat, lng,clustericon.get(i).user_id,clustericon.get(i).user_photo));
+            for (int j = 0; j < boardItems.size(); j++)
+            {
+                boardItems.get(j).items.clear();
+            }
+
+            for (int i = 0; i < clustericon.size(); i++)
+            {
+                if( boardItems.size() != 0)
+                {
+                    for (int j = 0; j < boardItems.size(); j++)
+                    {
+                        if (boardItems.get(j).location.latitude == clustericon.get(i).latitude && boardItems.get(j).location.longitude == clustericon.get(i).longitude) // 위도 경도 같으면 add 아니면 new
+                        {
+                            boardItems.get(j).items.add(new MarkerItem(clustericon.get(i).latitude, clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
+                        } else {
+                            boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude, clustericon.get(i).longitude)));
+                        }
+                    }
+                }
+                else
+                {
+                    boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude, clustericon.get(i).longitude)));
+                    boardItems.get(0).items.add(new MarkerItem(clustericon.get(i).latitude, clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
                 }
             }
-            getSampleMarkerItems(sampleList);
+            setSampleMarkerItems( boardItems );
         }
          else {
             if(customMarker != null)
@@ -245,19 +288,19 @@ public class ClusterMap extends AppCompatActivity
         }
 
     }
-    private void getSampleMarkerItems(ArrayList<MarkerItem> sampleList) {
-
-        for (MarkerItem markerItem : sampleList) {
-            addMarker(markerItem);
+    private void setSampleMarkerItems( ArrayList<BoardItem> items ) {
+        for( int i=0; i<items.size(); i++ )
+        {
+            addMarker( items.get(i).items.get( items.get(i).index ), i );
         }
 
     }
 
-    private Marker addMarker(MarkerItem markerItem) {
+    private Marker addMarker(MarkerItem markerItem, int itemIndex) {
 
         User_Info user_info = new User_Info();
         try {
-            user_info = new Data().read_myPage(markerItem.getName());
+            user_info = new Data().read_myPage( markerItem.getName() );
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -274,13 +317,13 @@ public class ClusterMap extends AppCompatActivity
 
         Glide.with(this)
                 .load( markerItem.getImage())
-                .apply( new RequestOptions().override(50,50).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                .apply( new RequestOptions().override(60,50).placeholder(R.drawable.noimg).error(R.drawable.noimg))
                 .into(store_image);
-
 
         MarkerOptions marker = new MarkerOptions();
         marker.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view)));
-        marker.title(name);
+        marker.title( markerItem.name );
+        marker.snippet("" + itemIndex );
         marker.position(position);
         return customMarker = mGoogleMap.addMarker(marker);
 
@@ -336,16 +379,9 @@ public class ClusterMap extends AppCompatActivity
 
         mMoveMapByUser = false;
 
-
-        if (currentMarker != null) currentMarker.remove();
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(location);
-
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
 
-        currentMarker = mGoogleMap.addMarker(markerOptions);
 
 
         if (mMoveMapByAPI) {

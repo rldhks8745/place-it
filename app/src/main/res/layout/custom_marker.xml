@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tv_marker"
-    android:layout_width="150dp"
-    android:layout_height="100dp"
+    android:layout_width="200dp"
+    android:layout_height="130dp"
     android:background="#FFFFFF"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="left">
 
@@ -19,7 +21,7 @@
 
         <TextView
             android:id="@+id/store_name"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:text="ㅇㅇㅇㅇ"
@@ -27,7 +29,9 @@
             android:gravity="center_horizontal"/>
 
     </LinearLayout>
-
+<LinearLayout
+    android:layout_width="200dp"
+    android:layout_height="50dp">
     <TextView
         android:id="@+id/store_status"
         android:layout_width="match_parent"
@@ -36,7 +40,19 @@
         android:text="ㅇㅇㅇㅇㅇ"
         android:textSize="20sp"
         android:gravity="center_horizontal"/>
+</LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <ImageButton
+            android:id="@+id/exchange_button"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:background="#FFFFFF"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/exchange_arrows" />
+    </LinearLayout>
 
 </LinearLayout>
