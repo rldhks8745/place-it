@@ -9,4 +9,5 @@ public class User_Info
     public String massage;
     public double latitude;
     public double longitude;
+    public String nickname;
 }
