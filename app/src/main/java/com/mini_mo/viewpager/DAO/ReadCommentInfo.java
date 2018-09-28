@@ -15,6 +15,10 @@ public class ReadCommentInfo {
     public String comment_content;
     public String comment_id;
     public String user_photo;
+    public String comment_photo;
+    public String comment_pw;
+    public String comment_nickname;
+    public int guest_photo;
 
     //public ReadCommentInfo readCommentInfo(int 게시글번호){
 
