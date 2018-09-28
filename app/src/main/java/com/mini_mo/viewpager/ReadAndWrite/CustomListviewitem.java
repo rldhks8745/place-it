@@ -10,15 +10,24 @@ public class CustomListviewitem {
 
     private String board_number;
     private String comment_number;
-    private String icon;
+    private String comment_id;
+    private String userphoto;
+    private int guestphoto;
     private String nickname;
     private String title;
     private String date;
     private String photo;
 
+    public String getComment_id() {
+        return comment_id;
+    }
 
-    public String getIcon() {
-        return icon;
+    public String getUserphoto() {
+        return userphoto;
+    }
+
+    public int getGuestphoto() {
+        return guestphoto;
     }
 
     public String getTile() {
@@ -45,12 +54,20 @@ public class CustomListviewitem {
         return photo;
     }
 
+    public void setComment_id(String comment_id) {
+        this.comment_id = comment_id;
+    }
+
+    public void setUserphoto(String userphoto) {
+        this.userphoto = userphoto;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setIcon(String icon){
-        this.icon = icon;
+    public void setGuestphoto(int guestphoto){
+        this.guestphoto = guestphoto;
     }
 
     public void setNickname(String nickname) {

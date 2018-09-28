@@ -1010,6 +1010,7 @@ public class Data {
                 t.comment_num = tjo.getInt("comment_num")+"";
                 t.comment_date = tjo.getString("comment_date");
                 t.comment_content = tjo.getString("comment_content");
+                t.user_photo = tjo.getString("user_photo");
                 t.comment_id = tjo.getString("comment_id");
                 t.comment_photo = tjo.getString("comment_photo");
                 t.comment_pw = tjo.getString("comment_pw");

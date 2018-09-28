@@ -3,7 +3,9 @@ package com.mini_mo.viewpager.ReadAndWrite;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +90,7 @@ public class CustomAdapter extends BaseAdapter {
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         final CustomListviewitem myItem = getItem(position);
 
-        if(!Store.userid.equals(myItem.getNickname())){
+        /*if(!Store.userid.equals(myItem.getNickname())){
             linearLayout.removeView(button);
 
             iv_img.setOnClickListener(new View.OnClickListener() {
@@ -119,20 +121,44 @@ public class CustomAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 }
             });
-        }
+        }*/
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        if(!(myItem.getIcon().equals("No Photo"))) {
-            Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
-        }else {
-            Glide.with(convertView)
-                    .load(myItem.getIcon())
-                    .apply( new RequestOptions().override(100,100).placeholder(R.drawable.user).error(R.drawable.user))
-                    .into(iv_img);
+        if(myItem.getComment_id().equals("Guest")) {
+            Drawable user = null;
+
+            if (myItem.getGuestphoto() == 1) {
+                user = activity.getResources().getDrawable(R.drawable.comment_1);
+            } else if (myItem.getGuestphoto() == 2) {
+                user = activity.getResources().getDrawable(R.drawable.comment_2);
+            } else if (myItem.getGuestphoto() == 3) {
+                user = activity.getResources().getDrawable(R.drawable.comment_3);
+            } else if (myItem.getGuestphoto() == 4) {
+                user = activity.getResources().getDrawable(R.drawable.comment_4);
+            } else if (myItem.getGuestphoto() == 5) {
+                user = activity.getResources().getDrawable(R.drawable.comment_5);
+            }
+
+            iv_img.setImageDrawable(user);
+        }else{
+            if(!(myItem.getUserphoto().equals("No Photo"))) {
+
+                Glide.with(convertView).load(myItem.getUserphoto()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
+
+            }else {
+                Glide.with(convertView)
+                        .load(myItem.getUserphoto())
+                        .apply(new RequestOptions().override(100, 100).placeholder(R.drawable.user))
+                        .into(iv_img);
+            }
         }
 
         if(!(myItem.getPhoto().equals("No Photo"))) {
-            Glide.with(convertView).load(myItem.getPhoto()).into(tv_iamge);
+            Log.i("사진 들어오나?", myItem.getPhoto());
+            Glide.with(convertView)
+                    .load( myItem.getPhoto())
+                    .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                    .into(tv_iamge);
         }
 
         //Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
@@ -147,7 +173,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String board_num,String comment_num ,String icon, String title, String nickname, String date, String photo) {
+    public void addItem(String board_num,String comment_num,String comment_id,int guestphoto,String userphoto, String title, String nickname, String date, String photo) {
 
         CustomListviewitem mItem = new CustomListviewitem();
 
@@ -155,7 +181,9 @@ public class CustomAdapter extends BaseAdapter {
 
         mItem.setBoard_number(board_num);
         mItem.setComment_number(comment_num);
-        mItem.setIcon(icon);
+        mItem.setComment_id(comment_id);
+        mItem.setUserphoto(userphoto);
+        mItem.setGuestphoto(guestphoto);
         mItem.setNickname(nickname);
         mItem.setTitle(title);
         mItem.setDate(date);

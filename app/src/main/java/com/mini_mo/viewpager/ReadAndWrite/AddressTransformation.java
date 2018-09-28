@@ -40,7 +40,7 @@ public class AddressTransformation {
 
                     String str = ((mainlocal == null) ? "" : mainlocal) + " " + ((sublocal == null) ? "" : sublocal) + " " + ((thoroughfare == null) ? "" : thoroughfare);*/
 
-                    String str = list.get(0).getAddressLine(0).toString().substring(5);
+                    String str = list.get(0).getAddressLine(0).substring(5);
 
                     //Log.i("풀 주소",list.get(0).getAddressLine(0).toString().substring(5));
 
