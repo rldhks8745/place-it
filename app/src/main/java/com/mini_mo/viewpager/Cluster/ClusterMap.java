@@ -164,7 +164,7 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(mActivity);
-                dialog  .setTitle("프로필 선택")
+            dialog  .setTitle("프로필 선택")
                         .setMessage("같은 위치에 다른 가게가 있습니다. 다음 가게 정보를 보시겠습니까?")
                         .setPositiveButton("다음 가게", new DialogInterface.OnClickListener() {
                             @Override
@@ -175,21 +175,20 @@ public class ClusterMap extends AppCompatActivity
                                     boardItems.get( boardItemIndex ).index = 0;
                                 else
                                     boardItems.get( boardItemIndex ).index++;
-
+                                mGoogleMap.clear();
                                 getVisibleRegion();
-                                return;
                             }
                         })
                         .setNegativeButton("가게 페이지", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(getApplicationContext(), YourPageActivity.class);
-                                String str =marker.getTitle();
-                                intent.putExtra("id",marker.getTitle());
+                                String str =marker.getTitle().toString();
+                                intent.putExtra("id",str);
                                 startActivity(intent);
+                                getVisibleRegion();
                             }
                         }).create().show();
-
                 return false;
             }
         });
@@ -288,10 +287,10 @@ public class ClusterMap extends AppCompatActivity
         }
 
     }
-    private void setSampleMarkerItems( ArrayList<BoardItem> items ) {
-        for( int i=0; i<items.size(); i++ )
+    private void setSampleMarkerItems( ArrayList<BoardItem> boardItems ) {
+        for( int i=0; i<boardItems.size(); i++ )
         {
-            addMarker( items.get(i).items.get( items.get(i).index ), i );
+            addMarker( boardItems.get(i).items.get( boardItems.get(i).index ), i );
         }
 
     }
