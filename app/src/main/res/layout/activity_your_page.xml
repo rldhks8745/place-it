@@ -131,9 +131,37 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="10"
                     android:text="user id"
-                    android:textColor="#42619d"
+                    android:textColor="#3ca0ff"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="10"
+                    android:textSize="1sp" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="10"
+                    android:text="위치가 설정되지 않았습니다."
+                    android:textColor="#3ca0aa"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="10"
+                    android:textSize="1sp" />
 
                 <TextView
                     android:id="@+id/message"
@@ -171,6 +199,6 @@
         android:scaleType="centerCrop"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@drawable/like" />
+        app:srcCompat="@drawable/friendlikeoff" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -154,7 +154,6 @@ public class MyPageFragment extends Fragment {
             location.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Intent cintent = new Intent(MyPageFragment.this.getContext(), Selectlocationmap.class);
                     startActivityForResult(cintent,TAPMAP);
                 }
@@ -202,9 +201,13 @@ public class MyPageFragment extends Fragment {
                 recyclerListView.loadItems(nestedScrollView, getContext());
 
                 userId.setText(user_info.nickname);
-                location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
+                if(read_location.latitude == 0.0 || read_location.longitude == 0.0){
+                    location.setText("위치가 설정되지 않았습니다.");
+                }else{
+                    location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
+                }
 
-                //Bitmap bit = BItmap.getBitmap
+
                 // photo 넣는곳
                 Glide.with( this.getContext() )
                         .load( user_info.user_photo )

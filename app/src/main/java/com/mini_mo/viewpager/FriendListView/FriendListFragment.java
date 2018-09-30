@@ -15,6 +15,7 @@ import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.FriendsList;
 import com.mini_mo.viewpager.MainActivity;
 import com.mini_mo.viewpager.R;
+import com.mini_mo.viewpager.Store;
 import com.mini_mo.viewpager.YourPageActivity;
 
 import org.json.JSONException;
@@ -49,39 +50,45 @@ public class FriendListFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.content_friendlist, container, false);
-
+        if(Store.userid.equals("Guest")){
+            rootView = inflater.inflate(R.layout.guest_view, container, false);
+        }else {
+            rootView = inflater.inflate(R.layout.content_friendlist, container, false);
+        }
         return rootView;
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         /** listView 부분 **/
-        listView = (ListView) rootView.findViewById(R.id.friendListView);
-        adapter = new FriendListView( this.getActivity());
-        listView.setAdapter(adapter);
+        if(!Store.userid.equals("Guest")){
+            listView = (ListView) rootView.findViewById(R.id.friendListView);
+            adapter = new FriendListView(this.getActivity());
+            listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO 리스트의 아이템 클릭시
-                Intent intent = new Intent(getActivity(), YourPageActivity.class);
-                intent.putExtra("id", adapter.listViewItemList.get(position).user_id);
-                startActivity(intent);
-            }
-        });
-
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // TODO 리스트의 아이템 클릭시
+                    Intent intent = new Intent(getActivity(), YourPageActivity.class);
+                    intent.putExtra("id", adapter.listViewItemList.get(position).user_id);
+                    startActivity(intent);
+                }
+            });
+        }
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            items = new Data().readFriends(MainActivity.getInstance().loginId); // 친구 목록 받아옴
-            adapter.add( items, this.getContext() );
-            adapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(!Store.userid.equals("Guest")) {
+            try {
+                items = new Data().readFriends(MainActivity.getInstance().loginId); // 친구 목록 받아옴
+                adapter.add(items, this.getContext());
+                adapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
