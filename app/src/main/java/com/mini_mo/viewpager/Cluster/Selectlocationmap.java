@@ -119,7 +119,7 @@ public  class Selectlocationmap extends AppCompatActivity
         mGoogleMap = googleMap;
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         setCurrentLocation(newLocation);
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(19));
 
         mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
