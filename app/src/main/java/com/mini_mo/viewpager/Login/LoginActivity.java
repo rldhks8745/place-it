@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         loginId = auto.getString("inputId",null);
         loginPwd = auto.getString("inputPwd",null);
 
-       if(loginId !=null && loginPwd != null && !loginId.equals("Guest"))  //자동 로그인할 정보가 있나 확인
+       if(loginId !=null && loginPwd != null)  //자동 로그인할 정보가 있나 확인
         {
             int result=0;
 

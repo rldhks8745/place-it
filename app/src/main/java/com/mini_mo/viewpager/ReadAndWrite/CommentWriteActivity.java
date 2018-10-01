@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mini_mo.viewpager.DAO.Data;
@@ -44,6 +45,8 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
     private int userphoto_num;
     private Random user_random;
 
+    private LinearLayout linearLayout;
+
     private ImageView usericon;
     private ImageView back;
     private ImageView send;
@@ -63,6 +66,7 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
         photo = "No Photo";
         userphoto_num = 0;
 
+        linearLayout = (LinearLayout)findViewById(R.id.layout);
         usericon = (ImageView)findViewById(R.id.usericon);
         nickname = (EditText)findViewById(R.id.nickname);
         password = (EditText)findViewById(R.id.password);
@@ -73,6 +77,7 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
 
         if(!Store.userid.equals("Guest")){
             nickname.setText(Store.userid.toString());
+            linearLayout.removeView(password);
         }else{
             userphoto_num = (user_random.nextInt(4)+1);
 
@@ -174,14 +179,17 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.send:
-
-                Data data = new Data();
-                if(nickname.getText().equals("") || password.getText().equals("")){
+                if(nickname.getText().equals("") || password.getText().equals(" ")){
                     Toast.makeText(getApplicationContext(),"닉네임 또는 패스워드는 반드시 입력하세요!",Toast.LENGTH_SHORT).show();
                 }else{
+                    Data data = new Data();
                     intent = new Intent(this, CommentActivity.class);
                     try {
-                        data.writeComment(String.valueOf(Store.board_num),Store.userid,content.getText().toString(),photo,nickname.getText().toString(),password.getText().toString(),userphoto_num);
+                        if(!Store.userid.equals("Guest")){
+                            data.writeComment(String.valueOf(Store.board_num), Store.userid, content.getText().toString(), photo, nickname.getText().toString(), "0", userphoto_num);
+                        }else {
+                            data.writeComment(String.valueOf(Store.board_num), Store.userid, content.getText().toString(), photo, nickname.getText().toString(), password.getText().toString(), userphoto_num);
+                        }
                         Toast.makeText(getApplicationContext(),"댓글 등록 성공!",Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                         finish();

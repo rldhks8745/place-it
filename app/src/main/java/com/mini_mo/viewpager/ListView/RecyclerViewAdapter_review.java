@@ -119,30 +119,6 @@ public class RecyclerViewAdapter_review extends RecyclerView.Adapter<RecyclerVie
         viewHolder.date.setText(item.comment_date.substring(0,16));
         viewHolder.nickname.setText(item.comment_nickname);
         viewHolder.contents.setText(item.comment_content);
-
-
-        /** 각각의 Item의 클릭 이벤트 --> 글 자세히 보기 액티비티 전환 **/
-        //Here it is simply write onItemClick listener here
-        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                //Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
-                Intent intent;
-
-                if( instance != null ) {
-                    intent = new Intent(instance.getActivity(), ReadActivity.class);
-                }
-                else
-                    intent = new Intent( activity, ReadActivity.class );
-                //여기는 DB에서 게시글번호를 가져와서 스트링으로 넣어주면 됨  intent.putExtra("Board_num","")
-                instance.startActivity(intent);
-                //Store.board_num = Store.sendboard.get(position).board_num;
-				Store.board_num = Integer.parseInt(item.board_num);
-                instance.getActivity().overridePendingTransition(R.anim.goup, R.anim.godown);
-            }
-        });
-
     }
 
     @Override

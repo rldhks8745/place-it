@@ -83,7 +83,7 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
 
     ImageList imgarrlist;
 
-    ImageView usericon,send,back,img,video,getlocation,tapmap,history;
+    ImageView usericon,send,back,img,video,getlocation,tapmap;
 
     LinearLayout imglayout;
 
@@ -208,7 +208,6 @@ public class ChangeBoard extends AppCompatActivity implements View.OnClickListen
         video.setOnClickListener(this);
         getlocation.setOnClickListener(this);
         tapmap.setOnClickListener(this);
-        history.setOnClickListener(this);
     }
 
     @SuppressLint("ResourceType")

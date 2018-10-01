@@ -193,8 +193,6 @@ public class MyPageFragment extends Fragment {
                     review.startAnimation(ani);
 
                     tap_onoff = 2;
-                    board.setTextColor(0xFFFFFF);
-                    review.setTextColor(0x000000);
                     onResume();
 
                     review_line.setImageResource(R.drawable.click_line);
@@ -212,8 +210,6 @@ public class MyPageFragment extends Fragment {
                     board.startAnimation(ani);
 
                     tap_onoff = 1;
-                    board.setTextColor(0x000000);
-                    review.setTextColor(0xFFFFFF);
                     onResume();
 
                     review_line.setImageResource(R.drawable.clickoff_line);

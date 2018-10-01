@@ -252,18 +252,23 @@ public class ClusterMap extends AppCompatActivity
                 {
                     for (int j = 0; j < boardItems.size(); j++)
                     {
-                        if (boardItems.get(j).location.latitude == clustericon.get(i).latitude && boardItems.get(j).location.longitude == clustericon.get(i).longitude) // 위도 경도 같으면 add 아니면 new
+                        if (boardItems.get(j).location.latitude == clustericon.get(i).latitude &&
+                                boardItems.get(j).location.longitude == clustericon.get(i).longitude) // 위도 경도 같으면 add 아니면 new
                         {
-                            boardItems.get(j).items.add(new MarkerItem(clustericon.get(i).latitude, clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
+                            boardItems.get(j).items.add(new MarkerItem(clustericon.get(i).latitude,
+                                    clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
                         } else {
-                            boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude, clustericon.get(i).longitude)));
+                            boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude,
+                                    clustericon.get(i).longitude)));
                         }
                     }
                 }
                 else
                 {
-                    boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude, clustericon.get(i).longitude)));
-                    boardItems.get(0).items.add(new MarkerItem(clustericon.get(i).latitude, clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
+                    boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude,
+                            clustericon.get(i).longitude)));
+                    boardItems.get(0).items.add(new MarkerItem(clustericon.get(i).latitude,
+                            clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
                 }
             }
             setSampleMarkerItems( boardItems );
@@ -314,8 +319,8 @@ public class ClusterMap extends AppCompatActivity
         store_name.setTextColor(Color.BLACK);
 
         Glide.with(this)
-                .load( markerItem.getImage())
-                .apply( new RequestOptions().override(60,50).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                .load( markerItem.getImage() )
+                .apply( new RequestOptions().override(0,0).placeholder(R.drawable.noimg).error(R.drawable.noimg))
                 .into(store_image);
 
         MarkerOptions marker = new MarkerOptions();
