@@ -142,9 +142,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="10"
-                    android:textColor="#3ca0ff"
-                    android:textSize="1sp"
-                    android:textStyle="bold" />
+                    android:textSize="1sp" />
 
                 <TextView
                     android:id="@+id/location"
@@ -154,7 +152,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="10"
                     android:text="위치가 설정되지 않았습니다."
-                    android:textColor="#3ca088"
+                    android:textColor="#3ca0aa"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -164,9 +162,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="10"
-                    android:textColor="#3ca0ff"
-                    android:textSize="1sp"
-                    android:textStyle="bold" />
+                    android:textSize="1sp" />
 
                 <TextView
                     android:id="@+id/message"

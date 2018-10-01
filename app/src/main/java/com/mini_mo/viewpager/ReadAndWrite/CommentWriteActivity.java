@@ -76,21 +76,17 @@ public class CommentWriteActivity extends AppCompatActivity implements View.OnCl
         }else{
             userphoto_num = (user_random.nextInt(4)+1);
 
-            Drawable user = null;
-
             if(userphoto_num == 1){
-                user = getResources().getDrawable(R.drawable.comment_1);
+                usericon.setImageResource(R.drawable.comment_1);
             }else if(userphoto_num == 2){
-                user = getResources().getDrawable(R.drawable.comment_2);
+                usericon.setImageResource(R.drawable.comment_2);
             }else if(userphoto_num == 3){
-                user = getResources().getDrawable(R.drawable.comment_3);
+                usericon.setImageResource(R.drawable.comment_3);
             }else if(userphoto_num == 4){
-                user = getResources().getDrawable(R.drawable.comment_4);
+                usericon.setImageResource(R.drawable.comment_4);
             }else if(userphoto_num == 5){
-                user = getResources().getDrawable(R.drawable.comment_5);
+                usericon.setImageResource(R.drawable.comment_5);
             }
-
-            usericon.setImageDrawable(user);
         }
 
         image.setOnClickListener(this);

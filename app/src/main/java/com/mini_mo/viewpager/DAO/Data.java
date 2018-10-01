@@ -16,6 +16,57 @@ public class Data {
 
     }
 
+    public ArrayList<ReadCommentInfo> read_myPage_comment(String id) throws JSONException {
+        ArrayList<ReadCommentInfo> rci = new ArrayList<ReadCommentInfo>();
+        int com_cnt = 0;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject b_n = new JSONObject();
+
+        obj.put("flag", "read_myPage_comment");
+        b_n.put("id", id);
+        obj.put("read_myPage_comment_data", b_n);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        result = new JSONObject(result.getString("result"));
+
+        com_cnt = result.getInt("com_count");
+
+        if (com_cnt >0)
+        {
+            JSONArray tmp = result.getJSONArray("read_comment_data");
+            for (int i = 0; i < com_cnt; i++)
+            {
+                ReadCommentInfo t = new ReadCommentInfo();
+                JSONObject tjo = tmp.getJSONObject(i);
+                t.board_num = tjo.getInt("board_num")+"";
+                t.comment_num = tjo.getInt("comment_num")+"";
+                t.comment_date = tjo.getString("comment_date");
+                t.comment_content = tjo.getString("comment_content");
+                t.user_photo = tjo.getString("user_photo");
+                t.comment_id = tjo.getString("comment_id");
+                t.comment_photo = tjo.getString("comment_photo");
+                t.comment_pw = tjo.getString("comment_pw");
+                t.comment_nickname = tjo.getString("comment_nickname");
+                t.guest_photo = tjo.getInt("guest_photo");
+
+
+                rci.add(t);
+            }
+        }
+
+        return rci;
+
+    }
+
+
     public User_Info read_myLocation(String id)  throws JSONException
     {
         User_Info fl = new User_Info();

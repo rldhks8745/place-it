@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +49,7 @@ public class MainPageFragment extends Fragment{
     public double latitude = 0.0;
     public double longitude = 0.0;
     private ClusterMap clusterMap;
+    private Animation ani;
 
     int count = 0;
 
@@ -97,6 +100,9 @@ public class MainPageFragment extends Fragment{
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ani = AnimationUtils.loadAnimation(getActivity(),R.anim.button_anim);
+                btnlocation.startAnimation(ani);
+
                 Intent mapintent = new Intent(getContext(),ClusterMap.class);
                 startActivity(mapintent);
             }

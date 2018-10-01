@@ -125,21 +125,20 @@ public class CustomAdapter extends BaseAdapter {
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         if(myItem.getComment_id().equals("Guest")) {
-            Drawable user = null;
 
             if (myItem.getGuestphoto() == 1) {
-                user = activity.getResources().getDrawable(R.drawable.comment_1);
+                iv_img.setImageResource(R.drawable.comment_1);
             } else if (myItem.getGuestphoto() == 2) {
-                user = activity.getResources().getDrawable(R.drawable.comment_2);
+                iv_img.setImageResource(R.drawable.comment_2);
             } else if (myItem.getGuestphoto() == 3) {
-                user = activity.getResources().getDrawable(R.drawable.comment_3);
+                iv_img.setImageResource(R.drawable.comment_3);
             } else if (myItem.getGuestphoto() == 4) {
-                user = activity.getResources().getDrawable(R.drawable.comment_4);
+                iv_img.setImageResource(R.drawable.comment_4);
             } else if (myItem.getGuestphoto() == 5) {
-                user = activity.getResources().getDrawable(R.drawable.comment_5);
+                iv_img.setImageResource(R.drawable.comment_5);
             }
 
-            iv_img.setImageDrawable(user);
+
         }else{
             if(!(myItem.getUserphoto().equals("No Photo"))) {
 

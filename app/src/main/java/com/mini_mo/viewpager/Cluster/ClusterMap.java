@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,13 +67,15 @@ public class ClusterMap extends AppCompatActivity
     private Activity activity;
     private AppCompatActivity mActivity;
     private ClusterManager<MyItem> mClusterManager = null;
+    private Animation ani;
+
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng savePoint;
     ArrayList<MarkerItem> sampleList = new ArrayList();
     float zoomLevel = 17;
 
-    ImageView ok, nowlocation, cancel, mapmenu,store_image;
+    ImageView ok, nowlocation, cancel,store_image;
     TextView textView,store_name,store_status;
     View marker_root_view;
     ImageButton exchange_button;
@@ -101,7 +105,6 @@ public class ClusterMap extends AppCompatActivity
         ok = (ImageView) findViewById(R.id.ok);
         nowlocation = (ImageView) findViewById(R.id.nowlocation);
         cancel = (ImageView) findViewById(R.id.cancel);
-        mapmenu = (ImageView) findViewById(R.id.mapmenu);
 
         textView = (TextView) findViewById(R.id.textView);
 
@@ -110,7 +113,6 @@ public class ClusterMap extends AppCompatActivity
         ok.setOnClickListener(this);
         nowlocation.setOnClickListener(this);
         cancel.setOnClickListener(this);
-        mapmenu.setOnClickListener(this);
 
         marker_root_view = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
         store_name = (TextView)marker_root_view.findViewById(R.id.store_name);
@@ -164,7 +166,7 @@ public class ClusterMap extends AppCompatActivity
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(mActivity);
-                dialog  .setTitle("프로필 선택")
+            dialog  .setTitle("프로필 선택")
                         .setMessage("같은 위치에 다른 가게가 있습니다. 다음 가게 정보를 보시겠습니까?")
                         .setPositiveButton("다음 가게", new DialogInterface.OnClickListener() {
                             @Override
@@ -175,21 +177,20 @@ public class ClusterMap extends AppCompatActivity
                                     boardItems.get( boardItemIndex ).index = 0;
                                 else
                                     boardItems.get( boardItemIndex ).index++;
-
+                                mGoogleMap.clear();
                                 getVisibleRegion();
-                                return;
                             }
                         })
                         .setNegativeButton("가게 페이지", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(getApplicationContext(), YourPageActivity.class);
-                                String str =marker.getTitle();
-                                intent.putExtra("id",marker.getTitle());
+                                String str =marker.getTitle().toString();
+                                intent.putExtra("id",str);
                                 startActivity(intent);
+                                getVisibleRegion();
                             }
                         }).create().show();
-
                 return false;
             }
         });
@@ -288,10 +289,10 @@ public class ClusterMap extends AppCompatActivity
         }
 
     }
-    private void setSampleMarkerItems( ArrayList<BoardItem> items ) {
-        for( int i=0; i<items.size(); i++ )
+    private void setSampleMarkerItems( ArrayList<BoardItem> boardItems ) {
+        for( int i=0; i<boardItems.size(); i++ )
         {
-            addMarker( items.get(i).items.get( items.get(i).index ), i );
+            addMarker( boardItems.get(i).items.get( boardItems.get(i).index ), i );
         }
 
     }
@@ -425,6 +426,9 @@ public class ClusterMap extends AppCompatActivity
         switch (v.getId()) {
             case R.id.ok:
 
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                ok.startAnimation(ani);
+
                 clustericon.clear();
                 getVisibleRegion();
                 if(Store.sendboard!=null)
@@ -442,13 +446,12 @@ public class ClusterMap extends AppCompatActivity
                 break;
 
             case R.id.nowlocation:
+
+                ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
+                nowlocation.startAnimation(ani);
+
                 textView.setText(AddressTransformation.getAddress(this, savePoint.latitude, savePoint.longitude));
                 break;
-
-            case R.id.mapmenu:
-
-                break;
-
 
         }
     }
