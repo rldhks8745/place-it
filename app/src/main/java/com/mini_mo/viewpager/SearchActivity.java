@@ -37,19 +37,11 @@ public class SearchActivity extends AppCompatActivity{
     Data data;
     SearchListViewAdapter searchadapter;
     ArrayList<ListViewItemData> listViewItemDatas;
-    RoundedBitmapDrawable roundedBitmapDrawable;
-    User_Info user_info;
-    ArrayList<ReadCommentInfo> rci;
-    com.mini_mo.viewpager.DAO.ReadBoardInfo rbi;
     ListViewItemData listViewItemData;
-
-    ImageView searchbutton;
-    ImageButton cameraButton;
-
     Intent intent;
 
+    ImageView searchbutton;
     TextView searchline;
-
     ListView listView;
 
     public static SearchActivity getInstance()
@@ -68,8 +60,6 @@ public class SearchActivity extends AppCompatActivity{
         searchline = (TextView)findViewById(R.id.searchline);
 
         listView = (ListView)findViewById(R.id.listview);
-
-        cameraButton = (ImageButton)findViewById(R.id.camera_button);
 
         searchadapter = new SearchListViewAdapter();
 
@@ -92,14 +82,6 @@ public class SearchActivity extends AppCompatActivity{
             searchadapter.notifyDataSetChanged();
 
         }
-
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent( SearchActivity.getInstance() , CameraActivity.class );
-                startActivity( intent );
-            }
-        });
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
