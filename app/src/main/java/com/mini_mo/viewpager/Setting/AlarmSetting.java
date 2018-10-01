@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -39,11 +40,14 @@ public class AlarmSetting extends AppCompatActivity {
     public static AlarmSetting instance;
 
     // 알람 설정에 필요한 변수들
-    public static boolean alarmOn = false; // 알람을 사용하나, 안하나 ( Service 실행여부 )
-    public static int selectedCategory = 0; // 카테고리
-    public static int selectedDistance = 0; // 반경(m) 거리
-    public static int selectedTime = 0; // 시간(분)
+    public static boolean alarmOn; // 알람을 사용하나, 안하나 ( Service 실행여부 )
+    public static int selectedCategory; // 카테고리
+    public static int selectedDistance; // 반경(m) 거리
+    public static int selectedTime; // 시간(분)
+    public int pSelectedDistance;
+    public int pSelectedTime;
 
+    SharedPreferences auto;
 
     // XML 객체들
     private RadioGroup onOffRadioGroup;
@@ -59,11 +63,25 @@ public class AlarmSetting extends AppCompatActivity {
 
     public static AlarmSetting getInstance(){ return instance; }
 
+    public AlarmSetting()
+    {
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_alarm);
         instance = this;
+
+
+        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+        alarmOn = auto.getBoolean("alarmOn",false);
+        selectedCategory = auto.getInt("selectedCategory",0);
+        selectedDistance = auto.getInt("pSelectedDistance",0);
+        selectedTime = auto.getInt("pSelectedTime",0);
+
 
         /** 알람 온,오프 라디오 그룹 설정 **/
         onOffRadioGroup = (RadioGroup)findViewById( R.id.setting_alarm_onoff_group );
@@ -106,9 +124,10 @@ public class AlarmSetting extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextSize(20);
-                selectedDistance = position;
+                selectedDistance = Integer.parseInt(aroundItem[position]);
+                pSelectedDistance = position;
 
-                around.setSelection( selectedDistance );
+                around.setSelection( position );
             }
 
             @Override
@@ -130,9 +149,10 @@ public class AlarmSetting extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextSize(20);
-                selectedTime = position;
+                selectedTime = Integer.parseInt(timeItem[position]);
+                pSelectedTime = position;
 
-                time.setSelection( selectedTime );
+                time.setSelection( position );
             }
 
             @Override
@@ -244,6 +264,18 @@ public class AlarmSetting extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
+
+        SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE); //SharedPreferences에 id와 비밀번호 저장
+        SharedPreferences.Editor autoLogin = auto.edit();
+        autoLogin.putBoolean("alarmOn", alarmOn);
+        autoLogin.putInt("selectedCategory", selectedCategory);
+        autoLogin.putInt("selectedDistance", selectedDistance);
+        autoLogin.putInt("selectedTime", selectedTime);
+        autoLogin.putInt("pSelectedTime", pSelectedTime);
+        autoLogin.putInt("pSelectedTime", pSelectedTime);
+        autoLogin.commit();
+
 
         Log.i("AlarmSetting", "onDestroy_start");
         super.onDestroy();

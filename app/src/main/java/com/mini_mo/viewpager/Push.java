@@ -1,6 +1,8 @@
 package com.mini_mo.viewpager;
 
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,12 +10,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -40,10 +44,10 @@ import java.util.HashMap;
 public class Push extends Service implements Runnable {
     private Data data;
     private NotificationCompat.Builder mbuilder;
-    private int category = AlarmSetting.selectedCategory; //알림띄울 카테고리
+    private int category; //알림띄울 카테고리
     private boolean is_push = false; //알림 기능 쓸지 여부.
-    private double notification_region = 0.001; //알림 범위
-    private int notification_time = AlarmSetting.selectedTime; //알림 주기
+    private double notification_region; //알림 범위
+    private int notification_time; //알림 주기
     private double notification_distance =0.05; // 얼마나 이동했을 때 통신 할 것인지 설정.
     private double before_latitude = 0,before_longitude = 0; // 얼마나 움직였는지 비교 할 이전의 좌표
     private static HashMap<Integer,Date> push_check = new HashMap<Integer, Date>();
@@ -59,10 +63,16 @@ public class Push extends Service implements Runnable {
     private static final int REBOOT_DELAY_TIMER = 10 * 1000;
     private static int LOCATION_UPDATE_DELAY = 1 * 60 * 1000; // 5 * 60 * 1000
 
+    SharedPreferences auto;
+
 
 
     public Push() {
         // 나중에 옵션 구현하고 나면 여기나 onCreate에서 옵션있는 값 불러와서 처음값을 초기화 해 줌.
+
+
+
+
     }
 
     @Override
@@ -99,6 +109,12 @@ public class Push extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+        auto = auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+        notification_region = (auto.getInt("SelectedDistance",10) * 0.0001);
+        category = auto.getInt("selectedCategory",0);
+        notification_time = auto.getInt("SelectedTime",1);
+
 
         Log.i("PersistentService", "onStart()");
         super.onStartCommand(intent, flags, startId);
@@ -130,7 +146,7 @@ public class Push extends Service implements Runnable {
             Log.i("PersistentService", "run(), mIsRunning is true");
             Log.i("PersistentService", "run(), alarm repeat after five minutes");
 
-            if(AlarmSetting.alarmOn)
+            if(auto.getBoolean("alarmOn",false))
             {
                 Log.i("Run_alarmOn", "ture");
                 function();
@@ -149,7 +165,7 @@ public class Push extends Service implements Runnable {
 
         Log.i("function", "========================");
         Log.i("function", "function_start");
-        notification_region = AlarmSetting.selectedDistance * 0.0001;
+
 
         getLocation();
 
@@ -163,7 +179,7 @@ public class Push extends Service implements Runnable {
         Log.i("push 통신 전", "되나");
 
         try {
-            lvi = data.read_board_list(latitude-notification_region, latitude + notification_region ,longitude - notification_region, longitude + notification_region);
+            lvi = data.read_board_list(latitude-notification_region, longitude - notification_region ,latitude + notification_region, longitude + notification_region);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -173,6 +189,8 @@ public class Push extends Service implements Runnable {
         deleteEntiredPush(push_check);
 
         //알림 삭제 시간. 글 번호. 새로 받은 정보에 현재 글 목록이 있으면 중복처리 해 주어야 함.
+
+        Log.i("lvi결과", mLatitude + "" + mLongitude);
 
         String content=null,user_photo=null;
         int push_count = 0;
@@ -195,7 +213,15 @@ public class Push extends Service implements Runnable {
         }
         if(push_count > 0)
         {
+            PushWakeLock.acquireCpuWakeLock(this);
             sendNotification(content,user_photo,push_count);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Log.i("lvi","쓰레드 슬립 중 오류");
+            }
+            PushWakeLock.releaseCpuLock();
         }
 
 
@@ -412,3 +438,37 @@ public class Push extends Service implements Runnable {
     }
 
 }
+
+class PushWakeLock {
+    private static PowerManager.WakeLock sCpuWakeLock;
+    private static KeyguardManager.KeyguardLock mKeyguardLock;
+    private static boolean isScreenLock;
+
+    static void acquireCpuWakeLock(Context context) {
+        Log.e("PushWakeLock", "Acquiring cpu wake lock");
+        Log.e("PushWakeLock", "wake sCpuWakeLock = " + sCpuWakeLock);
+
+        if (sCpuWakeLock != null) {
+            return;
+        }
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        sCpuWakeLock = pm.newWakeLock(
+                PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                        PowerManager.ON_AFTER_RELEASE, "hello");
+
+        sCpuWakeLock.acquire();
+    }
+
+    static void releaseCpuLock() {
+        Log.e("PushWakeLock", "Releasing cpu wake lock");
+        Log.e("PushWakeLock", "relase sCpuWakeLock = " + sCpuWakeLock);
+
+        if (sCpuWakeLock != null) {
+            sCpuWakeLock.release();
+            sCpuWakeLock = null;
+        }
+    }
+}
+
+
