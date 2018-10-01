@@ -273,11 +273,10 @@ public class Push extends Service implements Runnable {
 
     }
 
-    private void sendNotification(String messageBody,String user_photo,int push_count, ArrayList<ListViewItemData> lvi)
+    private void sendNotification(String messageBody,String user_photo,int push_count, ArrayList<ListViewItemData> notif_lvi)
     {
         Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra("Push_ArrayList",lvi);
-        intent.putParcelableArrayListExtra("Push_ArrayList",lvi);
+        intent.putParcelableArrayListExtra("Push_ArrayList",notif_lvi);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Glide.with(getApplicationContext()).asBitmap().load(user_photo)
