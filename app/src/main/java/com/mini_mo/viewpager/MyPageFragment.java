@@ -189,6 +189,9 @@ public class MyPageFragment extends Fragment {
                     ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
                     review_line.startAnimation(ani);
 
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    review.startAnimation(ani);
+
                     tap_onoff = 2;
                     board.setTextColor(0xFFFFFF);
                     review.setTextColor(0x000000);
@@ -204,6 +207,9 @@ public class MyPageFragment extends Fragment {
                 public void onClick(View view) {
                     ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
                     board_line.startAnimation(ani);
+
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    board.startAnimation(ani);
 
                     tap_onoff = 1;
                     board.setTextColor(0x000000);
