@@ -172,6 +172,7 @@ public class Push extends Service implements Runnable {
         double latitude=mLatitude,longitude=mLongitude; //매번 갱신해야 하기 때문에 이건 여기에 있는게 맞는 것 같음.
 
         ArrayList<ListViewItemData> lvi = new ArrayList<ListViewItemData>();
+        ArrayList<ListViewItemData> plvi = new ArrayList<ListViewItemData>();
 
         //위치가 얼마나 바뀌었는지 확인하고 일정 범위를 벗어났으면 서버와 통신.
 
@@ -202,6 +203,7 @@ public class Push extends Service implements Runnable {
             {
                 if(!push_check.containsKey(lvi.get(i).board_num)) //board_num이 알람이 떴었는지 체크하고 안떴었으면 안으로 들어감.
                 {
+                    plvi.add(lvi.get(i));
                     Log.i("lvi", i + "인덱스의 board_num = " +lvi.get(i).board_num);
                     content = lvi.get(i).content;
                     user_photo = lvi.get(i).user_photo;
@@ -214,7 +216,7 @@ public class Push extends Service implements Runnable {
         if(push_count > 0)
         {
             PushWakeLock.acquireCpuWakeLock(this);
-            sendNotification(content,user_photo,push_count);
+            sendNotification(content,user_photo,push_count,plvi);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -271,9 +273,11 @@ public class Push extends Service implements Runnable {
 
     }
 
-    private void sendNotification(String messageBody,String user_photo,int push_count)
+    private void sendNotification(String messageBody,String user_photo,int push_count, ArrayList<ListViewItemData> lvi)
     {
         Intent intent = new Intent(this,MainActivity.class);
+        intent.putExtra("Push_ArrayList",lvi);
+        intent.putParcelableArrayListExtra("Push_ArrayList",lvi);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Glide.with(getApplicationContext()).asBitmap().load(user_photo)
