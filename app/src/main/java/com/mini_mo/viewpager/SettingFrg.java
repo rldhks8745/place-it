@@ -1,31 +1,18 @@
 package com.mini_mo.viewpager;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.mini_mo.viewpager.ListView.RecyclerListView;
 import com.mini_mo.viewpager.Login.LoginActivity;
-import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
-import com.mini_mo.viewpager.ReadAndWrite.Util;
-import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
-import android.widget.LinearLayout;
 
 import com.mini_mo.viewpager.Setting.AlarmSetting;
 
