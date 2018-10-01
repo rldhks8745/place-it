@@ -115,7 +115,7 @@ public class ClusterMap extends AppCompatActivity
         marker_root_view = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
         store_name = (TextView)marker_root_view.findViewById(R.id.store_name);
         store_status = (TextView)marker_root_view.findViewById(R.id.store_status);
-        store_image = (ImageView)marker_root_view.findViewById(R.id.store_iamge);
+        store_image = (ImageView)marker_root_view.findViewById(R.id.store_image);
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -290,6 +290,7 @@ public class ClusterMap extends AppCompatActivity
     private void setSampleMarkerItems( ArrayList<BoardItem> boardItems ) {
         for( int i=0; i<boardItems.size(); i++ )
         {
+            if(boardItems.get(i).items != null&& boardItems.get(i).items.size() != 0 )
             addMarker( boardItems.get(i).items.get( boardItems.get(i).index ), i );
         }
 

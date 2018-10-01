@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tv_marker"
-    android:layout_width="200dp"
+    android:layout_width="220dp"
     android:layout_height="100dp"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
+
+    android:orientation="horizontal"
+    >
 
     <LinearLayout
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_gravity="left">
-
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        >
         <ImageView
-            android:id="@+id/store_iamge"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"/>
-
+            android:layout_width="70dp"
+            android:layout_height="100dp"
+            android:id="@+id/store_image"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#B9E2FA">
         <TextView
+            android:layout_margin="5dp"
             android:id="@+id/store_name"
-            android:layout_width="200dp"
+            android:layout_width="140dp"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:text="ㅇㅇㅇㅇ"
             android:textSize="20sp"
-            android:gravity="center_horizontal"/>
+            android:background="#ffffff"/>
 
+        <TextView
+            android:id="@+id/store_status"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:text="ㅇㅇㅇㅇㅇ"
+            android:textSize="20sp" />
     </LinearLayout>
-<LinearLayout
-    android:layout_width="200dp"
-    android:layout_height="50dp">
-    <TextView
-        android:id="@+id/store_status"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:text="ㅇㅇㅇㅇㅇ"
-        android:textSize="20sp"
-        android:gravity="center_horizontal"/>
-</LinearLayout>
+
+
 </LinearLayout>
