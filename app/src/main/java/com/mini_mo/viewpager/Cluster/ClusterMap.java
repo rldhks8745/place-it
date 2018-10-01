@@ -1,6 +1,5 @@
 package com.mini_mo.viewpager.Cluster;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,14 +17,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,14 +54,9 @@ public class ClusterMap extends AppCompatActivity
     public ArrayList<BoardItem> boardItems = new ArrayList<BoardItem>();
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
-    private Marker currentMarker = null;
     Marker customMarker=null;
 
     private static final String TAG = "googlemap_example";
-    private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
-    private Activity activity;
     private AppCompatActivity mActivity;
     private ClusterManager<MyItem> mClusterManager = null;
     private Animation ani;
@@ -74,26 +66,15 @@ public class ClusterMap extends AppCompatActivity
     LatLng savePoint;
     ArrayList<MarkerItem> sampleList = new ArrayList();
     float zoomLevel = 17;
+    LatLng temp_savepoint;
+
+    int bdindex = 0;
 
     ImageView ok, nowlocation, cancel,store_image;
     TextView textView,store_name,store_status;
     View marker_root_view;
-    ImageButton exchange_button;
 
     ArrayList<ListViewItemData> clustericon;
-    ArrayList<MarkerItem> storeList;
-    MarkerOptions marker = new MarkerOptions();
-
-    @SuppressLint("RestrictedApi")
-    LocationRequest locationRequest = new LocationRequest()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
-
-    public ClusterMap() {
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,12 +152,16 @@ public class ClusterMap extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 int boardItemIndex = Integer.parseInt( marker.getSnippet() );
 
+                                    boardItems.get(boardItemIndex).index = bdindex;
+
                                 if( boardItems.get( boardItemIndex ).index >= boardItems.get( boardItemIndex ).items.size()-1 ) // 0,1,2   size = 3 ;  index = 2 ,  2  >= 2
                                     boardItems.get( boardItemIndex ).index = 0;
                                 else
                                     boardItems.get( boardItemIndex ).index++;
                                 mGoogleMap.clear();
                                 getVisibleRegion();
+
+                                bdindex = boardItems.get(boardItemIndex).index;
                             }
                         })
                         .setNegativeButton("가게 페이지", new DialogInterface.OnClickListener() {
@@ -201,15 +186,26 @@ public class ClusterMap extends AppCompatActivity
                 savePoint = cameraPosition.target;
             }
         });
+        temp_savepoint = savePoint;
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         mClusterManager = new ClusterManager<>(this, mGoogleMap);
         mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                if(customMarker != null)
+                if(customMarker != null) {
                     mGoogleMap.clear();
+                }
+                if(boardItems.size()!=0 &&
+                        temp_savepoint.latitude + 0.0002 < savePoint.latitude ||
+                        savePoint.latitude < temp_savepoint.latitude - 0.0002 ||
+                        temp_savepoint.longitude + 0.0002 < savePoint.longitude ||
+                        savePoint.longitude < temp_savepoint.longitude - 0.0002){
+                    boardItems.clear();
+                }
+                mGoogleMap.clear();
                 getVisibleRegion();
                 mClusterManager.cluster();
+                temp_savepoint = savePoint;
             }
         });
     }
@@ -273,8 +269,10 @@ public class ClusterMap extends AppCompatActivity
             setSampleMarkerItems( boardItems );
         }
          else {
-            if(customMarker != null)
-            mGoogleMap.clear();
+            if(customMarker != null) {
+                mGoogleMap.clear();
+
+            }
             if(sampleList!=null)
             sampleList.clear();
             for (int i = 0; i < clustericon.size(); i++) {
@@ -330,6 +328,7 @@ public class ClusterMap extends AppCompatActivity
     }
 
     private Bitmap createDrawableFromView(Context context, View view) {
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -393,40 +392,12 @@ public class ClusterMap extends AppCompatActivity
         }
     }
 
-
-    public void setDefaultLocation() {
-
-        mMoveMapByUser = false;
-
-
-        //디폴트 위치, Seoul
-        LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
-        String markerTitle = "위치정보 가져올 수 없음";
-        String markerSnippet = "위치 퍼미션과 GPS 활성 요부 확인하세요";
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        currentMarker = mGoogleMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
-        mGoogleMap.moveCamera(cameraUpdate);
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ok:
-
                 ani = AnimationUtils.loadAnimation(this,R.anim.button_anim);
                 ok.startAnimation(ani);
-
                 clustericon.clear();
                 getVisibleRegion();
                 if(Store.sendboard!=null)
