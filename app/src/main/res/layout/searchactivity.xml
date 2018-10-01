@@ -13,7 +13,8 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/textlines"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <LinearLayout
@@ -27,7 +28,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="15"
-                    app:srcCompat="@drawable/search" />
+                    app:srcCompat="@drawable/search1"
+                    android:padding="18sp"/>
 
                 <TextView
                     android:id="@+id/searchline"
@@ -40,8 +42,8 @@
                     android:gravity="center|left"
                     android:inputType="textPersonName"
                     android:text="검색결과"
-                    android:textColor="#ffffff"
-                    android:textSize="20dp" />
+                    android:textColor="#4b94d0"
+                    android:textSize="18sp" />
 
 
             </LinearLayout>
