@@ -41,6 +41,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mini_mo.viewpager.MainActivity;
+import com.mini_mo.viewpager.MainPageFragment;
 import com.mini_mo.viewpager.R;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
 import com.mini_mo.viewpager.Store;
@@ -76,6 +78,7 @@ public  class Selectlocationmap extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
     String location;
+    LatLng newLocation;
 
     @SuppressLint("RestrictedApi")
     LocationRequest locationRequest = new LocationRequest()
@@ -106,6 +109,7 @@ public  class Selectlocationmap extends AppCompatActivity
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.selectmap);
         mapFragment.getMapAsync(this);
+        newLocation = new LatLng(MainPageFragment.getInstance().latitude,MainPageFragment.getInstance().longitude);
     }
 
 
@@ -308,43 +312,6 @@ public  class Selectlocationmap extends AppCompatActivity
                     "connection lost.  Cause: service disconnected");
     }
 
-
-    public String getCurrentAddress(LatLng latlng) {
-
-        //지오코더... GPS를 주소로 변환
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        List<Address> addresses;
-
-        try {
-
-            addresses = geocoder.getFromLocation(
-                    latlng.latitude,
-                    latlng.longitude,
-                    1);
-        } catch (IOException ioException) {
-            //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            return "지오코더 서비스 사용불가";
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
-            return "잘못된 GPS 좌표";
-
-        }
-
-
-        if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
-            return "주소 미발견";
-
-        } else {
-            Address address = addresses.get(0);
-            return address.getAddressLine(0).toString();
-        }
-
-    }
-
-
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -361,27 +328,16 @@ public  class Selectlocationmap extends AppCompatActivity
         if (currentMarker != null) currentMarker.remove();
 
 
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
         //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
         //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
-
-        currentMarker = mGoogleMap.addMarker(markerOptions);
-
 
         if (mMoveMapByAPI) {
 
             Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
                     + location.getLatitude() + " " + location.getLongitude());
             // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 15);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(newLocation);
             mGoogleMap.moveCamera(cameraUpdate);
         }
     }
