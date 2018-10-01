@@ -108,8 +108,6 @@ public class ClusterMap extends AppCompatActivity
 
         textView = (TextView) findViewById(R.id.textView);
 
-        exchange_button = (ImageButton)findViewById(R.id.exchange_button);
-
         ok.setOnClickListener(this);
         nowlocation.setOnClickListener(this);
         cancel.setOnClickListener(this);
@@ -389,7 +387,6 @@ public class ClusterMap extends AppCompatActivity
 
             Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
                     + location.latitude + " " + location.longitude);
-            // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 15);
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(location);
             mGoogleMap.moveCamera(cameraUpdate);
         }
