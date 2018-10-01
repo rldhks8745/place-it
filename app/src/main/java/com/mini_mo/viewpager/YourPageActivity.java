@@ -110,6 +110,7 @@ public class YourPageActivity extends AppCompatActivity {
                 Intent intent = new Intent( YourPageActivity.getInstance() , ProfileImageActivity.class);
                 startActivity(intent);
             }
+
         });
 
         review.setOnClickListener(new View.OnClickListener() {
