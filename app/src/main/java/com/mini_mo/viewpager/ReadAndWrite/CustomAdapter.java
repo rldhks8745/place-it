@@ -78,13 +78,11 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.listlayout);
         ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon);
         TextView tv_nickname = (TextView) convertView.findViewById(R.id.nickname);
         TextView tv_date = (TextView) convertView.findViewById(R.id.date);
         ImageView tv_iamge = (ImageView) convertView.findViewById(R.id.image);
         TextView tv_title = (TextView) convertView.findViewById(R.id.contents);
-        ImageButton  button = (ImageButton)convertView.findViewById(R.id.delete);
 
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
@@ -153,7 +151,6 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         if(!(myItem.getPhoto().equals("No Photo"))) {
-            Log.i("사진 들어오나?", myItem.getPhoto());
             Glide.with(convertView)
                     .load( myItem.getPhoto())
                     .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))

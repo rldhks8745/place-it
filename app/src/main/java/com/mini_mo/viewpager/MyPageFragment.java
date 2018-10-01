@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +28,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.mini_mo.viewpager.Cluster.Selectlocationmap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.ListViewItemData;
+import com.mini_mo.viewpager.DAO.ReadCommentInfo;
 import com.mini_mo.viewpager.DAO.User_Info;
 import com.mini_mo.viewpager.ListView.RecyclerListView;
+import com.mini_mo.viewpager.ListView.RecyclerListView_review;
 import com.mini_mo.viewpager.ReadAndWrite.AddressTransformation;
+import com.mini_mo.viewpager.ReadAndWrite.CustomListviewitem;
 import com.mini_mo.viewpager.ReadAndWrite.WriteActivity;
 
 import org.json.JSONException;
@@ -47,16 +51,22 @@ public class MyPageFragment extends Fragment {
     private View view;
     private NestedScrollView nestedScrollView;
     private RecyclerListView recyclerListView;
+    private RecyclerListView_review recyclerListView_review;
     private User_Info user_info; // 사용자 정보
+    private Animation ani;
     String loginId; // 로그인 아이디
+    int tap_onoff; // 1=게시글 , 2= review
 
     ArrayList<ListViewItemData> mylistItem;
+    ArrayList<ReadCommentInfo> reviewlistitem;
     private User_Info read_location;
-    private TextView followers;
-    private TextView following;
     private TextView userId;
     private TextView location;
     private TextView message;
+    private TextView review;
+    private TextView board;
+    private ImageView board_line;
+    private ImageView review_line;
     private ImageView usericon;
 
     private static MyPageFragment instance = null;
@@ -86,11 +96,13 @@ public class MyPageFragment extends Fragment {
             view = inflater.inflate(R.layout.activity_mypage, container, false);
 
             nestedScrollView = (NestedScrollView) view.findViewById(R.id.include);
-            followers = (TextView) view.findViewById(R.id.follwers);
-            following = (TextView) view.findViewById(R.id.following);
             userId = (TextView) view.findViewById(R.id.userid);
             location = (TextView) view.findViewById(R.id.location);
             message = (TextView) view.findViewById(R.id.message);
+            review = (TextView) view.findViewById(R.id.review);
+            board = (TextView) view.findViewById(R.id.board);
+            review_line = (ImageView) view.findViewById(R.id.review_line);
+            board_line = (ImageView) view.findViewById(R.id.board_line);
             usericon = (ImageView) view.findViewById(R.id.usericon);
         }
 
@@ -101,8 +113,7 @@ public class MyPageFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         if(!Store.userid.equals("Guest")){
-            recyclerListView = new RecyclerListView(getContext(), view, this);
-
+            tap_onoff = 1;
 
             /** Fab 클릭 이벤트 --> 코멘트 작성 액티비티로 전환 **/
             FloatingActionButton writeButton = (FloatingActionButton) view.findViewById(R.id.write_fab);
@@ -171,6 +182,44 @@ public class MyPageFragment extends Fragment {
                     startActivity( intent );
                 }
             });
+
+            review.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    review_line.startAnimation(ani);
+
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    review.startAnimation(ani);
+
+                    tap_onoff = 2;
+                    board.setTextColor(0xFFFFFF);
+                    review.setTextColor(0x000000);
+                    onResume();
+
+                    review_line.setImageResource(R.drawable.click_line);
+                    board_line.setImageResource(R.drawable.clickoff_line);
+                }
+            });
+
+            board.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    board_line.startAnimation(ani);
+
+                    ani = AnimationUtils.loadAnimation(getActivity(),R.anim.alpha2);
+                    board.startAnimation(ani);
+
+                    tap_onoff = 1;
+                    board.setTextColor(0x000000);
+                    review.setTextColor(0xFFFFFF);
+                    onResume();
+
+                    review_line.setImageResource(R.drawable.clickoff_line);
+                    board_line.setImageResource(R.drawable.click_line);
+                }
+            });
         }
 
         super.onViewCreated(view, savedInstanceState);
@@ -185,42 +234,61 @@ public class MyPageFragment extends Fragment {
         super.onResume();
 
         if(!Store.userid.equals("Guest")){
-            try {
-                /* 사용자 정보 */
-                user_info = new Data().read_myPage(loginId);
-                mylistItem = new Data().read_myBoard(loginId, 0);
-                read_location = new Data().read_myLocation(Store.userid);
-                String friends = new Data().count_friends(loginId);
-                following.setText( friends.substring( 0, friends.indexOf(',') ) );
-                followers.setText( friends.substring( friends.indexOf(',')+1, friends.length()  ) );
 
-                /* 보드 정보 */
-                recyclerListView.loginId = loginId;
-                recyclerListView.listViewItems.clear();
-                recyclerListView.add(mylistItem);
-                recyclerListView.loadItems(nestedScrollView, getContext());
+            if(tap_onoff==1){
+                recyclerListView = new RecyclerListView(getContext(), this.view, this);
+                try {
+                    // 사용자 정보
+                    user_info = new Data().read_myPage(loginId);
+                    mylistItem = new Data().read_myBoard(loginId, 0);
+                    read_location = new Data().read_myLocation(Store.userid);
 
-                userId.setText(user_info.nickname);
-                if(read_location.latitude == 0.0 || read_location.longitude == 0.0){
-                    location.setText("위치가 설정되지 않았습니다.");
-                }else{
-                    location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
+                    // 보드 정보
+                    recyclerListView.loginId = loginId;
+                    recyclerListView.listViewItems.clear();
+                    recyclerListView.add(mylistItem);
+                    recyclerListView.loadItems(nestedScrollView, getContext());
+
+                    userId.setText(user_info.nickname);
+                    if(read_location.latitude == 0.0 || read_location.longitude == 0.0){
+                        location.setText("위치가 설정되지 않았습니다.");
+                    }else{
+                        location.setText(AddressTransformation.getAddress(getActivity(), read_location.latitude, read_location.longitude));
+                    }
+
+                    // photo 넣는곳
+                    Glide.with( this.getContext() )
+                            .load( user_info.user_photo )
+                            .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
+                            .into( usericon );
+
+                    Store.myprofile_img = user_info.user_photo;
+
+                    message.setText(user_info.massage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
+                recyclerListView.adapter.notifyDataSetChanged();
+            }else{
+                recyclerListView_review = new RecyclerListView_review(getContext(), this.view, this);
 
-                // photo 넣는곳
-                Glide.with( this.getContext() )
-                        .load( user_info.user_photo )
-                        .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
-                        .into( usericon );
+                try {
+                    // 사용자 정보
+                    reviewlistitem = new Data().read_myPage_comment(loginId);
 
-                Store.myprofile_img = user_info.user_photo;
+                    // 보드 정보
+                    recyclerListView_review.loginId = loginId;
+                    recyclerListView_review.listViewItems.clear();
+                    recyclerListView_review.add(reviewlistitem);
 
-                message.setText(user_info.massage);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                recyclerListView_review.adapter.notifyDataSetChanged();
             }
-            recyclerListView.adapter.notifyDataSetChanged();
+
         }
     }
 

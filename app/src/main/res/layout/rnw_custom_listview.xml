@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="100"
+        android:background="#FFFFFF"
+        android:weightSum="130"
         android:padding="10dp">
 
         <ImageView
@@ -40,7 +41,7 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="date"
                 android:layout_weight="10"
                 />
 
@@ -55,7 +56,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50"
+                android:layout_weight="80"
                 android:weightSum="10"
                 android:orientation="horizontal">
 
@@ -66,7 +67,7 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="10dp"
                     android:layout_weight="4"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:layout_width="match_parent"
