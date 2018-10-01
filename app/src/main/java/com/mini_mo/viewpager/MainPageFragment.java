@@ -102,7 +102,13 @@ public class MainPageFragment extends Fragment{
         try {
 
             push_data = getActivity().getIntent().getParcelableArrayListExtra("Push_ArrayList");
-
+            if(!(push_data == null)) {
+                Log.i("MainPageFragment", "size" + push_data.size());
+            }
+            else
+            {
+                Log.i("MainPageFragment", "push_data = null");
+            }
         } catch (Exception e)
         {
             Log.i("MainPageFragment", "ExtraData가 없읍니다.");
