@@ -2,15 +2,11 @@ package com.mini_mo.viewpager;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -18,41 +14,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.SearchView;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.mini_mo.viewpager.Camera.CameraActivity;
-import com.mini_mo.viewpager.Camera.LoadingDialog;
-import com.mini_mo.viewpager.Cluster.ClusterMap;
 import com.mini_mo.viewpager.DAO.Data;
 import com.mini_mo.viewpager.DAO.User_Info;
-import com.mini_mo.viewpager.FriendListView.FriendListFragment;
-import com.mini_mo.viewpager.Login.LoginActivity;
-import com.mini_mo.viewpager.ReadAndWrite.SaveLocateActivity;
 import com.mini_mo.viewpager.ReadAndWrite.Util;
-
-import org.json.JSONException;
-
-import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -61,8 +36,6 @@ public class MainActivity extends AppCompatActivity{
     private ViewPager mViewPager;
 
     Data data;
-    User_Info user_info;
-    RoundedBitmapDrawable roundedBitmapDrawable;
     SearchView searchView;
 
     Activity activity;
@@ -181,8 +154,6 @@ public class MainActivity extends AppCompatActivity{
                         myPageFragment.setLoginId(loginId);
                         return  myPageFragment;
                 case 2:
-                        return new FriendListFragment();
-                case 3:
                     return new SettingFrg();
                 default:
                     return null;
@@ -191,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
         @Override // ViewPager의 Page 수
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return 3;
         }
     }
 

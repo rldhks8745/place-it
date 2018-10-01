@@ -1,5 +1,7 @@
 package com.mini_mo.viewpager.DAO;
 
+import java.util.Arrays;
+
 /**
  * Created by sasor on 2018-04-29.
  */
@@ -20,9 +22,6 @@ public class ReadCommentInfo {
     public String comment_nickname;
     public int guest_photo;
 
-    //public ReadCommentInfo readCommentInfo(int 게시글번호){
 
-    // return ReadCommentInfo;
-    //}
 
 }
