@@ -230,7 +230,6 @@ public class Push extends Service implements Runnable {
         //if문이나 등등으로 해당사항에 해당되면 팝업 ㄱㄱㄱ
 
 
-
         //sleep and 반복
 
         Log.i("function", "function_end");
