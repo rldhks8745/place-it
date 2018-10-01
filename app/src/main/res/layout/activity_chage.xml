@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:layout_height="match_parent">
 
 
     <LinearLayout
@@ -15,9 +14,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:background="@drawable/textlines"
             android:layout_height="0dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:weightSum="100">
@@ -29,7 +27,7 @@
                 android:layout_weight="10"
                 android:padding="10dp"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/back" />
+                app:srcCompat="@drawable/leftcancel" />
 
             <TextView
                 android:layout_width="0dp"
@@ -37,7 +35,7 @@
                 android:layout_weight="10"
                 android:gravity="center"
                 android:text="back"
-                android:textColor="#FFFFFF" />
+                android:textColor="#4B94D0" />
 
             <TextView
                 android:layout_width="0dp"
@@ -49,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:text="send"
-                android:textColor="#FFFFFF" />
+                android:textColor="#4B94D0" />
 
             <ImageView
                 android:id="@+id/send"
@@ -57,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:padding="9dp"
-                app:srcCompat="@drawable/send" />
+                app:srcCompat="@drawable/rightcancel" />
         </LinearLayout>
 
         <LinearLayout
@@ -83,25 +81,24 @@
                 android:layout_weight="8"
                 android:gravity="center_vertical"
                 android:text="user id"
-                android:textColor="#FFFFFF"
+                android:textColor="#4B94D0"
                 android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="8"
-            android:orientation="vertical"
-            android:background="@drawable/round_rec"
             android:layout_margin="10dp"
+            android:layout_weight="7.5"
+            android:orientation="vertical"
             android:weightSum="10">
 
             <EditText
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="8"
-                android:background="@null"
+                android:layout_weight="7"
+                android:background="@drawable/round_rec"
                 android:gravity="left"
                 android:hint="게시글 수정..."
                 android:padding="10dp"
@@ -112,28 +109,32 @@
                 android:layout_height="0dp"
                 android:layout_gravity="left"
                 android:layout_marginRight="5dp"
-                android:layout_weight="2">
+                android:layout_weight="3">
 
                 <LinearLayout
                     android:id="@+id/linear"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:weightSum="10">
 
                     <ImageView
                         android:id="@+id/img"
                         android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:scaleType="centerInside"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:layout_marginTop="20dp"
+                        android:background="#4B94D0"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/add_image" />
 
                     <ImageView
                         android:id="@+id/video"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:layout_marginTop="5dp"
+                        android:background="#4B94D0"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/add_video" />
                 </LinearLayout>

@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:layout_height="match_parent">
 
 
     <LinearLayout
@@ -16,10 +15,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:orientation="horizontal"
+            android:background="@drawable/textlines"
             android:weightSum="100">
 
             <ImageView
@@ -29,7 +27,7 @@
                 android:layout_weight="10"
                 android:padding="10dp"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/back" />
+                app:srcCompat="@drawable/leftcancel" />
 
             <TextView
                 android:layout_width="0dp"
@@ -37,7 +35,8 @@
                 android:layout_weight="10"
                 android:gravity="center"
                 android:text="back"
-                android:textColor="#FFFFFF" />
+                android:textColor="#4B94D0"
+                android:textColorHint="#4B94D0" />
 
             <TextView
                 android:layout_width="0dp"
@@ -49,7 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:text="send"
-                android:textColor="#FFFFFF" />
+                android:textColor="#4B94D0"
+                android:textColorHint="#4B94D0" />
 
             <ImageView
                 android:id="@+id/send"
@@ -57,7 +57,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:padding="9dp"
-                app:srcCompat="@drawable/send" />
+                app:srcCompat="@drawable/rightcancel" />
         </LinearLayout>
 
         <LinearLayout
@@ -81,34 +81,30 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
 
                 <EditText
                     android:id="@+id/nickname"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="5"
+                    android:background="@null"
                     android:gravity="center_vertical"
                     android:hint="nicknmae"
-                    android:textColorHint="#FFFFFF"
-                    android:background="@null"
+                    android:textColorHint="#4B94D0"
                     android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
 
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="5"
-                    android:gravity="center_vertical"
-                    android:inputType="textPassword"
-                    android:hint="password"
-                    android:textColorHint="#FFFFFF"
                     android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="password"
+                    android:inputType="textPassword"
+                    android:textColorHint="#4B94D0"
                     android:textSize="15sp" />
 
             </LinearLayout>
@@ -120,9 +116,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="10"
-            android:background="@drawable/round_rec"
             android:layout_margin="10dp"
+            android:layout_weight="8"
+            android:background="@drawable/round_rec"
             android:orientation="vertical"
             android:weightSum="10">
 
@@ -130,7 +126,7 @@
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5"
+                android:layout_weight="7"
                 android:background="@null"
                 android:gravity="left"
                 android:hint="어떤 댓글을 쓰실건가요?"
@@ -139,12 +135,10 @@
 
             <ImageView
                 android:id="@+id/img"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:layout_margin="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="#4B94D0"
                 android:scaleType="center"
-                android:layout_gravity="center"
                 app:srcCompat="@drawable/add_image" />
 
         </LinearLayout>

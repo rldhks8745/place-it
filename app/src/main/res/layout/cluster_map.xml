@@ -12,42 +12,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="90"
-        android:weightSum="12">
+        android:weightSum="10">
 
         <ImageView
             android:id="@+id/cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:padding="10dp"
-            app:srcCompat="@drawable/leftcancel"/>
+            android:layout_weight="1"
+            android:background="@drawable/textlines"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:layout_marginRight="5dp"
+            app:srcCompat="@drawable/leftcancel" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="7"
             android:gravity="center_horizontal|center_vertical"
-            android:textSize="15dp"
             android:text="대구광역시 북구 팔달동 148-6"
-            android:layout_weight="6"/>
+            android:textSize="15dp" />
 
 
         <ImageView
             android:id="@+id/nowlocation"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:padding="10dp"
-            app:srcCompat="@drawable/nowlocation"
-            />
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/nowlocation" />
 
         <ImageView
             android:id="@+id/ok"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ok"/>
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ok" />
 
     </LinearLayout>
 

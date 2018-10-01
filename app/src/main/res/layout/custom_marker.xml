@@ -23,16 +23,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#B9E2FA">
+
         <TextView
-            android:layout_margin="5dp"
             android:id="@+id/store_name"
             android:layout_width="140dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="#ffffff"
             android:gravity="center_horizontal"
-            android:text="ㅇㅇㅇㅇ"
-            android:textSize="20sp"
-            android:background="#ffffff"/>
+            android:text="storeName"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/store_status"
@@ -42,7 +43,7 @@
             android:layout_weight="1"
             android:background="#ffffff"
             android:gravity="center"
-            android:text="ㅇㅇㅇㅇㅇ"
+            android:text="storeStatus"
             android:textSize="15sp" />
     </LinearLayout>
 

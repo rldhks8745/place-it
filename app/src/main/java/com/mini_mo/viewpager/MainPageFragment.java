@@ -60,6 +60,7 @@ public class MainPageFragment extends Fragment{
     private static MainPageFragment instance = null;
 
     ArrayList<ListViewItemData> near;
+    ArrayList<ListViewItemData> push_data = null;
 
     public LoadingDialog loading;
 
@@ -85,6 +86,7 @@ public class MainPageFragment extends Fragment{
         btnlocation = (ImageView) rootView.findViewById(R.id.btnlocation);
         location = (TextView) rootView.findViewById(R.id.location);
 
+
         loading = new LoadingDialog();
         gps = new GpsInfo( getContext() );
 
@@ -96,6 +98,15 @@ public class MainPageFragment extends Fragment{
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         //ItemListView listView = new ItemListView(rootView);
+
+        try {
+
+            push_data = getActivity().getIntent().getParcelableArrayListExtra("Push_ArrayList");
+
+        } catch (Exception e)
+        {
+            Log.i("MainPageFragment", "ExtraData가 없읍니다.");
+        }
 
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +166,16 @@ public class MainPageFragment extends Fragment{
         Data data = new Data();
 
         try{
-            near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
+
+            if(push_data == null)
+            {
+                near = data.read_board_list(min_lat,min_lng,max_lat,max_lng,count);
+            }
+            else
+            {
+                near = push_data;
+            }
+
             Store.sendboard = near;
             if(recyclerListView.listViewItems!=null)
             {
@@ -167,6 +187,7 @@ public class MainPageFragment extends Fragment{
         }catch (JSONException e){
             e.printStackTrace();
         }
+        push_data = null;
     }
 
     @Override

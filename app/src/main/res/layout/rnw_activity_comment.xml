@@ -23,13 +23,13 @@
 
         <ImageView
             android:id="@+id/write"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/commentwrite"
-            android:layout_marginRight="20dp"
+            android:layout_width="45dp"
+            android:layout_height="44dp"
+            android:layout_gravity="end|bottom"
             android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
             android:background="#00ffffff"
-            android:layout_gravity="end|bottom"/>
+            app:srcCompat="@drawable/commentwrite" />
 
 
     </FrameLayout>
