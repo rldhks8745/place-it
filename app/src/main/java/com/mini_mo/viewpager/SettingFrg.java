@@ -50,7 +50,6 @@ public class SettingFrg extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent( SettingFrg.this.getContext() , AlarmSetting.class);
                 startActivity(intent);
-                getActivity().finish();
             }
         });
 
