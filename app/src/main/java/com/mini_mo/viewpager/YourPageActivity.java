@@ -167,10 +167,10 @@ public class YourPageActivity extends AppCompatActivity {
                 /** 동적 로딩 설정 **/
                 recyclerListView.loadItems(nestedScrollView, this);
 
-                Glide.with(this)
-                        .load(user_info.user_photo)
-                        //.apply( new RequestOptions().placeholder( R.drawable.user ).error( R.drawable.user ))
-                        .into(usericon);
+                Glide.with( this )
+                        .load( user_info.user_photo )
+                        .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
+                        .into( usericon );
 
                 userId.setText(user_info.user_id);
                 if (your_location.latitude == 0.0 || your_location.longitude == 0.0) {
