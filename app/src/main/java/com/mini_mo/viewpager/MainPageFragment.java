@@ -164,10 +164,10 @@ public class MainPageFragment extends Fragment{
 
     public void nearSearch(){
         double max_lat, max_lng, min_lat, min_lng;
-        max_lat = latitude + 0.0005;
-        max_lng = longitude + 0.0005;
-        min_lat = latitude - 0.0005;
-        min_lng = longitude -0.0005;
+        max_lat = latitude + 0.0002;
+        max_lng = longitude + 0.0002;
+        min_lat = latitude - 0.0002;
+        min_lng = longitude -0.0002;
 
         Data data = new Data();
 
