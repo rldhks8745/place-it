@@ -102,7 +102,13 @@ public class MainPageFragment extends Fragment{
         try {
 
             push_data = getActivity().getIntent().getParcelableArrayListExtra("Push_ArrayList");
-
+            if(!(push_data == null)) {
+                Log.i("MainPageFragment", "size" + push_data.size());
+            }
+            else
+            {
+                Log.i("MainPageFragment", "push_data = null");
+            }
         } catch (Exception e)
         {
             Log.i("MainPageFragment", "ExtraData가 없읍니다.");
@@ -158,10 +164,10 @@ public class MainPageFragment extends Fragment{
 
     public void nearSearch(){
         double max_lat, max_lng, min_lat, min_lng;
-        max_lat = latitude + 0.0005;
-        max_lng = longitude + 0.0005;
-        min_lat = latitude - 0.0005;
-        min_lng = longitude -0.0005;
+        max_lat = latitude + 0.0002;
+        max_lng = longitude + 0.0002;
+        min_lat = latitude - 0.0002;
+        min_lng = longitude -0.0002;
 
         Data data = new Data();
 

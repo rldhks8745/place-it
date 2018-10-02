@@ -52,7 +52,7 @@ public class RecyclerListView_review {
     public RecyclerListView_review(Context context, View view, AppCompatActivity activity )
     {
         listViewItems = new ArrayList<ReadCommentInfo>();
-        adapter = new RecyclerViewAdapter_review(listViewItems, R.layout.listview_item1, activity);
+        adapter = new RecyclerViewAdapter_review(listViewItems, R.layout.rnw_custom_listview, activity);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);

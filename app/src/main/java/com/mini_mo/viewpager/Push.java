@@ -230,7 +230,6 @@ public class Push extends Service implements Runnable {
         //if문이나 등등으로 해당사항에 해당되면 팝업 ㄱㄱㄱ
 
 
-
         //sleep and 반복
 
         Log.i("function", "function_end");
@@ -273,11 +272,10 @@ public class Push extends Service implements Runnable {
 
     }
 
-    private void sendNotification(String messageBody,String user_photo,int push_count, ArrayList<ListViewItemData> lvi)
+    private void sendNotification(String messageBody,String user_photo,int push_count, ArrayList<ListViewItemData> notif_lvi)
     {
         Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra("Push_ArrayList",lvi);
-        intent.putParcelableArrayListExtra("Push_ArrayList",lvi);
+        intent.putParcelableArrayListExtra("Push_ArrayList",notif_lvi);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Glide.with(getApplicationContext()).asBitmap().load(user_photo)
