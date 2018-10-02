@@ -112,7 +112,7 @@ public class RecyclerViewAdapter_review extends RecyclerView.Adapter<RecyclerVie
         if(!(item.comment_photo.equals("No Photo"))) {
             Glide.with(viewHolder.mView)
                     .load( item.comment_photo)
-                    .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
+                    .apply( new RequestOptions().override(500,500).placeholder(R.drawable.noimg).error(R.drawable.noimg))
                     .into(viewHolder.image);
         }
 

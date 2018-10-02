@@ -172,7 +172,7 @@ public class YourPageActivity extends AppCompatActivity {
                         .apply( new RequestOptions().override(usericon.getWidth(),usericon.getHeight()).placeholder( R.drawable.user ).error( R.drawable.user ))
                         .into( usericon );
 
-                userId.setText(user_info.user_id);
+                userId.setText(user_info.nickname);
                 if (your_location.latitude == 0.0 || your_location.longitude == 0.0) {
                     location.setText("위치가 설정되지 않았습니다.");
                 } else {

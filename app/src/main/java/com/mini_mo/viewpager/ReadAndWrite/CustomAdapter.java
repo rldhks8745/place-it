@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -81,7 +82,7 @@ public class CustomAdapter extends BaseAdapter {
         ImageView iv_img = (ImageView) convertView.findViewById(R.id.usericon);
         TextView tv_nickname = (TextView) convertView.findViewById(R.id.nickname);
         TextView tv_date = (TextView) convertView.findViewById(R.id.date);
-        ImageView tv_iamge = (ImageView) convertView.findViewById(R.id.image);
+        ImageView tv_image = (ImageView) convertView.findViewById(R.id.image);
         TextView tv_title = (TextView) convertView.findViewById(R.id.contents);
 
 
@@ -154,8 +155,17 @@ public class CustomAdapter extends BaseAdapter {
             Glide.with(convertView)
                     .load( myItem.getPhoto())
                     .apply( new RequestOptions().override(300,300).placeholder(R.drawable.noimg).error(R.drawable.noimg))
-                    .into(tv_iamge);
+                    .into(tv_image);
         }
+
+        tv_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Intent intent = new Intent(activity, Comment_Image_Activity.class);
+               intent.putExtra("img",myItem.getPhoto());
+               activity.startActivity(intent);
+            }
+        });
 
         //Glide.with(convertView).load(myItem.getIcon()).apply(bitmapTransform(new CircleCrop())).into(iv_img);
         tv_nickname.setText(myItem.getNickname());

@@ -256,7 +256,7 @@ public class ClusterMap extends AppCompatActivity
                                 boardItems.get(j).location.longitude == clustericon.get(i).longitude) // 위도 경도 같으면 add 아니면 new
                         {
                             boardItems.get(j).items.add(new MarkerItem(clustericon.get(i).latitude,
-                                    clustericon.get(i).longitude, clustericon.get(i).nickname, clustericon.get(i).user_photo));
+                                    clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
                         } else {
                             boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude,
                                     clustericon.get(i).longitude)));
@@ -268,7 +268,7 @@ public class ClusterMap extends AppCompatActivity
                     boardItems.add(new BoardItem(new LatLng(clustericon.get(i).latitude,
                             clustericon.get(i).longitude)));
                     boardItems.get(0).items.add(new MarkerItem(clustericon.get(i).latitude,
-                            clustericon.get(i).longitude, clustericon.get(i).nickname, clustericon.get(i).user_photo));
+                            clustericon.get(i).longitude, clustericon.get(i).user_id, clustericon.get(i).user_photo));
                 }
             }
             setSampleMarkerItems( boardItems );
@@ -310,7 +310,7 @@ public class ClusterMap extends AppCompatActivity
 
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
         String status = user_info.massage;
-        String name = markerItem.getName();
+        String name = user_info.nickname;
 
         store_status.setText(status.toString());
         store_name.setText(name.toString());

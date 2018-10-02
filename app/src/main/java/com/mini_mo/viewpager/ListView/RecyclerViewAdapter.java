@@ -99,7 +99,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         final ListViewItemData item = listViewItems.get(position);
 
         // 값 설정 ( set )
-        viewHolder.userId.setText(item.user_id);
+        viewHolder.userId.setText(item.nickname);
         viewHolder.contents.setText(item.content);
         viewHolder.date.setText(item.date_board.substring(0,16));
         viewHolder.like.setText(String.valueOf(item.good));

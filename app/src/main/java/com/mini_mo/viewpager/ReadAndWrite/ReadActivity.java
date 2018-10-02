@@ -203,7 +203,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        userid.setText(rbi.user_id.toString());
+        userid.setText(rbi.nickname.toString());
         content.setText(rbi.content.toString());
 
         //gps 텍스트뷰 : 위치받아오기 완료되면 위치값 넣어주기 (위도 경도 받아오기)

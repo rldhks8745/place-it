@@ -27,6 +27,7 @@ public class Store {
     public static String myprofile_img=null; //로그인한 사람의 유저이미지
 
     public static ArrayList<Bitmap> readboard_image = new ArrayList<>();
+    public static String comment_img = null;
     public static ArrayList<ListViewItemData> sendboard = new ArrayList<>();
     public static boolean setlist = false;
     public static String userid = "";

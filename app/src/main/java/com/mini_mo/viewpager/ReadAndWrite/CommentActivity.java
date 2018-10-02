@@ -155,14 +155,4 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         finish();
         super.onBackPressed();
     }
-
-    public String getDate(){
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        String formatDate = sdfNow.format(date);
-
-
-        return formatDate;
-    }
 }

@@ -1174,6 +1174,7 @@ public class Data {
             rbi.user_id = result.getString("user_id");
             rbi.user_photo = result.getString("user_photo");
             rbi.is_good = result.getInt("is_good");
+            rbi.nickname = result.getString("nickname");
 
             int count = result.getInt("img_count");
 
