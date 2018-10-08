@@ -16,6 +16,32 @@ public class Data {
 
     }
 
+    public String change_comment(int comment_num,String user_name,String content,String nickname, int guestPhoto) throws JSONException
+    {
+
+        int r = -2;
+        JSONObject result = null;
+        JSONObject obj = new JSONObject();
+        JSONObject c_d = new JSONObject();
+
+        obj.put("flag", "change_comment");
+        c_d.put("content", content);
+        c_d.put("nickname", nickname);
+        c_d.put("guestPhoto", guestPhoto);
+        c_d.put("comment_num", comment_num);
+        obj.put("change_comment_data",c_d);
+
+        try {
+            result = new ConHttpJson().execute(obj).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return r+"";
+    }
+
     public ArrayList<ReadCommentInfo> read_myPage_comment(String id) throws JSONException {
         ArrayList<ReadCommentInfo> rci = new ArrayList<ReadCommentInfo>();
         int com_cnt = 0;
