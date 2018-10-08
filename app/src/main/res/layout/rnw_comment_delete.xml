@@ -24,6 +24,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_shadow"
+            android:clickable="true"
             android:text="삭제"
             android:textColor="#42619d"
             android:textSize="12sp" />
@@ -34,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/button_shadow"
+            android:clickable="true"
             android:text="취소"
             android:textColor="#42619d"
             android:textSize="12sp" />

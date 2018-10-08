@@ -39,6 +39,8 @@ import java.util.Date;
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener{
+    final int DELTE = 777;
+
     private Data data;
     private User_Info user_info;
 
@@ -77,7 +79,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         for(int i=0;i<rci.size();i++){
             final ReadCommentInfo readCommentInfo = rci.get(i);
-            myadapter.addItem(readCommentInfo.board_num,readCommentInfo.comment_num,readCommentInfo.comment_id,readCommentInfo.guest_photo,readCommentInfo.user_photo, readCommentInfo.comment_content, readCommentInfo.comment_nickname,readCommentInfo.comment_date,readCommentInfo.comment_photo);
+            myadapter.addItem(readCommentInfo.board_num,readCommentInfo.comment_num,readCommentInfo.comment_id,readCommentInfo.guest_photo,readCommentInfo.user_photo, readCommentInfo.comment_content, readCommentInfo.comment_nickname,readCommentInfo.comment_date,readCommentInfo.comment_photo, readCommentInfo.comment_pw);
             myadapter.notifyDataSetChanged();
         }
 
@@ -148,6 +150,33 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == DELTE) {
+            ChangeList();
+        }
+    }
+
+    public void ChangeList(){
+
+        myadapter = new CustomAdapter(this, this);
+
+        comment_list.setAdapter(myadapter);
+
+        try {
+            rci = data.readComment(String.valueOf(Store.board_num));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for(int i=0;i<rci.size();i++){
+            final ReadCommentInfo readCommentInfo = rci.get(i);
+            myadapter.addItem(readCommentInfo.board_num,readCommentInfo.comment_num,readCommentInfo.comment_id,readCommentInfo.guest_photo,readCommentInfo.user_photo, readCommentInfo.comment_content, readCommentInfo.comment_nickname,readCommentInfo.comment_date,readCommentInfo.comment_photo, readCommentInfo.comment_pw);
+            myadapter.notifyDataSetChanged();
+        }
     }
 
     @Override

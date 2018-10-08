@@ -37,6 +37,8 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class CustomAdapter extends BaseAdapter {
 
+    final int DELETE = 777;
+
     View view;
     Data data;
 
@@ -94,6 +96,13 @@ public class CustomAdapter extends BaseAdapter {
             public boolean onLongClick(View v) {
                 if(Store.userid.equals(myItem.getComment_id())) {
                     Toast.makeText(view.getContext(), position + "번째 리스트" + ", " + myItem.getComment_id() + ", " + Store.userid, Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(activity, CommentDeleteActivity.class);
+                    intent.putExtra("board_num",myItem.getBoard_number());
+                    intent.putExtra("comment_num",myItem.getComment_number());
+                    intent.putExtra("pass",myItem.getPass());
+                    activity.startActivityForResult(intent,DELETE);
+
                     return true;
                 }
                 return false;
@@ -169,7 +178,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String board_num,String comment_num,String comment_id,int guestphoto,String userphoto, String title, String nickname, String date, String photo) {
+    public void addItem(String board_num,String comment_num,String comment_id,int guestphoto,String userphoto, String title, String nickname, String date, String photo, String pass) {
 
         CustomListviewitem mItem = new CustomListviewitem();
 
@@ -184,6 +193,7 @@ public class CustomAdapter extends BaseAdapter {
         mItem.setTitle(title);
         mItem.setDate(date);
         mItem.setPhoto(photo);
+        mItem.setPass(pass);
 
 
         /* mItems에 MyItem을 추가한다. */

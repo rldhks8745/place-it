@@ -17,6 +17,7 @@ public class CustomListviewitem {
     private String title;
     private String date;
     private String photo;
+    private String pass;
 
     public String getComment_id() {
         return comment_id;
@@ -54,6 +55,10 @@ public class CustomListviewitem {
         return photo;
     }
 
+    public String getPass(){
+        return pass;
+    }
+
     public void setComment_id(String comment_id) {
         this.comment_id = comment_id;
     }
@@ -88,5 +93,9 @@ public class CustomListviewitem {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public void setPass(String pass){
+        this.pass = pass;
     }
 }
