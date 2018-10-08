@@ -89,9 +89,18 @@ public class CustomAdapter extends BaseAdapter {
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         final CustomListviewitem myItem = getItem(position);
 
-        /*if(!Store.userid.equals(myItem.getNickname())){
-            linearLayout.removeView(button);
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(Store.userid.equals(myItem.getComment_id())) {
+                    Toast.makeText(view.getContext(), position + "번째 리스트" + ", " + myItem.getComment_id() + ", " + Store.userid, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
 
+        if(!Store.userid.equals(myItem.getNickname())){
             iv_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -101,26 +110,7 @@ public class CustomAdapter extends BaseAdapter {
                     activity.startActivity(intent);
                 }
             });
-        }else{
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(view.getContext(), position+"번째 리스트", Toast.LENGTH_SHORT).show();
-
-                    CustomListviewitem Item = getItem(position);
-
-                    data = new Data();
-                    mItems.remove(position);
-                    try {
-                        data.deleteComment(Integer.parseInt(myItem.getBoard_number()),Integer.parseInt(myItem.getComment_number()));// DB에 DELETE해주는 메소드에 넣으면 OK
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    notifyDataSetChanged();
-                }
-            });
-        }*/
+        }
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         if(myItem.getComment_id().equals("Guest")) {
